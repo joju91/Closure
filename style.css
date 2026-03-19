@@ -903,6 +903,48 @@ body {
 .doc-type-title { font-size: 0.97rem; font-weight: 600; }
 .doc-type-sub { font-size: 0.83rem; color: var(--text-soft); }
 
+/* ─── FORM ERROR ─────────────────────────────── */
+.form-error {
+  color: var(--red);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 10px 14px;
+  background: var(--red-bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(185, 28, 28, 0.2);
+  margin-bottom: 12px;
+}
+.form-error.hidden { display: none; }
+
+/* ─── BÖRJA HÄR ──────────────────────────────── */
+.start-here {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 32px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font);
+}
+.start-here:hover { background: var(--accent-dark); }
+.start-here.hidden { display: none; }
+.start-here-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  opacity: 0.75;
+  margin-bottom: 3px;
+}
+.start-here-title { font-size: 1rem; font-weight: 700; line-height: 1.3; }
+.start-here-arrow { margin-left: auto; font-size: 1.5rem; flex-shrink: 0; opacity: 0.8; }
+
 /* ─── DOC FORMS ──────────────────────────────── */
 #doc-chooser.hidden { display: none; }
 .doc-form { display: flex; flex-direction: column; gap: 0; }

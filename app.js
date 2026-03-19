@@ -485,6 +485,32 @@ function renderPlan() {
   const week   = state.tasks.filter(t => t.urgency === 'week');
   const later  = state.tasks.filter(t => t.urgency === 'later');
 
+  // ── Börja här-kort ──────────────────────────
+  const firstTask = state.tasks.find(t => !t.done);
+  const startEl   = document.getElementById('start-here');
+  if (startEl) {
+    if (firstTask) {
+      startEl.innerHTML = `
+        <div>
+          <div class="start-here-label">Börja här</div>
+          <div class="start-here-title">${firstTask.title}</div>
+        </div>
+        <div class="start-here-arrow">›</div>`;
+      startEl.classList.remove('hidden');
+      startEl.onclick = () => {
+        // Make sure we're on plan tab, open the task
+        switchTab('plan');
+        toggleTask(firstTask.id);
+        setTimeout(() => {
+          document.getElementById(`task-card-${firstTask.id}`)
+            ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 80);
+      };
+    } else {
+      startEl.classList.add('hidden');
+    }
+  }
+
   renderTaskList('tasks-today', today);
   renderTaskList('tasks-week',  week);
   renderTaskList('tasks-later', later);
@@ -830,7 +856,8 @@ function removeBulkRow(id) {
 function generateBulkLetters() {
   const sender = document.getElementById('bulk-sender').value.trim();
   const email  = document.getElementById('bulk-email').value.trim();
-  if (!sender || !email) { alert('Fyll i ditt namn och din e-post.'); return; }
+  clearFormError('err-bulk');
+  if (!sender || !email) { showFormError('err-bulk', 'Fyll i ditt namn och din e-post.'); return; }
 
   const services = [];
   document.querySelectorAll('.bulk-row').forEach(row => {
@@ -838,7 +865,7 @@ function generateBulkLetters() {
     const custnr = row.querySelector('.bulk-custnr').value.trim();
     if (name) services.push({ name, custnr });
   });
-  if (services.length === 0) { alert('Lägg till minst en tjänst.'); return; }
+  if (services.length === 0) { showFormError('err-bulk', 'Lägg till minst en tjänst med namn.'); return; }
 
   const { deceased, personnr, today } = getDocContext();
 
@@ -882,7 +909,8 @@ function generateLetter() {
   const custnr  = document.getElementById('letter-custnr').value.trim();
   const sender  = document.getElementById('letter-sender').value.trim();
   const email   = document.getElementById('letter-email').value.trim();
-  if (!service || !sender || !email) { alert('Fyll i de obligatoriska fälten (märkta med *).'); return; }
+  clearFormError('err-letter');
+  if (!service || !sender || !email) { showFormError('err-letter', 'Fyll i de obligatoriska fälten (märkta med *).'); return; }
 
   const { deceased, personnr, today } = getDocContext();
   const custnrLine = custnr ? `\nKundnummer: ${custnr}` : '';
@@ -916,7 +944,8 @@ function generateBank() {
   const sender   = document.getElementById('bank-sender').value.trim();
   const relation = document.getElementById('bank-relation').value.trim();
   const email    = document.getElementById('bank-email').value.trim();
-  if (!bank || !sender || !relation || !email) { alert('Fyll i de obligatoriska fälten (märkta med *).'); return; }
+  clearFormError('err-bank');
+  if (!bank || !sender || !relation || !email) { showFormError('err-bank', 'Fyll i de obligatoriska fälten (märkta med *).'); return; }
 
   const { deceased, personnr, today } = getDocContext();
 
@@ -954,7 +983,8 @@ function generateForsakring() {
   const sender   = document.getElementById('fors-sender').value.trim();
   const relation = document.getElementById('fors-relation').value.trim();
   const email    = document.getElementById('fors-email').value.trim();
-  if (!bolag || !sender || !relation || !email) { alert('Fyll i de obligatoriska fälten (märkta med *).'); return; }
+  clearFormError('err-forsakring');
+  if (!bolag || !sender || !relation || !email) { showFormError('err-forsakring', 'Fyll i de obligatoriska fälten (märkta med *).'); return; }
 
   const { deceased, personnr, today } = getDocContext();
 
@@ -993,7 +1023,8 @@ function generateAnnons() {
   const memory    = document.getElementById('annons-memory').value.trim();
   const funeral   = document.getElementById('annons-funeral').value.trim();
 
-  if (!name) { alert('Ange den avlidnes namn.'); return; }
+  clearFormError('err-annons');
+  if (!name) { showFormError('err-annons', 'Ange den avlidnes namn.'); return; }
 
   const lifeSpan = (born && died) ? `${born} – ${died}` : (died ? `Avled ${died}` : '');
   const memLine  = memory ? `\n${memory}\n` : '';
@@ -1039,7 +1070,7 @@ function getShareableState() {
     minderarig: state.minderarig,
     ansvar:     state.ansvar,
     name:       state.name,
-    personnr:   state.personnr,
+    // personnr intentionally excluded from share links (privacy)
   };
 }
 
@@ -1063,6 +1094,19 @@ function copyShareLink() {
   });
 }
 
+// ─── FORM VALIDATION ─────────────────────────
+function showFormError(errId, msg) {
+  const el = document.getElementById(errId);
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.remove('hidden');
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function clearFormError(errId) {
+  const el = document.getElementById(errId);
+  if (el) el.classList.add('hidden');
+}
+
 // ─── UTILS ────────────────────────────────────
 function formatDate(date) {
   return date.toLocaleDateString('sv-SE', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -1082,7 +1126,9 @@ function copyToClipboard(text, onDone) {
 
 // ─── PERSIST ─────────────────────────────────
 function saveState() {
-  try { localStorage.setItem('closure_state', JSON.stringify(getShareableState())); } catch(e) {}
+  // Save locally with personnr (own device only — never shared)
+  const toSave = { ...getShareableState(), personnr: state.personnr };
+  try { localStorage.setItem('closure_state', JSON.stringify(toSave)); } catch(e) {}
 }
 
 // ─── INIT ─────────────────────────────────────

@@ -20,7 +20,7 @@
   <div class="landing-hero">
     <div class="landing-content">
       <p class="landing-eyebrow">Du ska inte behöva tänka på det praktiska nu.</p>
-      <h1 class="landing-headline">Vi tar hand om allt det praktiska.<br>Du tar hand om det som betyder något.</h1>
+      <h1 class="landing-headline">Vi guidar dig igenom det praktiska.<br>Du tar hand om det som betyder något.</h1>
       <p class="landing-sub">Closure bygger din personliga plan, genererar brev och håller koll på allt som behöver göras — så att du slipper.</p>
       <button class="btn-primary btn-large" onclick="startOnboarding()">Kom igång — tar 5 minuter</button>
       <p class="landing-note">Gratis att börja. Ingen registrering krävs.</p>
@@ -191,6 +191,8 @@
         <p>Du har gått igenom allt. Ta en djup andetag — du klarade det.</p>
       </div>
 
+      <button id="start-here" class="start-here hidden" aria-label="Gå till nästa uppgift"></button>
+
       <div class="task-sections">
         <div class="task-section" id="section-today">
           <div class="section-header">
@@ -282,6 +284,7 @@
           <div id="bulk-rows"></div>
           <button class="add-row-btn" onclick="addBulkRow()">+ Lägg till tjänst</button>
         </div>
+        <p class="form-error hidden" id="err-bulk" role="alert"></p>
         <button class="btn-primary" style="max-width:260px" onclick="generateBulkLetters()">Generera alla brev →</button>
       </div>
 
@@ -314,6 +317,7 @@
           <label>Din e-post <span class="required">*</span></label>
           <input type="email" id="letter-email" class="text-input" placeholder="din@epost.se" />
         </div>
+        <p class="form-error hidden" id="err-letter" role="alert"></p>
         <button class="btn-primary" style="max-width:240px" onclick="generateLetter()">Generera brev</button>
       </div>
 
@@ -338,6 +342,7 @@
           <label>Din e-post <span class="required">*</span></label>
           <input type="email" id="bank-email" class="text-input" placeholder="din@epost.se" />
         </div>
+        <p class="form-error hidden" id="err-bank" role="alert"></p>
         <button class="btn-primary" style="max-width:240px" onclick="generateBank()">Generera brev</button>
       </div>
 
@@ -372,6 +377,7 @@
           <label>Begravning (om känt)</label>
           <input type="text" id="annons-funeral" class="text-input" placeholder="t.ex. Storkyrkan, Stockholm, 15 februari kl 14:00" />
         </div>
+        <p class="form-error hidden" id="err-annons" role="alert"></p>
         <button class="btn-primary" style="max-width:240px" onclick="generateAnnons()">Generera annons</button>
       </div>
 
@@ -396,6 +402,7 @@
           <label>Din e-post <span class="required">*</span></label>
           <input type="email" id="fors-email" class="text-input" placeholder="din@epost.se" />
         </div>
+        <p class="form-error hidden" id="err-forsakring" role="alert"></p>
         <button class="btn-primary" style="max-width:260px" onclick="generateForsakring()">Generera brev</button>
       </div>
 
