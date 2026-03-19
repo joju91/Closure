@@ -549,7 +549,7 @@ function renderTaskList(containerId, tasks) {
 
     const notesHtml = task.notesPlaceholder && !task.done
       ? `<textarea class="task-notes" id="notes-${task.id}" placeholder="${task.notesPlaceholder}" rows="2"
-           oninput="saveTaskNote('${task.id}', this.value)">${getTaskNote(task.id)}</textarea>`
+           oninput="autoStartOnNote('${task.id}'); saveTaskNote('${task.id}', this.value)">${getTaskNote(task.id)}</textarea>`
       : '';
 
     const docHtml = task.hasDoc && !task.done
@@ -655,6 +655,11 @@ function updateProgress() {
     summaryEl.innerHTML = `<strong>${done} av ${total}</strong> uppgifter klara`;
     if (completionEl) completionEl.classList.remove('visible');
   }
+}
+
+function autoStartOnNote(taskId) {
+  const task = state.tasks.find(t => t.id === taskId);
+  if (task && !task.done && !task.started) markTaskStarted(taskId);
 }
 
 function markTaskStarted(taskId) {
