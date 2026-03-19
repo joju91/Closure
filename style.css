@@ -101,6 +101,12 @@ body {
   font-size: 1.1rem;
   width: auto;
   border-radius: 10px;
+  animation: ctaPulse 1.8s ease 1.5s 2;
+}
+
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(44, 74, 110, 0.35); }
+  50%       { box-shadow: 0 0 0 12px rgba(44, 74, 110, 0); }
 }
 .btn-ghost {
   background: transparent;
@@ -318,7 +324,8 @@ body {
   border-color: var(--accent);
   background: var(--accent-light);
   color: var(--accent);
-  transform: scale(1.01);
+  transform: scale(1.02);
+  box-shadow: 0 2px 14px rgba(44, 74, 110, 0.15);
 }
 
 /* Checkboxes */
@@ -983,6 +990,44 @@ body {
   text-align: center;
 }
 .share-confirm.hidden { display: none; }
+
+/* ─── UNDO TOAST ─────────────────────────────── */
+.undo-toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-primary);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 300;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.22);
+  white-space: nowrap;
+  animation: toastIn 0.25s ease;
+}
+.undo-toast.hidden { display: none; }
+.undo-toast button {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.4);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: var(--font);
+  transition: background 0.15s;
+}
+.undo-toast button:hover { background: rgba(255,255,255,0.12); }
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
 
 /* ─── SHARED BANNER ──────────────────────────── */
 .shared-banner {

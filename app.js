@@ -569,6 +569,7 @@ function renderTaskList(containerId, tasks) {
     cardEl.setAttribute('tabindex', '0');
     cardEl.setAttribute('role', 'button');
     cardEl.setAttribute('aria-expanded', 'false');
+    cardEl.setAttribute('aria-controls', `expand-${task.id}`);
     cardEl.addEventListener('click', () => toggleTask(task.id));
     cardEl.addEventListener('keydown', e => {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTask(task.id); }
@@ -676,6 +677,38 @@ function markTaskDone(taskId) {
   if (expandedTaskId === taskId) expandedTaskId = null;
 
   updateProgress();
+  showUndoToast(taskId);
+}
+
+// ─── UNDO TOAST ───────────────────────────────
+let _undoTaskId  = null;
+let _undoTimer   = null;
+
+function showUndoToast(taskId) {
+  _undoTaskId = taskId;
+  clearTimeout(_undoTimer);
+  const toast = document.getElementById('undo-toast');
+  toast.classList.remove('hidden');
+  _undoTimer = setTimeout(() => {
+    toast.classList.add('hidden');
+    _undoTaskId = null;
+  }, 4000);
+}
+
+function undoTaskDone() {
+  if (!_undoTaskId) return;
+  clearTimeout(_undoTimer);
+  document.getElementById('undo-toast').classList.add('hidden');
+
+  const taskId = _undoTaskId;
+  _undoTaskId = null;
+
+  const task = state.tasks.find(t => t.id === taskId);
+  if (!task) return;
+  task.done    = false;
+  task.started = false;
+  saveTaskState();
+  renderPlan();   // full re-render restores accordion, buttons, notes
 }
 
 // ─── MODALS ───────────────────────────────────
