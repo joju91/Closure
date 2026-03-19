@@ -136,6 +136,28 @@ body {
 }
 .back-btn:hover { color: var(--text-primary); }
 
+/* ─── NAV LANDING LINKS ──────────────────────── */
+.nav-landing-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.nav-text-link {
+  font-size: 0.88rem;
+  color: var(--text-soft);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+.nav-text-link:hover { color: var(--text-primary); }
+
+/* ─── NAV PLAN ACTIONS ───────────────────────── */
+.nav-plan-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 /* ─── LANDING ────────────────────────────────── */
 #screen-landing .nav {
   background: transparent;
@@ -180,6 +202,75 @@ body {
   font-size: 0.85rem;
   color: var(--text-muted);
 }
+
+/* ─── LANDING SECTIONS (Om / Integritet) ────── */
+.landing-section {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 56px 20px;
+  border-top: 1px solid var(--border);
+}
+.landing-section h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 14px;
+  color: var(--text-primary);
+}
+.landing-section p {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  line-height: 1.75;
+  margin-bottom: 10px;
+}
+.landing-section p:last-child { margin-bottom: 0; }
+.landing-contact-link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.landing-contact-link:hover { text-decoration: underline; }
+.legal-disclaimer {
+  font-size: 0.82rem !important;
+  color: var(--text-muted) !important;
+  background: var(--grey-bg);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px !important;
+  margin-top: 10px;
+  line-height: 1.6 !important;
+}
+.privacy-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.privacy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-light);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* ─── LANDING FOOTER ─────────────────────────── */
+.landing-footer {
+  background: var(--text-primary);
+  color: rgba(255,255,255,0.5);
+  padding: 20px;
+  text-align: center;
+  font-size: 0.8rem;
+}
+.landing-footer a {
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+}
+.landing-footer a:hover { color: #fff; text-decoration: underline; }
 
 /* ─── ONBOARDING (fullscreen conversational) ─── */
 #screen-onboarding {

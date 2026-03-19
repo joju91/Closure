@@ -16,6 +16,10 @@
 <div id="screen-landing" class="screen active">
   <nav class="nav">
     <div class="logo">Closure</div>
+    <div class="nav-landing-links">
+      <a href="#section-om" class="nav-text-link">Om</a>
+      <a href="#section-integritet" class="nav-text-link">Integritet</a>
+    </div>
   </nav>
   <div class="landing-hero">
     <div class="landing-content">
@@ -26,6 +30,35 @@
       <p class="landing-note">Gratis att börja. Ingen registrering krävs.</p>
     </div>
   </div>
+
+  <!-- Om Closure -->
+  <section class="landing-section" id="section-om">
+    <h2>Om Closure</h2>
+    <p>Closure byggdes för att göra en av livets svåraste perioder lite lättare att navigera. Vi hjälper dig strukturera det praktiska — utan att du ska behöva söka information på egen hand i sorgen.</p>
+    <p>Har du frågor, hittat något fel eller vill ge feedback? Hör av dig: <a class="landing-contact-link" href="mailto:hej@closure.se">hej@closure.se</a></p>
+    <p class="legal-disclaimer">Closure ger inte juridisk rådgivning. Informationen är av generell karaktär och baserad på svenska förhållanden. Vid tveksamheter — konsultera en jurist eller begravningsbyrå.</p>
+  </section>
+
+  <!-- Integritet -->
+  <section class="landing-section" id="section-integritet">
+    <h2>Din integritet</h2>
+    <p>Closure lagrar all information lokalt i din webbläsare — ingenting skickas till någon server. Din plan, dina anteckningar och eventuellt personnummer finns bara på din enhet.</p>
+    <p>Om du delar planen med någon via länk ingår namn och dina svar, men aldrig personnummer. Rensar du webbläsarens data försvinner allt.</p>
+    <div class="privacy-badges">
+      <span class="privacy-badge">🔒 Ingen server</span>
+      <span class="privacy-badge">🖥 Sparas bara lokalt</span>
+      <span class="privacy-badge">📤 Personnummer delas aldrig</span>
+      <span class="privacy-badge">👤 Inget konto krävs</span>
+    </div>
+  </section>
+
+  <footer class="landing-footer">
+    <p>© 2025 Closure &nbsp;·&nbsp;
+       <a href="mailto:hej@closure.se">Kontakt</a> &nbsp;·&nbsp;
+       <a href="#section-integritet">Integritet</a> &nbsp;·&nbsp;
+       <a href="#section-om">Om</a>
+    </p>
+  </footer>
 </div>
 
 <!-- ═══════════════════════════════════════════
@@ -164,7 +197,10 @@
   <!-- Nav -->
   <nav class="nav nav-light nav-plan">
     <div class="logo">Closure</div>
-    <button class="btn-ghost btn-sm" onclick="openShareModal()">Dela plan</button>
+    <div class="nav-plan-actions">
+      <button class="btn-ghost btn-sm" onclick="editAnswers()">Ändra svar</button>
+      <button class="btn-ghost btn-sm" onclick="openShareModal()">Dela plan</button>
+    </div>
   </nav>
 
   <!-- Tabs -->

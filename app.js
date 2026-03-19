@@ -37,6 +37,37 @@ function startOnboarding() {
   showScreen('screen-onboarding');
 }
 
+function editAnswers() {
+  // Same as startOnboarding but pre-fills existing answers
+  startOnboarding();
+  obPrefillAnswers();
+}
+
+function obPrefillAnswers() {
+  // Step 1 — relation
+  document.querySelectorAll('#ob-step-1 .ob-choice').forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.val === state.relation);
+  });
+  // Step 2 — timing
+  document.querySelectorAll('#ob-step-2 .ob-choice').forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.val === state.timing);
+  });
+  // Step 3 — checkboxes (:has CSS handles visual state)
+  document.querySelectorAll('#ob-step-3 input[type="checkbox"]').forEach(cb => {
+    cb.checked = !!state[cb.dataset.key];
+  });
+  // Step 4 — ansvar
+  document.querySelectorAll('#ob-step-4 .ob-choice').forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.val === state.ansvar);
+  });
+  // Step 5 — name
+  const nameEl = document.getElementById('deceased-name');
+  if (nameEl) nameEl.value = state.name || '';
+  // Step 6 — personnr
+  const pnrEl = document.getElementById('deceased-personnr');
+  if (pnrEl) pnrEl.value = state.personnr || '';
+}
+
 // ─── ONBOARDING (conversational) ─────────────
 const OB_TOTAL = 6;
 let obCurrentStep = 1;
