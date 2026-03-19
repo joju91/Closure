@@ -1302,11 +1302,14 @@ body {
 
 /* ─── RESPONSIVE ─────────────────────────────── */
 @media (max-width: 600px) {
-  :root { --nav-height: 57px; }
+  :root {
+    --nav-height: 57px;
+    --bottom-nav-height: 58px;
+  }
   .nav { padding: 16px 20px; }
   .nav-plan { padding: 12px 20px; }
   .onboarding-wrap { padding: 24px 16px 60px; }
-  .plan-wrap { padding: 24px 16px 80px; }  /* extra bottom for shared-banner */
+  .plan-wrap { padding: 24px 16px 140px; } /* extra for bottom nav + safe area */
   .choice-grid { grid-template-columns: 1fr; }
   .checkbox-grid { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
@@ -1316,4 +1319,37 @@ body {
   .landing-headline { font-size: 1.8rem; }
   .task-expand { padding: 14px 16px 18px 16px; }
   .ob-stage { align-items: flex-start; padding-top: 32px; }
+
+  /* ── Bottom tab navigation ── */
+  .plan-tabs-bar {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 1px solid var(--border);
+    border-bottom: none;
+    /* iOS safe area */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    z-index: 95;
+  }
+  .plan-tabs {
+    max-width: 100%;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .plan-tab {
+    padding: 16px 12px;
+    font-size: 0.9rem;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* Undo toast above bottom nav on mobile */
+  .undo-toast {
+    bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 12px);
+    white-space: normal;
+    max-width: calc(100vw - 32px);
+  }
 }

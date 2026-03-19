@@ -1,0 +1,19 @@
+{
+  "name": "Closure",
+  "short_name": "Closure",
+  "description": "Praktisk guide vid dödsfall — steg för steg.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F8F7F5",
+  "theme_color": "#2C4A6E",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
