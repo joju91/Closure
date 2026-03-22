@@ -13,6 +13,9 @@ const state = {
   skulder:     false,
   utland:      false,
   minderarig:  false,
+  fordon:      false,
+  husdjur:     false,
+  hyresratt:   false,
   ansvar:      null,
   name:        '',
   personnr:    '',
@@ -157,9 +160,19 @@ const TASK_LIBRARY = [
 
   // ── ALWAYS ─────────────────────────────────
   {
+    id: 'narmaste_anhörig',
+    title: 'Påbörja kontaktrundringen',
+    desc: 'Det här sker i etapper — du behöver inte nå alla på en gång. Börja med de allra närmaste: familj och nära vänner. Övriga kan meddelas under de kommande dagarna. Det är okej att be någon annan hjälpa till.',
+    urgency: 'today',
+    time: 'Din tid',
+    link: null,
+    triggers: [],
+    notesPlaceholder: 'Vem har meddelats, vem återstår…',
+  },
+  {
     id: 'begravningsbyra',
     title: 'Kontakta en begravningsbyrå',
-    desc: 'Begravningsbyrån tar hand om kroppen och hjälper dig med det praktiska kring begravningen. Du behöver inte ha alla svar klara när du ringer — de guidar dig. Några alternativ att börja med:',
+    desc: 'Begravningsbyrån tar hand om kroppen, sköter registreringen hos Skatteverket och hjälper dig planera ceremonin. Du behöver inte ha alla svar klara när du ringer — de guidar dig. Några alternativ:',
     urgency: 'today',
     time: 'ca 30 min',
     link: null,
@@ -171,31 +184,12 @@ const TASK_LIBRARY = [
     ],
   },
   {
-    id: 'narmaste_anhörig',
-    title: 'Meddela närmaste anhöriga',
-    desc: 'Om du inte redan gjort det — informera familj och nära vänner om vad som hänt. Det är okej att be någon annan hjälpa till med detta.',
-    urgency: 'today',
-    time: 'Din tid',
-    link: null,
-    triggers: [],
-  },
-  {
-    id: 'skatteverket',
-    title: 'Skatteverket registrerar dödsfallet automatiskt',
-    desc: 'I Sverige registrerar sjukhuset eller begravningsbyrån normalt dödsfallet hos Skatteverket. Du behöver vanligtvis inte göra något — men bekräfta detta med begravningsbyrån.',
-    urgency: 'today',
-    time: 'ca 5 min',
-    link: 'https://www.skatteverket.se',
-    phone: '0771-567 567',
-    triggers: [],
-  },
-  {
     id: 'dodsbevis',
-    title: 'Beställ dödsbevis',
-    desc: 'Du behöver dödsbevis för att hantera banker, försäkringar och myndigheter. Begravningsbyrån hjälper ofta till, annars beställer du det via Skatteverket. Ha personnumret tillgängligt när du ringer.',
+    title: 'Beställ dödsfallsintyg',
+    desc: 'Dödsbeviset utfärdas automatiskt av läkaren. Det du behöver beställa är <strong>dödsfallsintyg med släktutredning</strong> från Skatteverket — det är detta dokument som banker, försäkringsbolag och myndigheter kräver för att du ska få företräda dödsboet. Ha personnumret tillgängligt.',
     urgency: 'today',
     time: 'ca 15 min',
-    link: 'https://www.skatteverket.se',
+    link: 'https://www.skatteverket.se/privat/folkbokforing/dodsfall.html',
     phone: '0771-567 567',
     triggers: [],
   },
@@ -211,9 +205,29 @@ const TASK_LIBRARY = [
 
   // ── WEEK ───────────────────────────────────
   {
+    id: 'begravningsceremoni',
+    title: 'Planera begravningsceremonin',
+    desc: 'Bestäm vem i familjen som ansvarar för vad — och se till att någon förmedlar era önskemål till begravningsbyrån.<br><br>Vem ansvarar för musik? Vem håller tal? Vem ordnar minnesstunden? Vem samlar in den dödes eventuella önskemål?',
+    urgency: 'week',
+    time: 'ca 30 min med familjen',
+    link: null,
+    triggers: [],
+    notesPlaceholder: 'Vem ansvarar för vad — musik, tal, minnesstund, önskemål…',
+  },
+  {
+    id: 'fullmakt_dodsbo',
+    title: 'Upprätta fullmakt för dödsboet',
+    urgency: 'week',
+    time: 'ca 30 min',
+    desc: 'När ni är flera som ärver måste normalt alla godkänna varje åtgärd — vilket snabbt blir tungrott. Lösningen är att alla skriver en fullmakt till en person som får agera för er gemensamt: betala räkningar, kontakta banker och hantera löpande ärenden. Fullmakten måste visas upp i original vid bankbesök.',
+    link: null,
+    triggers: ['flera_delägare'],
+    hasDoc: 'fullmakt',
+  },
+  {
     id: 'bouppteckning',
     title: 'Planera bouppteckningen',
-    desc: 'En bouppteckning är en förteckning över den avlidnes tillgångar och skulder. Den ska göras inom 3 månader. Du kan anlita en jurist — det rekommenderas om boet är komplext. Några alternativ:',
+    desc: 'En bouppteckning är en förteckning över den avlidnes tillgångar och skulder. Den ska vara klar inom 3 månader och skickas till Skatteverket inom 4 månader.<br><br><strong>Göra själv:</strong> Möjligt om boet är enkelt (bara bankmedel och lösöre). Kräver två utomstående vittnen som inte är arvingar. Sparar 6 500–15 000 kr.<br><strong>Anlita jurist:</strong> Rekommenderas vid fastighet, företag, testamente eller om arvingarna inte är överens.',
     urgency: 'week',
     time: 'Kontakta jurist inom veckan',
     link: null,
@@ -233,43 +247,36 @@ const TASK_LIBRARY = [
     triggers: [],
     hasDoc: 'bank',
     notesPlaceholder: 'Vet du vilka banker? Skriv de du känner till — det är okej att börja med en. (t.ex. Swedbank, SEB, Nordea…)',
+    resources: [
+      { label: 'Swedbank — dödsbo & efterlevande', url: 'https://www.swedbank.se/privat/mer-fran-swedbank/dodsfall.html' },
+      { label: 'SEB — när någon gått bort', url: 'https://seb.se/privat/dodsfall' },
+      { label: 'Nordea — dödsfall och dödsbo', url: 'https://www.nordea.se/privat/livshändelser/dodsfall/' },
+      { label: 'Handelsbanken — dödsfall', url: 'https://www.handelsbanken.se/sv/privat/livet/dodsfall' },
+      { label: 'Länsförsäkringar Bank — dödsfall', url: 'https://www.lansforsakringar.se/privat/bank/dodsfall/' },
+      { label: 'Skandiabanken — dödsfall', url: 'https://www.skandia.se/bank/dodsfall/' },
+    ],
   },
   {
     id: 'forsakringar',
     title: 'Gå igenom försäkringar',
-    desc: 'Kontrollera om det finns livförsäkring, olycksfallsförsäkring, hemförsäkring eller begravningsförsäkring. Ring respektive bolag och uppge personnummer och dödsbevis. Skriv ned vad du hittar nedan.',
-    urgency: 'week',
-    time: 'ca 1 timme',
-    link: null,
-    triggers: [],
-    hasDoc: 'forsakring',
-    notesPlaceholder: 'Vet du något försäkringsbolag? Skriv det du hittar — ett i taget är bra nog. (t.ex. Folksam, If, Skandia…)',
-  },
-  {
-    id: 'abonnemang',
-    title: 'Avsluta abonnemang och prenumerationer',
-    desc: 'Mobil, streaming, tidningar, el, gym — säg upp tjänster en efter en. Använd dokumentgeneratorn för att skapa uppsägningsbrev. Skriv ned det du vet eller hittar nedan.',
+    desc: `Försäkringar kan ge stora belopp som riskerar att aldrig sökas — gör en systematisk genomgång.<br><br>
+<strong>TGL (Tjänstegrupplivförsäkring)</strong> — De flesta anställda med kollektivavtal har detta. Begravningshjälp: ~29 400 kr till dödsboet. Grundbelopp till partner/barn: upp till ~350 000 kr. Måste sökas manuellt hos t.ex. Afa, Folksam eller KPA.<br><br>
+<strong>Hitta dolda försäkringar:</strong> Gå igenom bankutdrag efter premiebetalningar. Kontakta arbetsgivare och fackförbund. Ring de fyra stora (Folksam, If, Länsförsäkringar, Trygg-Hansa) och fråga om den avlidne hade engagemang.`,
     urgency: 'week',
     time: 'ca 1–2 timmar',
     link: null,
     triggers: [],
-    hasDoc: 'letter',
-    notesPlaceholder: 'Vet du några abonnemang eller tjänster? Notera dem här — du kan fylla på. (t.ex. Telia, Spotify, Netflix, el, gym…)',
-  },
-  {
-    id: 'dodsannons',
-    title: 'Dödsannons (om aktuellt)',
-    desc: 'Begravningsbyrån hjälper ofta till med dödsannonsen som en del av sina tjänster — fråga dem om det ingår. Vill ni publicera en egen annons i tidning eller på sociala medier kan Closure hjälpa dig formulera den.',
-    urgency: 'week',
-    time: 'ca 15 min',
-    link: null,
-    triggers: [],
-    hasDoc: 'annons',
+    hasDoc: 'forsakring',
+    notesPlaceholder: 'Vet du något försäkringsbolag? Skriv det du hittar — ett i taget är bra nog. (t.ex. Folksam, If, Skandia, Afa…)',
+    resources: [
+      { label: 'Afa Försäkring — TGL och dödsfall', url: 'https://www.afaforsakring.se/privatperson/dodsfall/' },
+      { label: 'Folksam — anmälan vid dödsfall', url: 'https://www.folksam.se/liv-halsa/nar-nagon-dor' },
+    ],
   },
   {
     id: 'arbetsgivare',
-    title: 'Kontakta arbetsgivaren (om aktuellt)',
-    desc: 'Om den avlidne var anställd: meddela arbetsgivaren om dödsfallet. Det kan finnas tjänstepension eller andra förmåner att ta tillvara.',
+    title: 'Kontakta arbetsgivaren och fackförbundet',
+    desc: 'Meddela arbetsgivaren om dödsfallet. Be dem bekräfta om den avlidne haft TGL (Tjänstegrupplivförsäkring) via kollektivavtal — detta är en livförsäkring som ger skattefritt engångsbelopp och måste sökas aktivt. Kontakta även fackförbundet, många har egna dödsfallsförsäkringar via t.ex. Bliwa eller Folksam.',
     urgency: 'week',
     time: 'ca 30 min',
     link: null,
@@ -278,9 +285,20 @@ const TASK_LIBRARY = [
 
   // ── LATER ──────────────────────────────────
   {
+    id: 'abonnemang',
+    title: 'Avsluta abonnemang och prenumerationer',
+    desc: 'Mobil, streaming, tidningar, el, gym — säg upp tjänster en efter en. Använd dokumentgeneratorn för att skapa uppsägningsbrev. Skriv ned det du vet eller hittar nedan.',
+    urgency: 'later',
+    time: 'ca 1–2 timmar',
+    link: null,
+    triggers: [],
+    hasDoc: 'letter',
+    notesPlaceholder: 'Vet du några abonnemang eller tjänster? Notera dem här — du kan fylla på. (t.ex. Telia, Spotify, Netflix, el, gym…)',
+  },
+  {
     id: 'arvskifte',
-    title: 'Genomför arvskifte',
-    desc: 'När bouppteckningen är klar delas tillgångarna upp enligt testamente eller lag. Detta kan ta tid och görs ofta med hjälp av jurist.',
+    title: 'Fördela arvet',
+    desc: 'När bouppteckningen är klar och godkänd av Skatteverket delas tillgångarna upp mellan arvingarna — enligt testamente eller enligt lag om inget testamente finns. Görs ofta med hjälp av jurist och kan ta tid om ni är oense.',
     urgency: 'later',
     time: 'Månader efter dödsfallet',
     link: null,
@@ -289,7 +307,11 @@ const TASK_LIBRARY = [
   {
     id: 'avsluta_konton',
     title: 'Avsluta digitala konton',
-    desc: 'E-post, sociala medier och andra onlinetjänster behöver avslutas eller minnesmärkas. Tänk på att spara viktig information (foton, dokument) innan du stänger konton. Notera vad du hittar nedan.',
+    desc: `Spara viktiga foton och dokument innan du stänger konton. Varje plattform har egna rutiner:<br><br>
+<strong>Facebook/Instagram:</strong> Kan minnesmärkas eller raderas. Kräver dödsfallsintyg till supporten.<br>
+<strong>Google:</strong> Kontrollera "Hantering av inaktiva konton" — utan förinställningar kan anhöriga begära data via supporten.<br>
+<strong>Apple/iCloud:</strong> Utan en förutbestämd "digital arvskontakt" krävs ofta domstolsbeslut för att få ut foton och filer.<br><br>
+Säg även upp betaltjänster som Klarna, PayPal, spelkonton — logga aldrig in med den avlidnes lösenord, använd de officiella vägarna.`,
     urgency: 'later',
     time: 'ca 1–2 timmar',
     link: null,
@@ -308,15 +330,6 @@ const TASK_LIBRARY = [
 
   // ── CONDITIONAL: Fastighet ─────────────────
   {
-    id: 'fastighet_lagfart',
-    title: 'Lagfartsutredning — fastighet',
-    desc: 'Om den avlidne ägde en fastighet behöver du ansöka om lagfartsändring hos Lantmäteriet. Görs efter avslutad bouppteckning.',
-    urgency: 'later',
-    time: 'Kontakta jurist',
-    link: 'https://www.lantmateriet.se',
-    triggers: ['fastighet'],
-  },
-  {
     id: 'fastighet_boende',
     title: 'Besluta om bostadens framtid',
     desc: 'Ska bostaden säljas, övertas av anhörig, eller hyras ut? Ta detta beslut med alla delägare i boet.',
@@ -324,6 +337,27 @@ const TASK_LIBRARY = [
     time: 'Diskussion med familjen',
     link: null,
     triggers: ['fastighet'],
+  },
+  {
+    id: 'bostadsratt_brf',
+    title: 'Kontakta bostadsrättsföreningen',
+    desc: 'Meddela föreningen om dödsfallet och fråga vad som gäller för överlåtelse av bostadsrätten till arvinge eller försäljning. BRF:en behöver godkänna en ny ägare och har egna rutiner för detta.',
+    urgency: 'week',
+    time: 'ca 20 min',
+    link: null,
+    triggers: ['fastighet'],
+  },
+
+  // ── CONDITIONAL: Hyresrätt ────────────────
+  {
+    id: 'hyresratt_uppsagning',
+    title: 'Säg upp hyreskontrakt',
+    urgency: 'today',
+    time: 'Gör inom 1 månad — annars löper kontraktet vidare',
+    desc: 'Hyreskontrakt upphör inte automatiskt vid dödsfall. Säg upp direkt till hyresvärden skriftligen — om det görs inom en månad från dödsfallet är uppsägningstiden normalt en månad. Väntar du längre löper vanlig uppsägningstid (ofta 3 månader). Ha dödsbevis redo.',
+    link: null,
+    triggers: ['hyresratt'],
+    hasDoc: 'letter',
   },
 
   // ── CONDITIONAL: Företag ───────────────────
@@ -340,7 +374,7 @@ const TASK_LIBRARY = [
   {
     id: 'foretag_avveckling',
     title: 'Planera avveckling eller överlåtelse av företaget',
-    desc: 'Ska bolaget avvecklas, säljas, eller tas över av arvinge? Detta är komplext — anlita en revisor och jurist tidigt.',
+    desc: 'Ska bolaget avvecklas, säljas, eller tas över av en arvinge? Detta är komplext och tidskänsligt — anlita revisor och jurist tidigt.<br><br><strong>Om det finns aktiva kunder eller uppdrag:</strong> Dödsboet tar automatiskt över ägarens rättigheter och skyldigheter. Kontakta kunderna och informera om dödsfallet — var transparent om vad som händer. Kan pågående avtal inte fullföljas, meddela motparten snarast och diskutera avslut i god anda.<br><br><strong>Praktiska steg nu:</strong><br>1. Kontakta företagets revisor och redovisningskonsult direkt.<br>2. Säkerställ att löpande räkningar, löner och moms hanteras — betalstopp sker inte automatiskt.<br>3. Meddela Bolagsverket om dödsfallet (se uppgiften ovan).<br>4. Använd <em>Dokument → Skatteverket</em> härifrån för att begära avregistrering av F-skatt.',
     urgency: 'week',
     time: 'Kontakta revisor',
     link: null,
@@ -351,7 +385,7 @@ const TASK_LIBRARY = [
   {
     id: 'skulder_inventering',
     title: 'Inventera skulder noggrant',
-    desc: 'Skulder betalas av dödsboet innan arv utbetalas. Se till att ha en komplett bild — lån, krediter, obetalda räkningar.',
+    desc: 'Samla en komplett bild av lån, krediter och obetalda räkningar. Skulder betalas av dödsboet innan arv utbetalas.<br><br><strong>Viktigt:</strong> Begravnings- och bouppteckningskostnader prioriteras före alla andra skulder. Om boet inte räcker till kontaktar du borgenärerna och begär anstånd tills bouppteckningen är klar. Du som anhörig är <em>inte</em> personligt betalningsansvarig för den avlidnes skulder.',
     urgency: 'week',
     time: 'ca 1–2 timmar',
     link: null,
@@ -372,22 +406,29 @@ const TASK_LIBRARY = [
   {
     id: 'utland_juridik',
     title: 'Hämta juridisk rådgivning för utlandstillgångar',
-    desc: 'Tillgångar i annat land lyder under det landets lagar. Du behöver sannolikt lokal hjälp — Closure kan inte hantera detta automatiskt.',
+    desc: 'Tillgångar i annat land — bankkonto, bostad, pension — lyder under det landets lagar och kräver separat utredning. EU:s arvsförordning (nr 650/2012) gäller om den hemmahörande i Sverige dog inom EU, men utanför EU gäller det ländets egna regler.<br><br><strong>Börja med dessa steg:</strong><br>1. Kontakta banken i det andra landet och meddela dödsfallet.<br>2. Anlita en jurist specialiserad på internationell arvsrätt — fråga begravningsbyrån eller Advokatsamfundet.<br>3. Hör med Utrikesdepartementet om konsulär hjälp vid bostad eller tillgångar utanför EU.<br>4. Se till att bouppteckningen täcker utlandstillgångarna — en svensk bouppteckning räcker ofta inom EU, men ibland krävs en lokal kopia.',
     urgency: 'week',
     time: 'Kontakta jurist',
     link: null,
     triggers: ['utland'],
+    resources: [
+      { label: 'Advokatsamfundet — hitta specialist i internationell arvsrätt', url: 'https://www.advokatsamfundet.se/hitta-advokat' },
+      { label: 'UD — konsulär hjälp vid dödsfall utomlands', url: 'https://www.swedenabroad.se/sv/om-utlandet-for-svenska-medborgare/konsulart-bistand/' },
+    ],
   },
 
   // ── CONDITIONAL: Minderårigt barn ─────────
   {
     id: 'minderarig_goman',
     title: 'Utred om god man behövs för minderårigt barn',
-    desc: 'Om ett minderårigt barn är delägare i dödsboet kan en god man behöva utses. Kontakta tingsrätten eller socialtjänsten.',
+    desc: 'Om ett minderårigt barn är delägare i dödsboet kan en god man behöva utses för att representera barnet. En förälder kan inte ensam företräda sitt barn i ett dödsbo där de själva är delägare — det uppstår en intressekonflikt.<br><br>Kontakta <strong>överförmyndaren i din kommun</strong> — det är de som hanterar detta. Du hittar dem via din kommuns hemsida (sök "överförmyndare [kommunens namn]"). Be om en handläggningstid direkt — processen kan ta några veckor.',
     urgency: 'today',
-    time: 'Ring tingsrätten',
+    time: 'Kontakta överförmyndaren',
     link: null,
     triggers: ['minderarig'],
+    resources: [
+      { label: 'Sveriges Kommuner och Regioner — hitta din överförmyndare', url: 'https://skr.se/skr/demokratiledningstyrning/valmaktfordelning/overformyndare.html' },
+    ],
   },
 
   // ── CONDITIONAL: Make/maka ────────────────
@@ -432,6 +473,49 @@ const TASK_LIBRARY = [
     link: null,
     triggers: ['inget_testamente'],
   },
+
+  // ── CONDITIONAL: Fordon ───────────────────
+  {
+    id: 'fordon_transport',
+    title: 'Byt ägare på fordon',
+    urgency: 'later',
+    time: 'ca 30 min + posthantering',
+    desc: 'Fordon i ett dödsbo kräver en manuell process — de digitala tjänsterna hos Transportstyrelsen fungerar inte när säljaren är avliden. Använd registreringsbevisets gula del (Del 2) i original. En dödsboföreträdare skriver under i nuvarande ägares ställe. Den nye ägaren måste teckna trafikförsäkring från ägarbytesdagen.',
+    link: 'https://www.transportstyrelsen.se/sv/vagtrafik/fordon/agarbyte/',
+    triggers: ['fordon'],
+  },
+
+  // ── CONDITIONAL: Husdjur ──────────────────
+  {
+    id: 'husdjur_omplacering',
+    title: 'Ordna omsorg för husdjur',
+    urgency: 'week',
+    time: 'Din tid',
+    desc: 'Husdjur är juridiskt lös egendom och hanteras i bouppteckning och testamente. Om den avlidne hade hund måste ägarbyte registreras i Jordbruksverkets hundregister av den nya ägaren. Behöver djuret omplaceras finns djurhem och uppfödare som kan hjälpa till.',
+    link: 'https://www.jordbruksverket.se/djur/hundar-katter-och-harliga-djur/hundar/registrera-din-hund',
+    triggers: ['husdjur'],
+  },
+
+  // ── ALWAYS: Hjälpmedel och mediciner ──────
+  {
+    id: 'hjalpmedel_mediciner',
+    title: 'Återlämna hjälpmedel och mediciner',
+    urgency: 'week',
+    time: 'ca 30 min',
+    desc: 'Rullstol, säng, lyft och andra medicintekniska produkter är ofta lån från regionen och ska återlämnas rengjorda. Större hjälpmedel hämtas ofta kostnadsfritt — ring regionen eller kommunen. Överblivna mediciner (tabletter, sprutor, krämer) lämnas till närmaste apotek för säker destruktion.',
+    triggers: [],
+  },
+
+  // ── ALWAYS: Bostadsavveckling ──────────────
+  {
+    id: 'bostadsavveckling',
+    title: 'Töm och städa bostaden',
+    urgency: 'later',
+    time: 'Dagar–veckor',
+    desc: 'Samordna med övriga arvingar vad som sparas, säljas eller skänks bort innan bostaden lämnas tillbaka eller säljs.<br><br><strong>RUT-avdraget gäller inte dödsbo</strong> — dödsboet är en egen juridisk person och Skatteverket medger inte skattereduktion. Räkna med att betala fullt pris ur dödsboets tillgångar. Typisk kostnad: 4 000–15 000 kr beroende på storlek.',
+    triggers: [],
+    notesPlaceholder: 'Vem ansvarar för tömningen? Vad ska sparas, säljas, skänkas?',
+  },
 ];
 
 function buildTasks() {
@@ -444,6 +528,10 @@ function buildTasks() {
   if (state.testamente)  triggers.add('testamente');
   if (!state.testamente) triggers.add('inget_testamente');
   if (state.relation === 'make') triggers.add('make');
+  if (state.ansvar === 'flera') triggers.add('flera_delägare');
+  if (state.fordon)      triggers.add('fordon');
+  if (state.husdjur)     triggers.add('husdjur');
+  if (state.hyresratt)   triggers.add('hyresratt');
 
   const addBegravningNote = state.timing === 'veckor';
 
@@ -465,7 +553,7 @@ let _notesCache = null;
 
 function _getNotes() {
   if (_notesCache) return _notesCache;
-  try { _notesCache = JSON.parse(localStorage.getItem('closure_notes') || '{}'); }
+  try { _notesCache = JSON.parse(localStorage.getItem('efterplan_notes') || '{}'); }
   catch(e) { _notesCache = {}; }
   return _notesCache;
 }
@@ -478,7 +566,7 @@ function _debounce(fn, ms) {
 const saveTaskNote = _debounce(function(taskId, value) {
   const notes = _getNotes();
   notes[taskId] = value;
-  try { localStorage.setItem('closure_notes', JSON.stringify(notes)); } catch(e) {}
+  try { localStorage.setItem('efterplan_notes', JSON.stringify(notes)); } catch(e) {}
 }, 400);
 
 function getTaskNote(taskId) {
@@ -487,19 +575,19 @@ function getTaskNote(taskId) {
 
 function saveTaskState() {
   const saved = {};
-  state.tasks.forEach(t => { saved[t.id] = { done: t.done, started: t.started }; });
-  try { localStorage.setItem('closure_tasks', JSON.stringify(saved)); } catch(e) {}
+  state.tasks.forEach(t => { saved[t.id] = { done: t.done, started: t.started, assignee: t.assignee || null }; });
+  try { localStorage.setItem('efterplan_tasks', JSON.stringify(saved)); } catch(e) {}
 }
 
 function loadTaskState() {
   try {
-    const saved = JSON.parse(localStorage.getItem('closure_tasks') || '{}');
+    const saved = JSON.parse(localStorage.getItem('efterplan_tasks') || '{}');
     state.tasks = state.tasks.map(t => {
       const s = saved[t.id];
       if (!s) return t;
       // Backward-compat: old format stored a boolean
       if (typeof s === 'boolean') return { ...t, done: s, started: false };
-      return { ...t, done: s.done || false, started: s.started || false };
+      return { ...t, done: s.done || false, started: s.started || false, assignee: s.assignee || null };
     });
   } catch(e) {}
 }
@@ -511,6 +599,12 @@ function renderPlan() {
     name ? `Plan för ${name}s dödsbo` : 'Din plan';
   document.getElementById('plan-sub').textContent =
     'Uppdateras allteftersom du går vidare. Det finns inget fel sätt att börja.';
+
+  const defEl = document.getElementById('plan-dodsbo-def');
+  if (defEl) {
+    const n = state.name || 'den som gick bort';
+    defEl.textContent = `Dödsboet är ett tillfälligt begrepp för allt ${n} lämnade efter sig — tillgångar och skulder. Det upphör när allt är fördelat.`;
+  }
 
   const today  = state.tasks.filter(t => t.urgency === 'today');
   const week   = state.tasks.filter(t => t.urgency === 'week');
@@ -545,6 +639,12 @@ function renderPlan() {
   renderTaskList('tasks-today', today);
   renderTaskList('tasks-week',  week);
   renderTaskList('tasks-later', later);
+
+  // Show Skatteverket doc button only if deceased had a company (F-skatt relevant)
+  const skvBtn = document.getElementById('doc-btn-skatteverket');
+  if (skvBtn) skvBtn.classList.toggle('hidden', !state.foretag);
+  const fullmaktBtn = document.getElementById('doc-btn-fullmakt');
+  if (fullmaktBtn) fullmaktBtn.classList.toggle('hidden', state.ansvar !== 'flera');
 
   document.getElementById('count-today').textContent = `${today.length} uppgifter`;
   document.getElementById('count-week').textContent  = `${week.length} uppgifter`;
@@ -583,12 +683,15 @@ function renderTaskList(containerId, tasks) {
            oninput="autoStartOnNote('${task.id}'); saveTaskNote('${task.id}', this.value)">${getTaskNote(task.id)}</textarea>`
       : '';
 
+    const notifyHtml = task.id === 'narmaste_anhörig' ? renderNotifyList() : '';
+
     const docHtml = task.hasDoc && !task.done
       ? `<button class="task-expand-doc" onclick="event.stopPropagation();switchTab('docs');showDocForm('${task.hasDoc}')">Generera dokument →</button>`
       : '';
 
     const doneHtml = task.done
-      ? `<span class="task-expand-done">Klar ✓</span>`
+      ? `<span class="task-expand-done">Klar ✓</span>
+         <button class="task-expand-undo-btn" onclick="event.stopPropagation();undoTaskDoneManual('${task.id}')">Markera som ej klar</button>`
       : task.started
       ? `<button class="task-expand-btn" onclick="event.stopPropagation();markTaskDone('${task.id}')">Markera som klar</button>`
       : `<button class="task-expand-start-btn" onclick="event.stopPropagation();markTaskStarted('${task.id}')">Påbörjad</button>
@@ -599,21 +702,26 @@ function renderTaskList(containerId, tasks) {
     const startedBadge = task.started && !task.done
       ? `<span class="task-started-badge">Påbörjad</span>`
       : '';
+    const assigneeBadge = task.assignee
+      ? `<span class="task-assignee-badge" id="assignee-badge-${task.id}">${task.assignee}</span>`
+      : `<span class="task-assignee-badge hidden" id="assignee-badge-${task.id}"></span>`;
 
     wrap.innerHTML = `
       <div class="task-card${cardClass}" id="task-card-${task.id}">
         <div class="task-check${checkClass}" id="check-${task.id}"></div>
         <div class="task-body">
           <div class="task-title">${task.title}</div>
-          <div class="task-time">${task.time}${startedBadge}</div>
+          <div class="task-time">${task.time}${startedBadge}${assigneeBadge}</div>
         </div>
         <div class="task-chevron" id="chevron-${task.id}" aria-hidden="true">›</div>
       </div>
       <div class="task-expand hidden" id="expand-${task.id}">
-        <p class="task-expand-desc">${task.desc}</p>
+        <div class="task-expand-desc">${task.desc}</div>
         ${linkHtml}
         ${phoneHtml}
         ${resourcesHtml}
+        ${renderAssigneePicker(task.id)}
+        ${notifyHtml}
         ${notesHtml}
         <div class="task-expand-actions">
           ${doneHtml}
@@ -642,7 +750,6 @@ function renderTaskList(containerId, tasks) {
 
 function toggleTask(taskId) {
   const task = state.tasks.find(t => t.id === taskId);
-  if (task && task.done) return;
 
   const isOpen = expandedTaskId === taskId;
 
@@ -742,6 +849,162 @@ function markTaskDone(taskId) {
   showUndoToast(taskId);
 }
 
+// ─── ASSIGNEES ────────────────────────────────
+function _getAssignees() {
+  try { return JSON.parse(localStorage.getItem('closure_assignees') || '[]'); } catch(e) { return []; }
+}
+function _saveAssignees(list) {
+  try { localStorage.setItem('closure_assignees', JSON.stringify(list)); } catch(e) {}
+}
+function getTaskAssignee(taskId) {
+  const task = state.tasks.find(t => t.id === taskId);
+  return task ? (task.assignee || null) : null;
+}
+function setTaskAssignee(taskId, name) {
+  const task = state.tasks.find(t => t.id === taskId);
+  if (!task) return;
+  task.assignee = (task.assignee === name) ? null : name;
+  saveTaskState();
+  _refreshAssigneePicker(taskId);
+  _refreshAssigneeBadge(taskId);
+}
+function addNewAssignee(taskId) {
+  const input = document.getElementById(`assignee-input-${taskId}`);
+  const name = input ? input.value.trim() : '';
+  if (!name) return;
+  const list = _getAssignees();
+  if (!list.includes(name)) { list.push(name); _saveAssignees(list); }
+  setTaskAssignee(taskId, name);
+  if (input) { input.value = ''; input.classList.add('hidden'); }
+}
+function toggleAssigneeInput(taskId) {
+  const input = document.getElementById(`assignee-input-${taskId}`);
+  if (!input) return;
+  input.classList.toggle('hidden');
+  if (!input.classList.contains('hidden')) input.focus();
+}
+function _refreshAssigneePicker(taskId) {
+  const picker = document.getElementById(`assignee-picker-${taskId}`);
+  if (picker) picker.innerHTML = _buildAssigneePickerInner(taskId);
+}
+function _refreshAssigneeBadge(taskId) {
+  const badge = document.getElementById(`assignee-badge-${taskId}`);
+  const task = state.tasks.find(t => t.id === taskId);
+  if (!badge || !task) return;
+  if (task.assignee) {
+    badge.textContent = task.assignee;
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+}
+function _buildAssigneePickerInner(taskId) {
+  const assignees = _getAssignees();
+  const current = getTaskAssignee(taskId);
+  const chips = assignees.map(n =>
+    `<button class="assignee-chip${n === current ? ' selected' : ''}"
+             onclick="event.stopPropagation();setTaskAssignee('${taskId}','${n.replace(/'/g,"\\'")}')">
+       ${n}
+     </button>`
+  ).join('');
+  return `${chips}
+    <button class="assignee-add-btn" title="Lägg till person" onclick="event.stopPropagation();toggleAssigneeInput('${taskId}')">+</button>
+    <input class="assignee-new-input hidden" id="assignee-input-${taskId}"
+           placeholder="Namn…"
+           onkeydown="if(event.key==='Enter'){event.preventDefault();addNewAssignee('${taskId}')}"
+           onclick="event.stopPropagation()" />`;
+}
+function renderAssigneePicker(taskId) {
+  return `<div class="task-assignee-section">
+    <span class="task-assignee-label">Ansvarig</span>
+    <div class="assignee-picker" id="assignee-picker-${taskId}">
+      ${_buildAssigneePickerInner(taskId)}
+    </div>
+  </div>`;
+}
+
+// ─── NOTIFY LIST ──────────────────────────────
+function _getNotifyList() {
+  try { return JSON.parse(localStorage.getItem('closure_notify_list') || '[]'); } catch(e) { return []; }
+}
+function _saveNotifyList(list) {
+  try { localStorage.setItem('closure_notify_list', JSON.stringify(list)); } catch(e) {}
+}
+function _genNotifyId() {
+  return Math.random().toString(36).slice(2, 10);
+}
+
+function addNotifyPerson() {
+  const input = document.getElementById('notify-new-input');
+  const name = input?.value.trim();
+  if (!name) return;
+  const list = _getNotifyList();
+  list.push({ id: _genNotifyId(), name, notified: false });
+  _saveNotifyList(list);
+  input.value = '';
+  _refreshNotifyList();
+}
+
+function toggleNotified(personId) {
+  const list = _getNotifyList();
+  const person = list.find(p => p.id === personId);
+  if (person) { person.notified = !person.notified; _saveNotifyList(list); }
+  _refreshNotifyList();
+}
+
+function removeNotifyPerson(personId) {
+  const list = _getNotifyList().filter(p => p.id !== personId);
+  _saveNotifyList(list);
+  _refreshNotifyList();
+}
+
+function _refreshNotifyList() {
+  const container = document.getElementById('notify-list-container');
+  if (!container) return;
+  container.innerHTML = _buildNotifyListInner();
+  const list = _getNotifyList();
+  const done = list.filter(p => p.notified).length;
+  const el = document.getElementById('notify-counter');
+  if (el) el.textContent = list.length ? `${done} av ${list.length} meddelade` : '';
+}
+
+function _buildNotifyListInner() {
+  const list = _getNotifyList();
+  if (!list.length) return '<p class="notify-empty">Inga tillagda än</p>';
+  return list.map(p => `
+    <div class="notify-person${p.notified ? ' notified' : ''}">
+      <button class="notify-check${p.notified ? ' checked' : ''}"
+        onclick="event.stopPropagation();toggleNotified('${p.id}')"
+        aria-label="Markera ${p.name} som meddelad">${p.notified ? '✓' : ''}</button>
+      <span class="notify-name">${p.name}</span>
+      <button class="notify-remove"
+        onclick="event.stopPropagation();removeNotifyPerson('${p.id}')"
+        aria-label="Ta bort ${p.name}">×</button>
+    </div>`).join('');
+}
+
+function renderNotifyList() {
+  const list = _getNotifyList();
+  const done = list.filter(p => p.notified).length;
+  const counterText = list.length ? `${done} av ${list.length} meddelade` : '';
+  return `<div class="notify-list-section">
+    <div class="notify-list-header">
+      <span class="notify-list-label">Att underrätta</span>
+      <span class="notify-counter" id="notify-counter">${counterText}</span>
+    </div>
+    <div class="notify-list-items" id="notify-list-container">
+      ${_buildNotifyListInner()}
+    </div>
+    <div class="notify-add-row">
+      <input class="notify-new-input" id="notify-new-input" type="text"
+        placeholder="Lägg till person…"
+        onclick="event.stopPropagation()"
+        onkeydown="if(event.key==='Enter'){event.stopPropagation();addNotifyPerson();}" />
+      <button class="notify-add-btn" onclick="event.stopPropagation();addNotifyPerson()">Lägg till</button>
+    </div>
+  </div>`;
+}
+
 // ─── UNDO TOAST ───────────────────────────────
 let _undoTaskId  = null;
 let _undoTimer   = null;
@@ -771,6 +1034,15 @@ function undoTaskDone() {
   task.started = false;
   saveTaskState();
   renderPlan();   // full re-render restores accordion, buttons, notes
+}
+
+function undoTaskDoneManual(taskId) {
+  const task = state.tasks.find(t => t.id === taskId);
+  if (!task) return;
+  task.done    = false;
+  task.started = false;
+  saveTaskState();
+  renderPlan();
 }
 
 // ─── MODALS ───────────────────────────────────
@@ -843,6 +1115,11 @@ function showDocForm(type) {
   if (type === 'forsakring') {
     const saved = getTaskNote('forsakringar');
     const el = document.getElementById('fors-bolag');
+    if (el && !el.value && saved) el.value = saved.split('\n')[0];
+  }
+  if (type === 'bank') {
+    const saved = getTaskNote('banker');
+    const el = document.getElementById('bank-name');
     if (el && !el.value && saved) el.value = saved.split('\n')[0];
   }
 
@@ -985,7 +1262,7 @@ function generateBank() {
 
   const { deceased, personnr, today } = getDocContext();
 
-  showDocResult('Banknotifiering — ' + bank, `${sender}
+  showDocResult('Brev till ' + bank, `${sender}
 ${email}
 
 ${today}
@@ -1024,7 +1301,7 @@ function generateForsakring() {
 
   const { deceased, personnr, today } = getDocContext();
 
-  showDocResult('Försäkringsanmälan — ' + bolag, `${sender}
+  showDocResult('Brev till ' + bolag, `${sender}
 ${email}
 
 ${today}
@@ -1058,30 +1335,112 @@ function generateAnnons() {
   const survivors = document.getElementById('annons-survivors').value.trim();
   const memory    = document.getElementById('annons-memory').value.trim();
   const funeral   = document.getElementById('annons-funeral').value.trim();
+  const ovrigt    = document.getElementById('annons-ovrigt').value.trim();
 
   clearFormError('err-annons');
   if (!name) { showFormError('err-annons', 'Ange den avlidnes namn.'); return; }
 
-  const lifeSpan = (born && died) ? `${born} – ${died}` : (died ? `Avled ${died}` : '');
-  const memLine  = memory ? `\n${memory}\n` : '';
-  const survLine = survivors ? `\nEfterlämnas av ${survivors}.` : '';
-  const funLine  = funeral ? `\nBegravning: ${funeral}.` : '\nBegravning meddelas i god tid.';
+  const lifeSpan  = (born && died) ? `${born} – ${died}` : (died ? `Avled ${died}` : '');
+  const memLine   = memory ? `\n${memory}\n` : '';
+  const survLine  = survivors ? `\nEfterlämnas av ${survivors}.` : '';
+  const funLine   = funeral ? `\nBegravning: ${funeral}.` : '\nBegravning meddelas i god tid.';
+  const ovrigtLine = ovrigt ? `\n\n${ovrigt}` : '';
 
   showDocResult('Dödsannons — ' + name, `${name}
 ${lifeSpan}
 ${memLine}${survLine}
 ${funLine}
 
-Sörjd och saknad.`.trim());
+Sörjd och saknad.${ovrigtLine}`.trim());
 }
 
-function showDocResult(title, text) {
+function showDocResult(title, text, emailSubject) {
   document.querySelectorAll('.doc-form').forEach(f => f.classList.add('hidden'));
   document.getElementById('doc-chooser').classList.add('hidden');
   document.getElementById('result-title').textContent = title;
   document.getElementById('doc-output-text').textContent = text;
   document.getElementById('doc-result').classList.remove('hidden');
   document.getElementById('copied-msg').classList.add('hidden');
+  const mailtoBtn = document.getElementById('result-mailto');
+  if (mailtoBtn) {
+    const subj = encodeURIComponent(emailSubject || title);
+    const body = encodeURIComponent(text);
+    mailtoBtn.href = `mailto:?subject=${subj}&body=${body}`;
+  }
+}
+
+function generateSkatteverket() {
+  const arende   = document.getElementById('skv-arende').value;
+  const sender   = document.getElementById('skv-sender').value.trim();
+  const relation = document.getElementById('skv-relation').value.trim();
+  const email    = document.getElementById('skv-email').value.trim();
+  clearFormError('err-skatteverket');
+  if (!sender || !relation || !email) { showFormError('err-skatteverket', 'Fyll i de obligatoriska fälten (märkta med *).'); return; }
+
+  const { deceased, personnr, today } = getDocContext();
+
+  const arendeTexts = {
+    intyg:    { subject: 'Begäran om dödsfallsintyg och personbevis för dödsbo', body: `Jag kontaktar er för att begära dödsfallsintyg och personbevis avseende dödsboet efter ${deceased} (personnr ${personnr}), som gick bort nyligen.\n\nDokumenten behövs för dödsboets räkning i samband med bouppteckning och kontakt med banker och myndigheter.\n\nJag är ${relation} och dödsbodelägare. Vänligen skicka handlingarna till angiven e-postadress, eller meddela hur ansökan görs via er e-tjänst.` },
+    fskatt:   { subject: 'Begäran om avslut av F-skatt — dödsfall', body: `Jag kontaktar er med anledning av att ${deceased} (personnr ${personnr}) har gått bort och att den av hen bedrivna enskilda näringsverksamheten därmed ska avslutas.\n\nJag ber er avregistrera F-skatten och eventuell mervärdesskatt (moms) med dödsdatum som slutdatum.\n\nJag är ${relation} och företräder dödsboet. Dödsbevis bifogas. Kontakta mig för ytterligare dokumentation.` },
+    slutskatt: { subject: 'Begäran om information om slutlig skatt — dödsfall', body: `Jag kontaktar er angående slutlig skatt för ${deceased} (personnr ${personnr}), som har gått bort.\n\nJag ber er bekräfta om det finns kvarsstående skattefordringar eller skatteåterbäring att reglera, samt hur dödsboet ska gå till väga.\n\nJag är ${relation} och dödsbodelägare. Vänligen kontakta mig på angiven e-postadress.` },
+  };
+
+  const { subject, body } = arendeTexts[arende];
+
+  showDocResult(`Skatteverket — ${subject}`, `${sender}\n${email}\n\n${today}\n\nTill: Skatteverket\nÄrende: ${subject}\n\nHej,\n\n${body}\n\nMed vänliga hälsningar,\n\n${sender}\n${relation} till ${deceased}\n${email}`, subject);
+}
+
+
+function generateFullmakt() {
+  const grantor1 = document.getElementById('fullmakt-grantor1').value.trim();
+  const grantor2 = document.getElementById('fullmakt-grantor2').value.trim();
+  const agent    = document.getElementById('fullmakt-agent').value.trim();
+  const relation = document.getElementById('fullmakt-relation').value.trim();
+  clearFormError('err-fullmakt');
+  if (!grantor1 || !agent) { showFormError('err-fullmakt', 'Fyll i de obligatoriska fälten (märkta med *).'); return; }
+
+  const { deceased, personnr, today } = getDocContext();
+  const grantors = grantor2 ? `${grantor1} och ${grantor2}` : grantor1;
+  const agentLine = relation ? `${agent} (${relation})` : agent;
+
+  showDocResult('Fullmakt — dödsbo', `FULLMAKT
+Utfärdad: ${today}
+
+Vi, undertecknade dödsbodelägare efter ${deceased} (personnr ${personnr}), ger härmed
+
+  ${agentLine}
+
+fullmakt att för dödsboets räkning:
+
+• Kontakta och företräda dödsboet gentemot banker och finansinstitut
+• Begära kontoinformation och genomföra betalningar ur dödsboets medel
+• Teckna dödsboets namn i löpande ärenden
+• Kontakta myndigheter (Skatteverket, Kronofogden m.fl.) å dödsboets vägnar
+• Säga upp avtal och abonnemang tillhörande ${deceased}
+
+Fullmakten gäller tills dödsboet är avslutat och ska uppvisas i original vid bankbesök.
+
+
+______________________________    ______________________________
+${grantors}
+Dödsbodelägare                    Datum och ort`);
+}
+
+
+function printBulkLetters() {
+  const letters = [];
+  document.querySelectorAll('[id^="bletter-"]').forEach(el => {
+    letters.push(el.innerText);
+  });
+  if (!letters.length) return;
+  const pages = letters.map((letter, i) =>
+    `<div style="page-break-after:${i < letters.length - 1 ? 'always' : 'auto'};white-space:pre-wrap;font-family:Georgia,serif;font-size:11pt;line-height:1.8;padding:40px 50px;">${letter}</div>`
+  ).join('');
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html lang="sv"><head><meta charset="UTF-8"><title>Brev — dödsbo</title></head><body>${pages}</body></html>`);
+  win.document.close();
+  win.focus();
+  win.print();
 }
 
 function copyDocument() {
@@ -1164,7 +1523,7 @@ function copyToClipboard(text, onDone) {
 function saveState() {
   // Save locally with personnr (own device only — never shared)
   const toSave = { ...getShareableState(), personnr: state.personnr };
-  try { localStorage.setItem('closure_state', JSON.stringify(toSave)); } catch(e) {}
+  try { localStorage.setItem('efterplan_state', JSON.stringify(toSave)); } catch(e) {}
 }
 
 // ─── INIT ─────────────────────────────────────
@@ -1189,11 +1548,13 @@ function saveState() {
 
   // 2. Restore own plan from localStorage
   try {
-    const saved = localStorage.getItem('closure_state');
+    const saved = localStorage.getItem('efterplan_state') || localStorage.getItem('efterplan_state');
     if (saved) {
       Object.assign(state, JSON.parse(saved));
       buildTasks();
+      loadTaskState();
       renderPlan();
+      showScreen('screen-plan');
     }
   } catch(e) {}
 })();

@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Closure — Minimalt med admin i sorgen</title>
+  <title>Efterplan – Checklista efter dödsfall</title>
+  <meta name="description" content="Checklista efter dödsfall – vi hjälper dig få ordning på allt praktiskt. Gratis, ingen registrering krävs." />
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
@@ -13,7 +14,7 @@
   <!-- iOS standalone -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Closure" />
+  <meta name="apple-mobile-web-app-title" content="Efterplan" />
   <link rel="apple-touch-icon" href="icon.svg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -27,7 +28,7 @@
 ════════════════════════════════════════════ -->
 <div id="screen-landing" class="screen active">
   <nav class="nav">
-    <div class="logo">Closure</div>
+    <div class="logo">Efterplan</div>
     <div class="nav-landing-links">
       <a href="#section-om" class="nav-text-link">Om</a>
       <a href="#section-integritet" class="nav-text-link">Integritet</a>
@@ -35,26 +36,26 @@
   </nav>
   <div class="landing-hero">
     <div class="landing-content">
-      <p class="landing-eyebrow">Du ska inte behöva tänka på det praktiska nu.</p>
-      <h1 class="landing-headline">Vi guidar dig igenom det praktiska.<br>Du tar hand om det som betyder något.</h1>
-      <p class="landing-sub">Closure bygger din personliga plan, genererar brev och håller koll på allt som behöver göras — så att du slipper.</p>
-      <button class="btn-primary btn-large" onclick="startOnboarding()">Kom igång — tar 5 minuter</button>
+      <p class="landing-eyebrow">Checklista efter dödsfall</p>
+      <h1 class="landing-headline">Du tar hand om det som betyder något.<br>Vi hjälper dig med resten.</h1>
+      <p class="landing-sub">Efterplan bygger din personliga plan, genererar brev och håller koll på allt som behöver göras — så att du slipper.</p>
+      <button class="btn-primary btn-large" onclick="startOnboarding()">Kom igång — tar 2 minuter</button>
       <p class="landing-note">Gratis att börja. Ingen registrering krävs.</p>
     </div>
   </div>
 
-  <!-- Om Closure -->
+  <!-- Om Efterplan -->
   <section class="landing-section" id="section-om">
-    <h2>Om Closure</h2>
-    <p>Closure byggdes för att göra en av livets svåraste perioder lite lättare att navigera. Vi hjälper dig strukturera det praktiska — utan att du ska behöva söka information på egen hand i sorgen.</p>
-    <p>Har du frågor, hittat något fel eller vill ge feedback? Hör av dig: <a class="landing-contact-link" href="mailto:hej@closure.se">hej@closure.se</a></p>
-    <p class="legal-disclaimer">Closure ger inte juridisk rådgivning. Informationen är av generell karaktär och baserad på svenska förhållanden. Vid tveksamheter — konsultera en jurist eller begravningsbyrå.</p>
+    <h2>Om Efterplan</h2>
+    <p>Efterplan byggdes för att göra en av livets svåraste perioder lite lättare att navigera. Vi hjälper dig strukturera det praktiska — utan att du ska behöva söka information på egen hand i sorgen.</p>
+    <p>Har du frågor, hittat något fel eller vill ge feedback? Hör av dig: <a class="landing-contact-link" href="mailto:hej@efterplan.se">hej@efterplan.se</a></p>
+    <p class="legal-disclaimer">Efterplan ger inte juridisk rådgivning. Informationen är av generell karaktär och baserad på svenska förhållanden. Vid tveksamheter — konsultera en jurist eller begravningsbyrå.</p>
   </section>
 
   <!-- Integritet -->
   <section class="landing-section" id="section-integritet">
     <h2>Din integritet</h2>
-    <p>Closure lagrar all information lokalt i din webbläsare — ingenting skickas till någon server. Din plan, dina anteckningar och eventuellt personnummer finns bara på din enhet.</p>
+    <p>Efterplan lagrar all information lokalt i din webbläsare — ingenting skickas till någon server. Din plan, dina anteckningar och eventuellt personnummer finns bara på din enhet.</p>
     <p>Om du delar planen med någon via länk ingår namn och dina svar, men aldrig personnummer. Rensar du webbläsarens data försvinner allt.</p>
     <div class="privacy-badges">
       <span class="privacy-badge">🔒 Ingen server</span>
@@ -65,8 +66,8 @@
   </section>
 
   <footer class="landing-footer">
-    <p>© 2025 Closure &nbsp;·&nbsp;
-       <a href="mailto:hej@closure.se">Kontakt</a> &nbsp;·&nbsp;
+    <p>© 2026 Efterplan &nbsp;·&nbsp;
+       <a href="mailto:hej@efterplan.se">Kontakt</a> &nbsp;·&nbsp;
        <a href="#section-integritet">Integritet</a> &nbsp;·&nbsp;
        <a href="#section-om">Om</a>
     </p>
@@ -121,42 +122,76 @@
     <div class="ob-step" id="ob-step-3">
       <div class="ob-content">
         <p class="ob-label">Steg 3 av 6</p>
-        <h2 class="ob-title">Vad vet du om boet?</h2>
+        <h2 class="ob-title">Gäller något av detta?</h2>
         <p class="ob-hint">Välj allt som stämmer. Du kan alltid ändra senare.</p>
         <div class="ob-checks">
           <label class="ob-check">
             <input type="checkbox" data-key="testamente" onchange="updateCheckboxState()">
             <span class="ob-check-box"></span>
-            <span class="ob-check-label">Testamente finns</span>
+            <span class="ob-check-label">Testamente finns
+              <span class="ob-check-hint">Hittades bland papperen, i bankfack eller hos notarie</span>
+            </span>
           </label>
           <label class="ob-check">
             <input type="checkbox" data-key="fastighet" onchange="updateCheckboxState()">
             <span class="ob-check-box"></span>
-            <span class="ob-check-label">Fastighet eller bostadsrätt</span>
+            <span class="ob-check-label">Ägde sin bostad
+              <span class="ob-check-hint">Villa, radhus eller bostadsrätt — den döde <strong>ägde</strong> (inte hyrde)</span>
+            </span>
           </label>
           <label class="ob-check">
-            <input type="checkbox" data-key="foretag" onchange="updateCheckboxState()">
+            <input type="checkbox" data-key="hyresratt" onchange="updateCheckboxState()">
             <span class="ob-check-box"></span>
-            <span class="ob-check-label">Eget företag / F-skatt</span>
-          </label>
-          <label class="ob-check">
-            <input type="checkbox" data-key="skulder" onchange="updateCheckboxState()">
-            <span class="ob-check-box"></span>
-            <span class="ob-check-label">Skulder eller lån</span>
-          </label>
-          <label class="ob-check">
-            <input type="checkbox" data-key="utland" onchange="updateCheckboxState()">
-            <span class="ob-check-box"></span>
-            <span class="ob-check-label">Tillgångar utomlands</span>
+            <span class="ob-check-label">Hyrde sin bostad
+              <span class="ob-check-hint">Hyresrätt — betalade hyra till hyresvärd (inte bostadsrätt)</span>
+            </span>
           </label>
           <label class="ob-check">
             <input type="checkbox" data-key="minderarig" onchange="updateCheckboxState()">
             <span class="ob-check-box"></span>
-            <span class="ob-check-label">Minderårigt barn i familjen</span>
+            <span class="ob-check-label">Minderårigt barn ärver
+              <span class="ob-check-hint">Barn under 18 år som är arvinge</span>
+            </span>
+          </label>
+          <label class="ob-check">
+            <input type="checkbox" data-key="foretag" onchange="updateCheckboxState()">
+            <span class="ob-check-box"></span>
+            <span class="ob-check-label">Eget företag
+              <span class="ob-check-hint">Enskild firma, aktiebolag eller F-skattsedel</span>
+            </span>
+          </label>
+          <label class="ob-check">
+            <input type="checkbox" data-key="utland" onchange="updateCheckboxState()">
+            <span class="ob-check-box"></span>
+            <span class="ob-check-label">Tillgångar utomlands
+              <span class="ob-check-hint">Bankkonto, bostad eller pension i annat land</span>
+            </span>
+          </label>
+          <label class="ob-check">
+            <input type="checkbox" data-key="skulder" onchange="updateCheckboxState()">
+            <span class="ob-check-box"></span>
+            <span class="ob-check-label">Skulder eller lån
+              <span class="ob-check-hint">Banklån, skulder hos Kronofogden eller kreditkort</span>
+              <span class="ob-check-note">Du ärver inte skulder — din ekonomi är skyddad</span>
+            </span>
+          </label>
+          <label class="ob-check">
+            <input type="checkbox" data-key="fordon" onchange="updateCheckboxState()">
+            <span class="ob-check-box"></span>
+            <span class="ob-check-label">Bil eller annat fordon
+              <span class="ob-check-hint">Bil eller fordon som den döde ägde eller delade</span>
+            </span>
+          </label>
+          <label class="ob-check">
+            <input type="checkbox" data-key="husdjur" onchange="updateCheckboxState()">
+            <span class="ob-check-box"></span>
+            <span class="ob-check-label">Husdjur
+              <span class="ob-check-hint">Hund, katt eller annat djur som behöver ny ägare</span>
+            </span>
           </label>
         </div>
-        <p class="ob-skip">Vet du inte? Det är okej.</p>
-        <button class="ob-next-btn" onclick="obGoTo(4)">Nästa →</button>
+        <p class="ob-skip">Vet du inte säkert? Hoppa bara vidare — du kan ändra senare.</p>
+        <button class="ob-next-btn ob-next-sticky" onclick="obGoTo(4)">Nästa →</button>
       </div>
     </div>
 
@@ -165,7 +200,7 @@
       <div class="ob-content">
         <p class="ob-label">Steg 4 av 6</p>
         <h2 class="ob-title">Hanterar du det här ensam?</h2>
-        <p class="ob-hint">Vi kan anpassa planen om ni delar ansvaret.</p>
+        <p class="ob-hint">Syskon, föräldrar, svärmor — alla som delar på det praktiska räknas. Vi lägger till en fullmaktsmall och anpassar planen.</p>
         <div class="ob-choices">
           <button class="ob-choice" data-key="ansvar" data-val="ensam" onclick="obChoose(this, 5)">Ja, jag sköter det</button>
           <button class="ob-choice" data-key="ansvar" data-val="flera" onclick="obChoose(this, 5)">Vi är flera</button>
@@ -191,7 +226,7 @@
       <div class="ob-content">
         <p class="ob-label">Steg 6 av 6 — helt frivilligt</p>
         <h2 class="ob-title">Personnummer?</h2>
-        <p class="ob-hint">Bara om du vill — vi fyller då i det automatiskt i brev. Sparas lokalt i din webbläsare, aldrig på någon server. Du kan lägga till det senare också.</p>
+        <p class="ob-hint">Vi fyller i det automatiskt i alla brev du genererar — sparar tid. Annars kan du fylla i det manuellt direkt i breven. Sparas bara lokalt i din webbläsare, aldrig på någon server.</p>
         <input type="text" id="deceased-personnr" class="ob-text-input" placeholder="ÅÅÅÅMMDD-XXXX" autocomplete="off"
           onkeydown="if(event.key==='Enter') generatePlan()" />
         <button class="ob-next-btn" onclick="generatePlan()">Visa min plan →</button>
@@ -208,7 +243,7 @@
 
   <!-- Nav -->
   <nav class="nav nav-light nav-plan">
-    <div class="logo">Closure</div>
+    <div class="logo">Efterplan</div>
     <div class="nav-plan-actions">
       <button class="btn-ghost btn-sm" onclick="editAnswers()">Ändra svar</button>
       <button class="btn-ghost btn-sm" onclick="openShareModal()">Dela plan</button>
@@ -229,6 +264,7 @@
       <div class="plan-header">
         <h1 class="plan-title" id="plan-title">Din plan</h1>
         <p class="plan-sub" id="plan-sub">Börja med det som känns minst tungt.</p>
+        <p class="plan-dodsbo-def" id="plan-dodsbo-def"></p>
         <div class="progress-bar-wrap" id="progress-bar-wrap" aria-hidden="true">
           <div class="progress-bar-fill" id="progress-bar-fill"></div>
         </div>
@@ -236,7 +272,7 @@
       </div>
 
       <div class="completion-message" id="completion-message" role="status">
-        <p>Du har gått igenom allt. Ta en djup andetag — du klarade det.</p>
+        <p>Du har gått igenom allt. Ta ett djupt andetag — du klarade det.</p>
       </div>
 
       <button id="start-here" class="start-here hidden" aria-label="Gå till nästa uppgift"></button>
@@ -279,14 +315,14 @@
       <!-- Väljare -->
       <div id="doc-chooser">
         <div class="plan-header">
-          <h1 class="plan-title">Generera dokument</h1>
-          <p class="plan-sub">Välj vad du vill skriva — vi fyller i det åt dig.</p>
+          <h1 class="plan-title">Brev & dokument</h1>
+          <p class="plan-sub">Välj vad du behöver — vi skriver det åt dig.</p>
         </div>
         <button class="doc-bulk-cta" onclick="showDocForm('bulk')">
           <span class="doc-bulk-icon">⚡</span>
           <div class="doc-bulk-text">
             <span class="doc-bulk-title">Avsluta flera tjänster på en gång</span>
-            <span class="doc-bulk-sub">Lägg till alla abonnemang — generera alla brev direkt</span>
+            <span class="doc-bulk-sub">Lägg till alla abonnemang — vi skriver alla brev åt dig</span>
           </div>
           <span class="doc-bulk-arrow">→</span>
         </button>
@@ -298,8 +334,8 @@
           </button>
           <button class="doc-type-btn" onclick="showDocForm('bank')">
             <span class="doc-icon">🏦</span>
-            <span class="doc-type-title">Banknotifiering</span>
-            <span class="doc-type-sub">Informera bank om dödsfallet</span>
+            <span class="doc-type-title">Till banken</span>
+            <span class="doc-type-sub">Meddela banken om dödsfallet</span>
           </button>
           <button class="doc-type-btn" onclick="showDocForm('annons')">
             <span class="doc-icon">❧</span>
@@ -308,8 +344,18 @@
           </button>
           <button class="doc-type-btn" onclick="showDocForm('forsakring')">
             <span class="doc-icon">🛡</span>
-            <span class="doc-type-title">Försäkringsanmälan</span>
-            <span class="doc-type-sub">Anmäl dödsfallet till försäkringsbolag</span>
+            <span class="doc-type-title">Till försäkringsbolaget</span>
+            <span class="doc-type-sub">Meddela försäkringsbolaget om dödsfallet</span>
+          </button>
+          <button class="doc-type-btn hidden" id="doc-btn-skatteverket" onclick="showDocForm('skatteverket')">
+            <span class="doc-icon">🏛</span>
+            <span class="doc-type-title">Skatteverket</span>
+            <span class="doc-type-sub">Avsluta F-skatt / enskild firma</span>
+          </button>
+          <button class="doc-type-btn hidden" id="doc-btn-fullmakt" onclick="showDocForm('fullmakt')">
+            <span class="doc-icon">📋</span>
+            <span class="doc-type-title">Fullmakt</span>
+            <span class="doc-type-sub">Ge en person rätt att företräda dödsboet</span>
           </button>
         </div>
       </div>
@@ -318,7 +364,7 @@
       <div id="doc-form-bulk" class="doc-form hidden">
         <button class="back-btn" onclick="backToDocChooser()">← Tillbaka</button>
         <h2 class="plan-title" style="margin-bottom:6px">Avsluta tjänster</h2>
-        <p class="plan-sub" style="margin-bottom:28px">Fyll i ditt namn och lägg till tjänster — vi genererar alla brev.</p>
+        <p class="plan-sub" style="margin-bottom:28px">Fyll i ditt namn och lägg till tjänster — vi skriver alla brev åt dig.</p>
         <div class="form-group">
           <label>Ditt namn <span class="required">*</span></label>
           <input type="text" id="bulk-sender" class="text-input" placeholder="Ditt fullständiga namn" />
@@ -333,14 +379,15 @@
           <button class="add-row-btn" onclick="addBulkRow()">+ Lägg till tjänst</button>
         </div>
         <p class="form-error hidden" id="err-bulk" role="alert"></p>
-        <button class="btn-primary" style="max-width:260px" onclick="generateBulkLetters()">Generera alla brev →</button>
+        <button class="btn-primary" style="max-width:260px" onclick="generateBulkLetters()">Skapa alla brev →</button>
       </div>
 
       <!-- Result: Bulk -->
       <div id="doc-result-bulk" class="doc-form hidden">
-        <button class="back-btn" onclick="backToDocChooser()">← Nytt</button>
+        <button class="back-btn" onclick="backToDocChooser()">← Tillbaka</button>
         <h2 class="plan-title" style="margin-bottom:6px">Dina brev</h2>
-        <p class="result-note" style="margin-bottom:24px">Kopiera och skicka ett i taget.</p>
+        <p class="result-note" style="margin-bottom:16px">Kopiera och skicka ett i taget — eller spara alla som PDF.</p>
+        <button class="btn-ghost btn-sm" style="margin-bottom:24px" onclick="printBulkLetters()">Skriv ut / Spara som PDF →</button>
         <div id="bulk-letters-list"></div>
       </div>
 
@@ -366,13 +413,13 @@
           <input type="email" id="letter-email" class="text-input" placeholder="din@epost.se" />
         </div>
         <p class="form-error hidden" id="err-letter" role="alert"></p>
-        <button class="btn-primary" style="max-width:240px" onclick="generateLetter()">Generera brev</button>
+        <button class="btn-primary" style="max-width:240px" onclick="generateLetter()">Skapa brev</button>
       </div>
 
       <!-- Form: Banknotifiering -->
       <div id="doc-form-bank" class="doc-form hidden">
         <button class="back-btn" onclick="backToDocChooser()">← Tillbaka</button>
-        <h2 class="plan-title" style="margin-bottom:6px">Banknotifiering</h2>
+        <h2 class="plan-title" style="margin-bottom:6px">Brev till banken</h2>
         <p class="plan-sub" style="margin-bottom:28px">Vi skriver brevet — du kopierar och skickar.</p>
         <div class="form-group">
           <label>Bank <span class="required">*</span></label>
@@ -391,7 +438,7 @@
           <input type="email" id="bank-email" class="text-input" placeholder="din@epost.se" />
         </div>
         <p class="form-error hidden" id="err-bank" role="alert"></p>
-        <button class="btn-primary" style="max-width:240px" onclick="generateBank()">Generera brev</button>
+        <button class="btn-primary" style="max-width:240px" onclick="generateBank()">Skapa brev</button>
       </div>
 
       <!-- Form: Dödsannons -->
@@ -425,14 +472,18 @@
           <label>Begravning (om känt)</label>
           <input type="text" id="annons-funeral" class="text-input" placeholder="t.ex. Storkyrkan, Stockholm, 15 februari kl 14:00" />
         </div>
+        <div class="form-group">
+          <label>Vill du lägga till något mer kan du göra det här</label>
+          <textarea id="annons-ovrigt" class="text-input textarea" placeholder="t.ex. citat, hälsning, önskemål om blombidrag, kontaktuppgifter…" rows="2"></textarea>
+        </div>
         <p class="form-error hidden" id="err-annons" role="alert"></p>
-        <button class="btn-primary" style="max-width:240px" onclick="generateAnnons()">Generera annons</button>
+        <button class="btn-primary" style="max-width:240px" onclick="generateAnnons()">Skapa annons</button>
       </div>
 
       <!-- Form: Försäkringsanmälan -->
       <div id="doc-form-forsakring" class="doc-form hidden">
         <button class="back-btn" onclick="backToDocChooser()">← Tillbaka</button>
-        <h2 class="plan-title" style="margin-bottom:6px">Försäkringsanmälan</h2>
+        <h2 class="plan-title" style="margin-bottom:6px">Brev till försäkringsbolaget</h2>
         <p class="plan-sub" style="margin-bottom:28px">Vi skriver brevet — du kopierar och skickar.</p>
         <div class="form-group">
           <label>Försäkringsbolag <span class="required">*</span></label>
@@ -451,17 +502,65 @@
           <input type="email" id="fors-email" class="text-input" placeholder="din@epost.se" />
         </div>
         <p class="form-error hidden" id="err-forsakring" role="alert"></p>
-        <button class="btn-primary" style="max-width:260px" onclick="generateForsakring()">Generera brev</button>
+        <button class="btn-primary" style="max-width:260px" onclick="generateForsakring()">Skapa brev</button>
+      </div>
+
+      <!-- Form: Fullmakt (visas om ansvar = flera) -->
+      <div id="doc-form-fullmakt" class="doc-form hidden">
+        <button class="back-btn" onclick="backToDocChooser()">← Tillbaka</button>
+        <h2 class="plan-title" style="margin-bottom:6px">Fullmakt — dödsbo</h2>
+        <p class="plan-sub" style="margin-bottom:28px">Utser en person att företräda dödsboet gentemot banker och myndigheter. Alla dödsbodelägare bör skriva under i original.</p>
+        <div class="form-group">
+          <label>Ditt namn (fullmaktsgivare) <span class="required">*</span></label>
+          <input type="text" id="fullmakt-grantor1" class="text-input" placeholder="Ditt fullständiga namn" />
+        </div>
+        <div class="form-group">
+          <label>Övriga dödsbodelägares namn (valfritt)</label>
+          <input type="text" id="fullmakt-grantor2" class="text-input" placeholder="t.ex. Erik Karlsson, Anna Karlsson" />
+        </div>
+        <div class="form-group">
+          <label>Fullmaktstagaren — vem ska ha fullmakten <span class="required">*</span></label>
+          <input type="text" id="fullmakt-agent" class="text-input" placeholder="Fullständigt namn" />
+        </div>
+        <div class="form-group">
+          <label>Fullmaktstagarens relation till dödsboet</label>
+          <input type="text" id="fullmakt-relation" class="text-input" placeholder="t.ex. Son, Dotter, Make" />
+        </div>
+        <p class="form-error hidden" id="err-fullmakt" role="alert"></p>
+        <button class="btn-primary" style="max-width:260px" onclick="generateFullmakt()">Skapa fullmakt</button>
+      </div>
+
+      <!-- Form: Skatteverket (visas endast om foretag = true) -->
+      <div id="doc-form-skatteverket" class="doc-form hidden">
+        <button class="back-btn" onclick="backToDocChooser()">← Tillbaka</button>
+        <h2 class="plan-title" style="margin-bottom:6px">Avregistrera F-skatt</h2>
+        <p class="plan-sub" style="margin-bottom:28px">Begär avregistrering av F-skatt och enskild firma hos Skatteverket. Kopiera brevet och skicka via Skatteverkets e-tjänst eller post.</p>
+        <input type="hidden" id="skv-arende" value="fskatt" />
+        <div class="form-group">
+          <label>Ditt namn <span class="required">*</span></label>
+          <input type="text" id="skv-sender" class="text-input" placeholder="Ditt fullständiga namn" />
+        </div>
+        <div class="form-group">
+          <label>Din relation till den avlidne <span class="required">*</span></label>
+          <input type="text" id="skv-relation" class="text-input" placeholder="t.ex. Make, Dotter, Son" />
+        </div>
+        <div class="form-group">
+          <label>Din e-post <span class="required">*</span></label>
+          <input type="email" id="skv-email" class="text-input" placeholder="din@epost.se" />
+        </div>
+        <p class="form-error hidden" id="err-skatteverket" role="alert"></p>
+        <button class="btn-primary" style="max-width:240px" onclick="generateSkatteverket()">Skapa brev</button>
       </div>
 
       <!-- Resultat -->
       <div id="doc-result" class="doc-form hidden">
-        <button class="back-btn" onclick="backToDocChooser()">← Nytt dokument</button>
-        <h2 class="plan-title" id="result-title" style="margin-bottom:6px">Ditt dokument</h2>
+        <button class="back-btn" onclick="backToDocChooser()">← Tillbaka</button>
+        <h2 class="plan-title" id="result-title" style="margin-bottom:6px">Klart!</h2>
         <p class="result-note">Läs igenom och justera om du vill — kopiera sedan och skicka.</p>
         <div class="doc-output" id="doc-output-text"></div>
         <div class="result-actions">
-          <button class="btn-primary" style="max-width:200px" onclick="copyDocument()">Kopiera text</button>
+          <button class="btn-primary" style="max-width:200px" onclick="copyDocument()">Kopiera</button>
+          <a id="result-mailto" class="btn-ghost" href="mailto:" style="max-width:200px; text-align:center;">Öppna i e-post ✉</a>
           <button class="btn-ghost" style="max-width:200px" onclick="backToDocChooser()">Nytt dokument</button>
         </div>
         <p class="copied-msg hidden" id="copied-msg">Kopierat!</p>

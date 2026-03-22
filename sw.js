@@ -1,5 +1,5 @@
-/* Closure — Service Worker */
-const CACHE = 'closure-v1';
+/* Efterplan — Service Worker */
+const CACHE = 'efterplan-v1';
 const ASSETS = [
   './',
   './index.html',
@@ -26,8 +26,24 @@ self.addEventListener('activate', e => {
 });
 
 // Cache-first: serve from cache, fall back to network
+// Google Fonts: cacha vid första hämtning (annars funkar inte appen offline)
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
+  const url = e.request.url;
+  if (url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com')) {
+    e.respondWith(
+      caches.open(CACHE).then(cache =>
+        cache.match(e.request).then(cached => {
+          if (cached) return cached;
+          return fetch(e.request).then(resp => {
+            cache.put(e.request, resp.clone());
+            return resp;
+          }).catch(() => cached);
+        })
+      )
+    );
+    return;
+  }
   e.respondWith(
     caches.match(e.request).then(cached => cached || fetch(e.request))
   );

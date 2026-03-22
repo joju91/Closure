@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   CLOSURE — Stylesheet
+   EFTERPLAN — Stylesheet
    Tone: Calm, trustworthy, minimal
 ════════════════════════════════════════════ */
 
@@ -11,17 +11,20 @@
   --text-primary: #1C2333;
   --text-soft:    #5A6A7E;
   --text-muted:   #718096;  /* darkened from #94A3B8 — passes WCAG AA on white */
+  --text-secondary: #5A6A7E;
   --border:       #E2E8F0;
   --accent:       #2C4A6E;
   --accent-dark:  #1a2f48;  /* hover state */
   --accent-light: #EDF2F7;
-  --disabled-bg:  #C8D4CC;  /* disabled button */
+  --disabled-bg:  #D1D5DB;  /* disabled button */
   --red:          #B91C1C;
   --red-bg:       #FEF2F2;
   --yellow:       #92400E;
   --yellow-bg:    #FFFBEB;
   --grey:         #718096;
   --grey-bg:      #F1F5F9;
+  --green:         #3a7d5a;  /* ob-check-note, success */
+  --danger:        #c0392b;  /* notify remove hover */
   --radius:       12px;
   --radius-sm:    8px;
   --shadow:       0 2px 12px rgba(44,74,110,0.08);
@@ -101,7 +104,8 @@ body {
   font-size: 1.1rem;
   width: auto;
   border-radius: 10px;
-  animation: ctaPulse 1.8s ease 1.5s 2;
+  /* Fix #17: animera vid scroll istället för efter fast 1.5s delay */
+  animation: ctaPulse 1.8s ease 0.3s 2;
 }
 
 @keyframes ctaPulse {
@@ -230,14 +234,15 @@ body {
   text-decoration: none;
 }
 .landing-contact-link:hover { text-decoration: underline; }
-.legal-disclaimer {
-  font-size: 0.82rem !important;
-  color: var(--text-muted) !important;
+/* Fix #16: ta bort !important — mer specifik selektor räcker */
+.landing-section .legal-disclaimer {
+  font-size: 0.82rem;
+  color: var(--text-muted);
   background: var(--grey-bg);
   border-radius: var(--radius-sm);
-  padding: 14px 16px !important;
+  padding: 14px 16px;
   margin-top: 10px;
-  line-height: 1.6 !important;
+  line-height: 1.6;
 }
 .privacy-badges {
   display: flex;
@@ -327,7 +332,7 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 32px 20px 120px;
+  padding: 32px 20px 72px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   position: relative;
@@ -474,7 +479,26 @@ body {
   border-color: var(--accent);
   background: var(--accent-light);
 }
-.ob-check-label { font-size: 0.95rem; font-weight: 500; }
+.ob-check-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.ob-check-hint {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-soft);
+  line-height: 1.3;
+}
+.ob-check-note {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--green);
+  line-height: 1.3;
+  margin-top: 1px;
+}
 
 /* Text input */
 .ob-text-input {
@@ -491,8 +515,11 @@ body {
   transition: border-color 0.2s;
   margin-bottom: 0;
 }
-.ob-text-input:focus { border-bottom-color: var(--accent); }
-.ob-text-input::placeholder { color: var(--border); }
+.ob-text-input:focus {
+  border-bottom-color: var(--accent);
+  box-shadow: 0 2px 0 0 var(--accent); /* synligt fokusindikator för tangentbord */
+}
+.ob-text-input::placeholder { color: var(--text-muted); }
 
 /* Next button */
 .ob-next-btn {
@@ -635,8 +662,19 @@ body {
 .plan-sub {
   font-size: 1rem;
   color: var(--text-soft);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
+.plan-dodsbo-def {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background: var(--accent-light);
+  border-left: 3px solid var(--border);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.plan-dodsbo-def:empty { display: none; }
 .progress-summary {
   font-size: 0.9rem;
   color: var(--text-muted);
@@ -662,11 +700,10 @@ body {
 .dot-yellow { background: var(--yellow); }
 .dot-grey   { background: var(--grey); }
 .section-title {
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  font-size: 0.85rem;
   color: var(--text-soft);
 }
 .section-count {
@@ -696,8 +733,8 @@ body {
   border-color: var(--accent);
 }
 .task-card.done {
-  opacity: 0.4;
-  pointer-events: none;
+  opacity: 0.55;
+  cursor: pointer;  /* klickbar för att visa Ångra */
 }
 .task-check {
   width: 22px;
@@ -761,6 +798,10 @@ body {
   color: var(--text-soft);
   line-height: 1.6;
   margin-bottom: 12px;
+}
+.task-expand-desc strong {
+  color: var(--text-primary);
+  font-weight: 600;
 }
 .task-expand-link {
   display: inline-block;
@@ -827,6 +868,21 @@ body {
   font-size: 0.85rem;
   color: var(--accent);
   font-weight: 600;
+}
+
+.task-expand-undo-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 8px;
+}
+.task-expand-undo-btn:hover {
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
 }
 
 /* ─── BULK UPPSÄGNING ────────────────────────── */
@@ -1063,7 +1119,7 @@ body {
   white-space: pre-wrap;
   font-family: 'Georgia', serif;
   margin-bottom: 16px;
-  max-height: 300px;
+  max-height: 480px;
   overflow-y: auto;
 }
 .result-note {
@@ -1207,6 +1263,202 @@ body {
   letter-spacing: 0.4px;
   text-transform: uppercase;
 }
+/* ─── ASSIGNEE BADGE (task card) ─────────────── */
+.task-assignee-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 5px;
+  margin-left: 7px;
+  vertical-align: middle;
+  letter-spacing: 0.3px;
+}
+.task-assignee-badge.hidden { display: none; }
+
+/* ─── ASSIGNEE PICKER (expand panel) ─────────── */
+.task-assignee-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0 4px;
+}
+.task-assignee-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+.assignee-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.assignee-chip {
+  font-size: 0.8rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.assignee-chip:hover { border-color: var(--accent); }
+.assignee-chip.selected {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.assignee-add-btn {
+  font-size: 1rem;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px dashed var(--border);
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+}
+.assignee-add-btn:hover { border-color: var(--accent); color: var(--accent); }
+.assignee-new-input {
+  font-size: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 8px;
+  background: var(--bg-input, var(--bg-card));
+  color: var(--text-primary);
+  width: 110px;
+}
+.assignee-new-input:focus { outline: none; border-color: var(--accent); }
+.assignee-new-input.hidden { display: none; }
+
+/* ─── NOTIFY LIST (kontaktrundringen task) ─── */
+.notify-list-section {
+  margin: 12px 0 6px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+.notify-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.notify-list-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+.notify-counter {
+  font-size: 0.72rem;
+  color: var(--text-soft);
+}
+.notify-list-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.notify-empty {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  margin: 0;
+  padding: 2px 0;
+}
+.notify-person {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.notify-person.notified .notify-name {
+  text-decoration: line-through;
+  color: var(--text-soft);
+}
+.notify-check {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: border-color 0.15s, background 0.15s;
+}
+.notify-check:hover { border-color: var(--accent); }
+.notify-check.checked {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.notify-name {
+  flex: 1;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+}
+.notify-remove {
+  font-size: 1rem;
+  color: var(--text-soft);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+  opacity: 0.5;
+}
+.notify-remove:hover { opacity: 1; color: var(--danger); }
+.notify-add-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.notify-new-input {
+  flex: 1;
+  font-size: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 5px 8px;
+  background: var(--bg);
+  color: var(--text-primary);
+  min-width: 0;
+}
+.notify-new-input:focus { outline: none; border-color: var(--accent); }
+.notify-add-btn {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+.notify-add-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
 .task-expand-start-btn {
   background: transparent;
   color: var(--text-soft);
@@ -1317,7 +1569,8 @@ body {
   .step-title { font-size: 1.5rem; }
   .nav-actions { display: none; }
   .landing-headline { font-size: 1.8rem; }
-  .task-expand { padding: 14px 16px 18px 16px; }
+  /* Fix #18: align expand-innehall med kortets textblock (past check 22px + gap 14px + padding 16px) */
+  .task-expand { padding: 14px 16px 18px 52px; }
   .ob-stage { align-items: flex-start; padding-top: 32px; }
 
   /* ── Bottom tab navigation ── */

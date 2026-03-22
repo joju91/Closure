@@ -1,7 +1,7 @@
 {
-  "name": "Closure",
-  "short_name": "Closure",
-  "description": "Praktisk guide vid dödsfall — steg för steg.",
+  "name": "Efterplan",
+  "short_name": "Efterplan",
+  "description": "Checklista efter dödsfall – vi hjälper dig få ordning på allt praktiskt.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
