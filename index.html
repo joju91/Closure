@@ -304,23 +304,40 @@
       </div>
     </div>
 
-    <!-- Step 4 (fd. steg 5) -->
+    <!-- Step 4 — deltagare (visas bara om "vi är flera") -->
     <div class="ob-step" id="ob-step-4">
       <div class="ob-content">
-        <p class="ob-label">Steg 4 av 5</p>
-        <h2 class="ob-title">Vad hette personen?</h2>
-        <p class="ob-hint">Det gör planen och breven lite mer personliga.</p>
-        <input type="text" id="deceased-name" class="ob-text-input" placeholder="Förnamn Efternamn" autocomplete="off"
-          onkeydown="if(event.key==='Enter') obGoTo(5)" />
-        <p class="ob-skip">Frivilligt — du kan hoppa över detta.</p>
+        <p class="ob-label">Steg 4 av 6</p>
+        <h2 class="ob-title">Vilka hjälper till?</h2>
+        <p class="ob-hint">Lägg till alla som delar på arbetet — t.ex. syskon, förälder eller annan anhörig.</p>
+        <div class="ob-participant-list" id="ob-participant-list"></div>
+        <div class="ob-participant-input-row">
+          <input type="text" id="ob-participant-name" class="ob-text-input" placeholder="Förnamn Efternamn" autocomplete="off"
+            onkeydown="if(event.key==='Enter') obAddParticipant()" />
+          <button class="btn-ghost btn-sm" type="button" onclick="obAddParticipant()">+ Lägg till</button>
+        </div>
+        <p class="ob-why">Vi använder detta för att du ska kunna tilldela uppgifter till rätt person.</p>
         <button class="ob-next-btn" onclick="obGoTo(5)">Nästa →</button>
       </div>
     </div>
 
-    <!-- Step 5 (fd. steg 6) -->
+    <!-- Step 5 — namn -->
     <div class="ob-step" id="ob-step-5">
       <div class="ob-content">
-        <p class="ob-label">Steg 5 av 5 — helt frivilligt</p>
+        <p class="ob-label">Steg 5 av 6</p>
+        <h2 class="ob-title">Vad hette personen?</h2>
+        <p class="ob-hint">Det gör planen och breven lite mer personliga.</p>
+        <input type="text" id="deceased-name" class="ob-text-input" placeholder="Förnamn Efternamn" autocomplete="off"
+          onkeydown="if(event.key==='Enter') obGoTo(6)" />
+        <p class="ob-skip">Frivilligt — du kan hoppa över detta.</p>
+        <button class="ob-next-btn" onclick="obGoTo(6)">Nästa →</button>
+      </div>
+    </div>
+
+    <!-- Step 6 — personnr -->
+    <div class="ob-step" id="ob-step-6">
+      <div class="ob-content">
+        <p class="ob-label">Steg 6 av 6 — helt frivilligt</p>
         <h2 class="ob-title">Personnummer?</h2>
         <p class="ob-hint">Vi fyller i det automatiskt i alla brev du genererar — sparar tid. Annars kan du fylla i det manuellt direkt i breven. Sparas bara lokalt i din webbläsare, aldrig på någon server.</p>
         <input type="text" id="deceased-personnr" class="ob-text-input" placeholder="ÅÅÅÅMMDD-XXXX" autocomplete="off"

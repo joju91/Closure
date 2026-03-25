@@ -68,6 +68,8 @@ function obPrefillAnswers() {
     const nb = document.querySelector('#ob-step-3 .ob-next-btn');
     if (nb) nb.disabled = false;
   }
+  // Step 4 — participants (if returning to edit)
+  renderObParticipantList();
   // Step 5 — name
   const nameEl = document.getElementById('deceased-name');
   if (nameEl) nameEl.value = state.name || '';
@@ -77,7 +79,7 @@ function obPrefillAnswers() {
 }
 
 // ─── ONBOARDING (conversational) ─────────────
-const OB_TOTAL = 5;
+let OB_TOTAL = 5;
 let obCurrentStep = 1;
 
 function obInitDots() {
@@ -129,7 +131,7 @@ function obGoTo(step) {
   }
 }
 
-const OB_FOCUS_IDS = { 4: 'deceased-name' };  /* steg 6 auto-fokuserar ej — tangentbordet ska inte öppnas automatiskt */
+const OB_FOCUS_IDS = { 5: 'deceased-name' };  /* tangentbordet ska inte öppnas automatiskt på personnr-steget */
 
 function obShowStep(step) {
   const el = document.getElementById(`ob-step-${step}`);
@@ -138,6 +140,13 @@ function obShowStep(step) {
   obCurrentStep = step;
   obUpdateDots(step);
   document.getElementById('ob-back-btn').style.visibility = step === 1 ? 'hidden' : 'visible';
+  // Update label dynamically to reflect logical step number
+  const labelEl = el.querySelector('.ob-label');
+  if (labelEl) {
+    const logicalStep = (OB_TOTAL === 5 && step >= 5) ? step - 1 : step;
+    const suffix = step === 6 ? ' — helt frivilligt' : '';
+    labelEl.textContent = `Steg ${logicalStep} av ${OB_TOTAL}${suffix}`;
+  }
   if (OB_FOCUS_IDS[step]) {
     setTimeout(() => document.getElementById(OB_FOCUS_IDS[step])?.focus(), 350);
   }
@@ -145,11 +154,47 @@ function obShowStep(step) {
 
 function obBack() {
   if (obCurrentStep === 1) { goToLanding(); return; }
+  // When ensam: step 5 (name) goes back to step 3, skipping participants step 4
+  if (obCurrentStep === 5 && state.ansvar === 'ensam') { obGoTo(3); return; }
   obGoTo(obCurrentStep - 1);
 }
 
 function obAfterAnsvar() {
-  obGoTo(4);
+  if (state.ansvar === 'flera') {
+    OB_TOTAL = 6;
+    obInitDots();
+    obGoTo(4); // participants step
+  } else {
+    OB_TOTAL = 5;
+    obInitDots();
+    obGoTo(5); // skip participants, go straight to name
+  }
+}
+
+function obAddParticipant() {
+  const input = document.getElementById('ob-participant-name');
+  const name = input ? input.value.trim() : '';
+  if (!name) return;
+  if (!state.participants) state.participants = [];
+  if (!state.participants.includes(name)) state.participants.push(name);
+  if (input) input.value = '';
+  renderObParticipantList();
+  renderParticipants();
+}
+
+function obRemoveParticipant(i) {
+  if (!state.participants) return;
+  state.participants.splice(i, 1);
+  renderObParticipantList();
+  renderParticipants();
+}
+
+function renderObParticipantList() {
+  const list = document.getElementById('ob-participant-list');
+  if (!list) return;
+  list.innerHTML = (state.participants || []).map((name, i) =>
+    `<span class="ob-participant-chip">${name} <button class="ob-participant-remove" type="button" onclick="obRemoveParticipant(${i})" aria-label="Ta bort ${name}">×</button></span>`
+  ).join('');
 }
 
 function updateCheckboxState() {

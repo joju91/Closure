@@ -1664,6 +1664,32 @@ body {
   flex: 1;
   margin-bottom: 0;
 }
+.ob-participant-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.ob-participant-input-row .ob-text-input {
+  flex: 1;
+  margin-bottom: 0;
+}
+.ob-participant-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  padding: 0 0 0 4px;
+  line-height: 1;
+}
+.ob-participant-remove:hover { color: var(--danger); }
+.ob-why {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  margin-bottom: 16px;
+  font-style: italic;
+}
 
 .task-expand-start-btn {
   background: transparent;
