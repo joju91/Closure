@@ -1599,7 +1599,7 @@ function copyDocument() {
   });
 }
 
-// ─── SHARE MODAL ─────────────────────────────
+// ─── STATE SNAPSHOT (for localStorage) ───────
 function getShareableState() {
   return {
     relation:   state.relation,
@@ -1612,16 +1612,8 @@ function getShareableState() {
     ansvar:       state.ansvar,
     name:         state.name,
     participants: state.participants || [],
-    // personnr intentionally excluded from share links (privacy)
+    // personnr intentionally excluded (privacy)
   };
-}
-
-function generateShareURL() {
-  const tasks = {};
-  state.tasks.forEach(t => { tasks[t.id] = { done: t.done, started: t.started, assignee: t.assignee || null }; });
-  const payload = { ...getShareableState(), _tasks: tasks };
-  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-  return `${location.origin}${location.pathname}#plan=${encoded}`;
 }
 
 function toggleMemoryPhrase(btn) {
@@ -1672,34 +1664,9 @@ function saveState() {
 
 // ─── INIT ─────────────────────────────────────
 (function init() {
-  // 1. Check for shared plan in URL hash
-  const hash = location.hash;
-  if (hash.startsWith('#plan=')) {
-    try {
-      const shared = JSON.parse(decodeURIComponent(escape(atob(hash.slice(6)))));
-      Object.assign(state, shared);
-      buildTasks();
-      if (shared._tasks) {
-        state.tasks = state.tasks.map(t => {
-          const s = shared._tasks[t.id];
-          return s ? { ...t, done: s.done || false, started: s.started || false, assignee: s.assignee || null } : t;
-        });
-      }
-      renderPlan();
-      showScreen('screen-plan');
-      const banner = document.getElementById('shared-banner');
-      if (banner) {
-        banner.classList.remove('hidden');
-        const nameEl = document.getElementById('shared-banner-name');
-        if (nameEl) nameEl.textContent = state.name ? state.name + 's plan' : 'planen';
-      }
-      return;
-    } catch(e) {}
-  }
-
-  // 2. Restore own plan from localStorage
+  // Restore own plan from localStorage
   try {
-    const saved = localStorage.getItem('efterplan_state') || localStorage.getItem('efterplan_state');
+    const saved = localStorage.getItem('efterplan_state');
     if (saved) {
       Object.assign(state, JSON.parse(saved));
       buildTasks();
