@@ -68,8 +68,6 @@ function obPrefillAnswers() {
     const nb = document.querySelector('#ob-step-3 .ob-next-btn');
     if (nb) nb.disabled = false;
   }
-  // Step 3b — participants
-  _refreshParticipantList();
   // Step 5 — name
   const nameEl = document.getElementById('deceased-name');
   if (nameEl) nameEl.value = state.name || '';
@@ -94,7 +92,7 @@ function obInitDots() {
 }
 
 function obUpdateDots(step) {
-  const numStep = (step === '3b') ? 3 : step;
+  const numStep = step;
   for (let i = 1; i <= OB_TOTAL; i++) {
     const dot = document.getElementById(`ob-dot-${i}`);
     if (!dot) continue;
@@ -147,17 +145,11 @@ function obShowStep(step) {
 
 function obBack() {
   if (obCurrentStep === 1) { goToLanding(); return; }
-  if (obCurrentStep === '3b') { obGoTo(3); return; }
-  if (obCurrentStep === 4 && state.ansvar === 'flera') { obGoTo('3b'); return; }
   obGoTo(obCurrentStep - 1);
 }
 
 function obAfterAnsvar() {
-  if (state.ansvar === 'flera') {
-    obGoTo('3b');
-  } else {
-    obGoTo(4);
-  }
+  obGoTo(4);
 }
 
 function updateCheckboxState() {
@@ -611,16 +603,12 @@ function renderParticipants() {
   const container = document.getElementById('plan-participants');
   if (!container) return;
   const participants = state.participants || [];
-  if (!participants.length) {
-    container.innerHTML = '';
-    container.classList.add('hidden');
-    return;
-  }
-  container.classList.remove('hidden');
-  container.innerHTML = participants.map(name => {
+  const chips = participants.map(name => {
     const initials = name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
     return `<span class="plan-participant-chip" title="${name}">${initials}</span>`;
   }).join('');
+  container.innerHTML = chips +
+    `<button class="plan-participant-add-btn" onclick="openModal('modal-participants')" title="Hantera deltagare" aria-label="Hantera deltagare">+</button>`;
 }
 
 // ─── RENDER PLAN ─────────────────────────────

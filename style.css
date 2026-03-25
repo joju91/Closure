@@ -165,6 +165,26 @@ body {
   gap: 4px;
   margin-right: 4px;
 }
+.plan-participant-add-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1.5px dashed var(--border);
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+}
+.plan-participant-add-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
 .plan-participant-chip {
   width: 28px;
   height: 28px;
@@ -219,6 +239,29 @@ body {
   max-width: 480px;
   margin: 0 auto 36px;
   line-height: 1.7;
+}
+.landing-payoff {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto 28px;
+  max-width: 380px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.landing-payoff li {
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  padding-left: 20px;
+  position: relative;
+}
+.landing-payoff li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: 700;
 }
 .landing-note {
   margin-top: 14px;

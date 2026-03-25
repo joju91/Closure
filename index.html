@@ -40,6 +40,11 @@
       <p class="landing-eyebrow">Checklista efter dödsfall</p>
       <h1 class="landing-headline">Du tar hand om det som betyder något.<br>Vi hjälper dig med resten.</h1>
       <p class="landing-sub">Efterplan bygger din personliga plan, genererar brev och håller koll på allt som behöver göras — så att du slipper.</p>
+      <ul class="landing-payoff">
+        <li>En prioriterad checklista anpassad efter din situation</li>
+        <li>Färdiga brev till banker, försäkringsbolag och myndigheter</li>
+        <li>En plan att dela med övriga i familjen</li>
+      </ul>
       <button class="btn-primary btn-large" onclick="startOnboarding()">Kom igång — tar 2 minuter</button>
       <p class="landing-note">Gratis att börja. Ingen registrering krävs.</p>
     </div>
@@ -201,24 +206,6 @@
       </div>
     </div>
 
-    <!-- Step 3b — visas bara när "vi är fler" -->
-    <div class="ob-step" id="ob-step-3b">
-      <div class="ob-content">
-        <p class="ob-label">Steg 3 av 5</p>
-        <h2 class="ob-title">Vilka hjälps ni åt?</h2>
-        <p class="ob-hint">Lägg till namn på dem som delar på arbetet. Används när ni fördelar vem som ansvarar för vad.</p>
-        <div id="ob-participant-list" class="ob-participant-list"></div>
-        <div class="ob-participant-add">
-          <input type="text" id="ob-participant-input" class="ob-text-input" placeholder="Lägg till namn…" autocomplete="off"
-            onkeydown="if(event.key==='Enter'){event.preventDefault();addParticipant()}"
-            onclick="event.stopPropagation()" />
-          <button style="padding:12px 18px;border-radius:var(--radius-sm);border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-size:0.88rem;font-weight:600;cursor:pointer;white-space:nowrap;font-family:var(--font)" onclick="addParticipant()">+ Lägg till</button>
-        </div>
-        <p class="ob-skip">Du kan hoppa över detta — namn kan läggas till senare i planen.</p>
-        <button class="ob-next-btn ob-next-sticky" onclick="obGoTo(4)">Nästa →</button>
-      </div>
-    </div>
-
     <!-- Step 4 (fd. steg 5) -->
     <div class="ob-step" id="ob-step-4">
       <div class="ob-content">
@@ -256,7 +243,7 @@
   <nav class="nav nav-light nav-plan">
     <div class="logo">Efterplan</div>
     <div class="nav-plan-actions">
-      <div id="plan-participants" class="plan-participants hidden"></div>
+      <div id="plan-participants" class="plan-participants"></div>
       <button class="btn-ghost btn-sm" onclick="editAnswers()">Ändra svar</button>
       <button class="btn-ghost btn-sm" onclick="openShareModal()">Dela plan</button>
     </div>
@@ -618,6 +605,25 @@
 
 
 <!-- UNDO TOAST -->
+<!-- MODAL: DELTAGARE -->
+<div id="modal-participants" class="modal-overlay hidden"
+     role="dialog" aria-modal="true" aria-labelledby="modal-participants-title"
+     onclick="closeModalIfOutside(event, 'modal-participants')">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-participants-title">Vilka hjälps ni åt?</h2>
+      <button class="modal-close" onclick="closeModal('modal-participants')" aria-label="Stäng">✕</button>
+    </div>
+    <p class="modal-sub">Namn används för arbetsfördelning och för att bestämma vem som ansvarar för vad.</p>
+    <div id="ob-participant-list" class="ob-participant-list" style="margin-bottom:12px"></div>
+    <div class="ob-participant-add">
+      <input type="text" id="ob-participant-input" class="text-input" placeholder="Lägg till namn…" autocomplete="off"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();addParticipant()}" />
+      <button class="btn-ghost btn-sm" onclick="addParticipant()">Lägg till</button>
+    </div>
+  </div>
+</div>
+
 <div id="undo-toast" class="undo-toast hidden" role="status" aria-live="polite">
   <span>Uppgift markerad som klar.</span>
   <button onclick="undoTaskDone()">Ångra</button>
