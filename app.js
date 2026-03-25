@@ -69,7 +69,15 @@ function obPrefillAnswers() {
     if (nb) nb.disabled = false;
   }
   // Step 4 — participants (if returning to edit)
+  const selfInput = document.getElementById('ob-self-name');
+  if (selfInput) selfInput.value = state.participants?.[0] || '';
+  // Render others (index 1+) as chips
+  const _allP = state.participants || [];
+  const _others = _allP.slice(1);
+  const _savedP = state.participants;
+  state.participants = _others;
   renderObParticipantList();
+  state.participants = _savedP;
   // Step 5 — name
   const nameEl = document.getElementById('deceased-name');
   if (nameEl) nameEl.value = state.name || '';
@@ -131,7 +139,7 @@ function obGoTo(step) {
   }
 }
 
-const OB_FOCUS_IDS = { 5: 'deceased-name' };  /* tangentbordet ska inte öppnas automatiskt på personnr-steget */
+const OB_FOCUS_IDS = { 4: 'ob-self-name', 5: 'deceased-name' };  /* tangentbordet ska inte öppnas automatiskt på personnr-steget */
 
 function obShowStep(step) {
   const el = document.getElementById(`ob-step-${step}`);
@@ -169,6 +177,16 @@ function obAfterAnsvar() {
     obInitDots();
     obGoTo(5); // skip participants, go straight to name
   }
+}
+
+function obSaveParticipantsAndContinue() {
+  const selfName = document.getElementById('ob-self-name')?.value.trim() || '';
+  // others = chips already added
+  const others = state.participants || [];
+  // Build final list: self first, then others (deduped)
+  const all = selfName ? [selfName, ...others.filter(n => n !== selfName)] : others;
+  state.participants = all;
+  obGoTo(5);
 }
 
 function obAddParticipant() {

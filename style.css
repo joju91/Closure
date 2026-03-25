@@ -1664,6 +1664,17 @@ body {
   flex: 1;
   margin-bottom: 0;
 }
+.ob-field-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+  margin-top: 16px;
+}
+.ob-field-label:first-of-type { margin-top: 0; }
 .ob-participant-input-row {
   display: flex;
   gap: 8px;
