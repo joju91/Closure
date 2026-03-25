@@ -159,6 +159,27 @@ body {
   gap: 8px;
   align-items: center;
 }
+.plan-participants {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 4px;
+}
+.plan-participant-chip {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-light);
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  font-size: 0.68rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  flex-shrink: 0;
+}
 
 /* ─── LANDING ────────────────────────────────── */
 #screen-landing .nav {

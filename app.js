@@ -606,8 +606,26 @@ function loadTaskState() {
   } catch(e) {}
 }
 
+// ─── PARTICIPANTS NAV ─────────────────────────
+function renderParticipants() {
+  const container = document.getElementById('plan-participants');
+  if (!container) return;
+  const participants = state.participants || [];
+  if (!participants.length) {
+    container.innerHTML = '';
+    container.classList.add('hidden');
+    return;
+  }
+  container.classList.remove('hidden');
+  container.innerHTML = participants.map(name => {
+    const initials = name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    return `<span class="plan-participant-chip" title="${name}">${initials}</span>`;
+  }).join('');
+}
+
 // ─── RENDER PLAN ─────────────────────────────
 function renderPlan() {
+  renderParticipants();
   const name = state.name;
   document.getElementById('plan-title').textContent =
     name ? `Plan för ${name}s dödsbo` : 'Din plan';
@@ -1602,7 +1620,10 @@ function getShareableState() {
 }
 
 function generateShareURL() {
-  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(getShareableState()))));
+  const tasks = {};
+  state.tasks.forEach(t => { tasks[t.id] = { done: t.done, started: t.started, assignee: t.assignee || null }; });
+  const payload = { ...getShareableState(), _tasks: tasks };
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
   return `${location.origin}${location.pathname}#plan=${encoded}`;
 }
 
@@ -1682,8 +1703,15 @@ function saveState() {
   const hash = location.hash;
   if (hash.startsWith('#plan=')) {
     try {
-      Object.assign(state, JSON.parse(decodeURIComponent(escape(atob(hash.slice(6))))));
+      const shared = JSON.parse(decodeURIComponent(escape(atob(hash.slice(6)))));
+      Object.assign(state, shared);
       buildTasks();
+      if (shared._tasks) {
+        state.tasks = state.tasks.map(t => {
+          const s = shared._tasks[t.id];
+          return s ? { ...t, done: s.done || false, started: s.started || false, assignee: s.assignee || null } : t;
+        });
+      }
       renderPlan();
       showScreen('screen-plan');
       const banner = document.getElementById('shared-banner');
