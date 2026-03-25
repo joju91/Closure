@@ -91,7 +91,7 @@
     <!-- Step 1 -->
     <div class="ob-step active" id="ob-step-1">
       <div class="ob-content">
-        <p class="ob-label">Steg 1 av 6</p>
+        <p class="ob-label">Steg 1 av 5</p>
         <h2 class="ob-title">Vem har gått bort?</h2>
         <p class="ob-hint">Det hjälper oss förstå vad som behöver göras.</p>
         <div class="ob-choices">
@@ -105,26 +105,10 @@
       </div>
     </div>
 
-    <!-- Step 2 -->
+    <!-- Step 2 (fd. steg 3) -->
     <div class="ob-step" id="ob-step-2">
       <div class="ob-content">
-        <p class="ob-label">Steg 2 av 6</p>
-        <h2 class="ob-title">Hur länge sedan hände det?</h2>
-        <p class="ob-hint">Det avgör vad som är akut just nu.</p>
-        <div class="ob-choices">
-          <button class="ob-choice" data-key="timing" data-val="idag" onclick="obChoose(this)">Idag</button>
-          <button class="ob-choice" data-key="timing" data-val="igår" onclick="obChoose(this)">Igår</button>
-          <button class="ob-choice" data-key="timing" data-val="dagar" onclick="obChoose(this)">2–7 dagar sedan</button>
-          <button class="ob-choice" data-key="timing" data-val="veckor" onclick="obChoose(this)">Mer än en vecka</button>
-        </div>
-        <button class="ob-next-btn" onclick="obGoTo(3)" disabled>Nästa →</button>
-      </div>
-    </div>
-
-    <!-- Step 3 -->
-    <div class="ob-step" id="ob-step-3">
-      <div class="ob-content">
-        <p class="ob-label">Steg 3 av 6</p>
+        <p class="ob-label">Steg 2 av 5</p>
         <h2 class="ob-title">Gäller något av detta?</h2>
         <p class="ob-hint">Välj allt som stämmer. Du kan alltid ändra senare.</p>
         <div class="ob-checks">
@@ -149,7 +133,7 @@
             <input type="checkbox" data-key="fastighet" onchange="updateCheckboxState()">
             <span class="ob-check-box"></span>
             <span class="ob-check-label">Ägde sin bostad
-              <span class="ob-check-hint">Villa, radhus eller bostadsrätt — den döde <strong>ägde</strong> (inte hyrde)</span>
+              <span class="ob-check-hint">Villa, radhus eller bostadsrätt — den avlidna <strong>ägde</strong> (inte hyrde)</span>
             </span>
           </label>
           <label class="ob-check">
@@ -187,7 +171,7 @@
             <input type="checkbox" data-key="fordon" onchange="updateCheckboxState()">
             <span class="ob-check-box"></span>
             <span class="ob-check-label">Bil eller annat fordon
-              <span class="ob-check-hint">Bil eller fordon som den döde ägde eller delade</span>
+              <span class="ob-check-hint">Bil eller fordon som den avlidna ägde eller delade</span>
             </span>
           </label>
           <label class="ob-check">
@@ -199,41 +183,59 @@
           </label>
         </div>
         <p class="ob-skip">Vet du inte säkert? Hoppa bara vidare — du kan ändra senare.</p>
-        <button class="ob-next-btn ob-next-sticky" onclick="obGoTo(4)">Nästa →</button>
+        <button class="ob-next-btn ob-next-sticky" onclick="obGoTo(3)">Nästa →</button>
       </div>
     </div>
 
-    <!-- Step 4 -->
-    <div class="ob-step" id="ob-step-4">
+    <!-- Step 3 (fd. steg 4) -->
+    <div class="ob-step" id="ob-step-3">
       <div class="ob-content">
-        <p class="ob-label">Steg 4 av 6</p>
+        <p class="ob-label">Steg 3 av 5</p>
         <h2 class="ob-title">Hanterar du det här ensam?</h2>
         <p class="ob-hint">Syskon, föräldrar, svärmor — alla som delar på det praktiska räknas. Vi lägger till en fullmaktsmall och anpassar planen.</p>
         <div class="ob-choices">
           <button class="ob-choice" data-key="ansvar" data-val="ensam" onclick="obChoose(this)">Ja, jag sköter det</button>
           <button class="ob-choice" data-key="ansvar" data-val="flera" onclick="obChoose(this)">Vi är flera</button>
         </div>
-        <button class="ob-next-btn" onclick="obGoTo(5)" disabled>Nästa →</button>
+        <button class="ob-next-btn" onclick="obAfterAnsvar()" disabled>Nästa →</button>
       </div>
     </div>
 
-    <!-- Step 5 -->
-    <div class="ob-step" id="ob-step-5">
+    <!-- Step 3b — visas bara när "vi är fler" -->
+    <div class="ob-step" id="ob-step-3b">
       <div class="ob-content">
-        <p class="ob-label">Steg 5 av 6</p>
+        <p class="ob-label">Steg 3 av 5</p>
+        <h2 class="ob-title">Vilka hjälps ni åt?</h2>
+        <p class="ob-hint">Lägg till namn på dem som delar på arbetet. Används när ni fördelar vem som ansvarar för vad.</p>
+        <div id="ob-participant-list" class="ob-participant-list"></div>
+        <div class="ob-participant-add">
+          <input type="text" id="ob-participant-input" class="ob-text-input" placeholder="Lägg till namn…" autocomplete="off"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();addParticipant()}"
+            onclick="event.stopPropagation()" />
+          <button style="padding:12px 18px;border-radius:var(--radius-sm);border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-size:0.88rem;font-weight:600;cursor:pointer;white-space:nowrap;font-family:var(--font)" onclick="addParticipant()">+ Lägg till</button>
+        </div>
+        <p class="ob-skip">Du kan hoppa över detta — namn kan läggas till senare i planen.</p>
+        <button class="ob-next-btn ob-next-sticky" onclick="obGoTo(4)">Nästa →</button>
+      </div>
+    </div>
+
+    <!-- Step 4 (fd. steg 5) -->
+    <div class="ob-step" id="ob-step-4">
+      <div class="ob-content">
+        <p class="ob-label">Steg 4 av 5</p>
         <h2 class="ob-title">Vad hette personen?</h2>
         <p class="ob-hint">Det gör planen och breven lite mer personliga.</p>
         <input type="text" id="deceased-name" class="ob-text-input" placeholder="Förnamn Efternamn" autocomplete="off"
-          onkeydown="if(event.key==='Enter') obGoTo(6)" />
+          onkeydown="if(event.key==='Enter') obGoTo(5)" />
         <p class="ob-skip">Frivilligt — du kan hoppa över detta.</p>
-        <button class="ob-next-btn" onclick="obGoTo(6)">Nästa →</button>
+        <button class="ob-next-btn" onclick="obGoTo(5)">Nästa →</button>
       </div>
     </div>
 
-    <!-- Step 6 -->
-    <div class="ob-step" id="ob-step-6">
+    <!-- Step 5 (fd. steg 6) -->
+    <div class="ob-step" id="ob-step-5">
       <div class="ob-content">
-        <p class="ob-label">Steg 6 av 6 — helt frivilligt</p>
+        <p class="ob-label">Steg 5 av 5 — helt frivilligt</p>
         <h2 class="ob-title">Personnummer?</h2>
         <p class="ob-hint">Vi fyller i det automatiskt i alla brev du genererar — sparar tid. Annars kan du fylla i det manuellt direkt i breven. Sparas bara lokalt i din webbläsare, aldrig på någon server.</p>
         <input type="text" id="deceased-personnr" class="ob-text-input" placeholder="ÅÅÅÅMMDD-XXXX" autocomplete="off"

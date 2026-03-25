@@ -185,7 +185,7 @@ body {
   margin-bottom: 16px;
 }
 .landing-headline {
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
   font-weight: 700;
   line-height: 1.2;
   color: var(--text-primary);
@@ -1508,6 +1508,58 @@ body {
 .notify-add-btn:hover {
   background: var(--accent);
   color: #fff;
+}
+.notify-notifier-select {
+  font-size: 0.75rem;
+  font-family: var(--font);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text-soft);
+  padding: 2px 4px;
+  cursor: pointer;
+  max-width: 100px;
+}
+.notify-notifier-select:focus { outline: none; border-color: var(--accent); }
+
+/* ─── Onboarding participants ─── */
+.ob-participant-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 16px;
+  margin-bottom: 12px;
+}
+.ob-participant-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--accent-light);
+  border: 1px solid var(--accent);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+.ob-participant-chip button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  padding: 0 0 0 4px;
+  line-height: 1;
+}
+.ob-participant-chip button:hover { color: var(--danger); }
+.ob-participant-add {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.ob-participant-add .ob-text-input {
+  flex: 1;
+  margin-bottom: 0;
 }
 
 .task-expand-start-btn {

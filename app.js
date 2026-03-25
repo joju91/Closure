@@ -6,7 +6,6 @@
 // ─── STATE ───────────────────────────────────
 const state = {
   relation:    null,
-  timing:      null,
   testamente:  false,
   fastighet:   false,
   foretag:     false,
@@ -16,10 +15,11 @@ const state = {
   fordon:      false,
   husdjur:     false,
   hyresratt:   false,
-  ansvar:      null,
-  name:        '',
-  personnr:    '',
-  tasks:       [],
+  ansvar:       null,
+  name:         '',
+  personnr:     '',
+  participants: [],
+  tasks:        [],
 };
 
 // ─── SCREENS ─────────────────────────────────
@@ -56,26 +56,20 @@ function obPrefillAnswers() {
     const nb = document.querySelector('#ob-step-1 .ob-next-btn');
     if (nb) nb.disabled = false;
   }
-  // Step 2 — timing
-  document.querySelectorAll('#ob-step-2 .ob-choice').forEach(btn => {
-    btn.classList.toggle('selected', btn.dataset.val === state.timing);
-  });
-  if (state.timing) {
-    const nb = document.querySelector('#ob-step-2 .ob-next-btn');
-    if (nb) nb.disabled = false;
-  }
-  // Step 3 — checkboxes (:has CSS handles visual state)
-  document.querySelectorAll('#ob-step-3 input[type="checkbox"]').forEach(cb => {
+  // Step 2 — checkboxes
+  document.querySelectorAll('#ob-step-2 input[type="checkbox"]').forEach(cb => {
     cb.checked = !!state[cb.dataset.key];
   });
-  // Step 4 — ansvar
-  document.querySelectorAll('#ob-step-4 .ob-choice').forEach(btn => {
+  // Step 3 — ansvar
+  document.querySelectorAll('#ob-step-3 .ob-choice').forEach(btn => {
     btn.classList.toggle('selected', btn.dataset.val === state.ansvar);
   });
   if (state.ansvar) {
-    const nb = document.querySelector('#ob-step-4 .ob-next-btn');
+    const nb = document.querySelector('#ob-step-3 .ob-next-btn');
     if (nb) nb.disabled = false;
   }
+  // Step 3b — participants
+  _refreshParticipantList();
   // Step 5 — name
   const nameEl = document.getElementById('deceased-name');
   if (nameEl) nameEl.value = state.name || '';
@@ -85,7 +79,7 @@ function obPrefillAnswers() {
 }
 
 // ─── ONBOARDING (conversational) ─────────────
-const OB_TOTAL = 6;
+const OB_TOTAL = 5;
 let obCurrentStep = 1;
 
 function obInitDots() {
@@ -100,12 +94,13 @@ function obInitDots() {
 }
 
 function obUpdateDots(step) {
+  const numStep = (step === '3b') ? 3 : step;
   for (let i = 1; i <= OB_TOTAL; i++) {
     const dot = document.getElementById(`ob-dot-${i}`);
     if (!dot) continue;
     dot.className = 'ob-dot';
-    if (i < step)   dot.classList.add('done');
-    if (i === step) dot.classList.add('active');
+    if (i < numStep)   dot.classList.add('done');
+    if (i === numStep) dot.classList.add('active');
   }
 }
 
@@ -136,7 +131,7 @@ function obGoTo(step) {
   }
 }
 
-const OB_FOCUS_IDS = { 5: 'deceased-name' };  /* steg 6 auto-fokuserar ej — tangentbordet ska inte öppnas automatiskt */
+const OB_FOCUS_IDS = { 4: 'deceased-name' };  /* steg 6 auto-fokuserar ej — tangentbordet ska inte öppnas automatiskt */
 
 function obShowStep(step) {
   const el = document.getElementById(`ob-step-${step}`);
@@ -151,12 +146,22 @@ function obShowStep(step) {
 }
 
 function obBack() {
-  if (obCurrentStep <= 1) { goToLanding(); return; }
+  if (obCurrentStep === 1) { goToLanding(); return; }
+  if (obCurrentStep === '3b') { obGoTo(3); return; }
+  if (obCurrentStep === 4 && state.ansvar === 'flera') { obGoTo('3b'); return; }
   obGoTo(obCurrentStep - 1);
 }
 
+function obAfterAnsvar() {
+  if (state.ansvar === 'flera') {
+    obGoTo('3b');
+  } else {
+    obGoTo(4);
+  }
+}
+
 function updateCheckboxState() {
-  document.querySelectorAll('#ob-step-3 input[type="checkbox"]').forEach(cb => {
+  document.querySelectorAll('#ob-step-2 input[type="checkbox"]').forEach(cb => {
     state[cb.dataset.key] = cb.checked;
   });
 }
@@ -177,7 +182,7 @@ const TASK_LIBRARY = [
   // ── ALWAYS ─────────────────────────────────
   {
     id: 'narmaste_anhörig',
-    title: 'Påbörja kontaktrundringen',
+    title: 'Meddela närstående',
     desc: 'Det här sker i etapper — du behöver inte nå alla på en gång. Börja med de allra närmaste: familj och nära vänner. Övriga kan meddelas under de kommande dagarna. Det är okej att be någon annan hjälpa till.',
     urgency: 'today',
     time: 'Din tid',
@@ -202,7 +207,7 @@ const TASK_LIBRARY = [
   {
     id: 'dodsbevis',
     title: 'Beställ dödsfallsintyg',
-    desc: 'Dödsbeviset utfärdas automatiskt av läkaren. Det du behöver beställa är <strong>dödsfallsintyg med släktutredning</strong> från Skatteverket — det är detta dokument som banker, försäkringsbolag och myndigheter kräver för att du ska få företräda dödsboet. Ha personnumret tillgängligt.',
+    desc: 'Dödsbeviset utfärdas automatiskt av läkaren. Det du behöver beställa är <strong>dödsfallsintyg med släktutredning</strong> från Skatteverket — det är detta dokument som banker, försäkringsbolag och myndigheter kräver för att du ska få företräda dödsboet. Ha den <em>avlidnas</em> personnummer tillgängligt.',
     urgency: 'today',
     time: 'ca 15 min',
     link: 'https://www.skatteverket.se/privat/folkbokforing/dodsfall.html',
@@ -223,7 +228,7 @@ const TASK_LIBRARY = [
   {
     id: 'begravningsceremoni',
     title: 'Planera begravningsceremonin',
-    desc: 'Bestäm vem i familjen som ansvarar för vad — och se till att någon förmedlar era önskemål till begravningsbyrån.<br><br>Vem ansvarar för musik? Vem håller tal? Vem ordnar minnesstunden? Vem samlar in den dödes eventuella önskemål?',
+    desc: 'Bestäm vem i familjen som ansvarar för vad — och se till att någon förmedlar era önskemål till begravningsbyrån.<br><br>Vem ansvarar för musik? Vem håller tal? Vem ordnar minnesstunden? Vem samlar in den avlidnas eventuella önskemål?',
     urgency: 'week',
     time: 'ca 30 min med familjen',
     link: null,
@@ -239,6 +244,7 @@ const TASK_LIBRARY = [
     link: null,
     triggers: ['flera_delägare'],
     hasDoc: 'fullmakt',
+    assigneeLabel: 'Vem får fullmakten?',
   },
   {
     id: 'bouppteckning',
@@ -308,7 +314,7 @@ const TASK_LIBRARY = [
     time: 'ca 1–2 timmar',
     link: null,
     triggers: [],
-    hasDoc: 'letter',
+    hasDoc: 'bulk',
     notesPlaceholder: 'Vet du några abonnemang eller tjänster? Notera dem här — du kan fylla på. (t.ex. Telia, Spotify, Netflix, el, gym…)',
   },
   {
@@ -332,7 +338,7 @@ Säg även upp betaltjänster som Klarna, PayPal, spelkonton — logga aldrig in
     time: 'ca 1–2 timmar',
     link: null,
     triggers: [],
-    notesPlaceholder: 'Vet du några konton? Skriv de du hittar — det är okej att börja tomt. (t.ex. Facebook, Google, iCloud, email…)',
+    notesPlaceholder: 'Personlig anteckning — skriv de konton du hittar. Inget skickas vidare automatiskt. (t.ex. Facebook, Google, iCloud, email…)',
   },
   {
     id: 'skattedeklaration',
@@ -528,7 +534,7 @@ Säg även upp betaltjänster som Klarna, PayPal, spelkonton — logga aldrig in
     title: 'Töm och städa bostaden',
     urgency: 'later',
     time: 'Dagar–veckor',
-    desc: 'Samordna med övriga arvingar vad som sparas, säljas eller skänks bort innan bostaden lämnas tillbaka eller säljs.<br><br><strong>RUT-avdraget gäller inte dödsbo</strong> — dödsboet är en egen juridisk person och Skatteverket medger inte skattereduktion. Räkna med att betala fullt pris ur dödsboets tillgångar. Typisk kostnad: 4 000–15 000 kr beroende på storlek.',
+    desc: 'Samordna med övriga arvingar vad som sparas, säljas eller skänks bort. Gör det i god tid — en tom bostad säljs snabbare och minskar löpande hyra eller avgift som annars belastar dödsboet.<br><br><strong>Donera / sälja:</strong> Stadsmissionen, Myrorna och Erikshjälpen hämtar möbler och kläder kostnadsfritt. Blocket och Facebook Marketplace fungerar bra för lösa föremål. Begravningsbyrån kan rekommendera lokala aktörer.<br><br><strong>Anlita städhjälp:</strong> Specialiserade dödsboföretag hanterar hel tömning och städ. Typisk kostnad: 5 000–20 000 kr beroende på bostadens storlek. Betalas ur dödsboets tillgångar.<br><br><strong>RUT-avdraget gäller inte dödsbo</strong> — dödsboet är en juridisk person och Skatteverket medger inte skattereduktion.',
     triggers: [],
     notesPlaceholder: 'Vem ansvarar för tömningen? Vad ska sparas, säljas, skänkas?',
   },
@@ -549,17 +555,9 @@ function buildTasks() {
   if (state.husdjur)     triggers.add('husdjur');
   if (state.hyresratt)   triggers.add('hyresratt');
 
-  const addBegravningNote = state.timing === 'veckor';
-
   state.tasks = TASK_LIBRARY.filter(task =>
     task.triggers.length === 0 || task.triggers.some(t => triggers.has(t))
-  ).map(task => {
-    const base = { ...task, done: false, started: false };
-    if (addBegravningNote && task.id === 'begravningsbyra') {
-      return { ...base, desc: base.desc + ' Har begravningsbyrå redan kontaktats? Markera som klar i så fall.' };
-    }
-    return base;
-  });
+  ).map(task => ({ ...task, done: false, started: false }));
 
   loadTaskState();
 }
@@ -739,7 +737,7 @@ function renderTaskList(containerId, tasks, nextTaskId) {
         ${linkHtml}
         ${phoneHtml}
         ${resourcesHtml}
-        ${renderAssigneePicker(task.id)}
+        ${(task.id === 'begravningsceremoni' && state.ansvar !== 'flera') ? '' : renderAssigneePicker(task.id)}
         ${notifyHtml}
         ${notesHtml}
         <div class="task-expand-actions">
@@ -934,12 +932,46 @@ function _buildAssigneePickerInner(taskId) {
            onclick="event.stopPropagation()" />`;
 }
 function renderAssigneePicker(taskId) {
+  const taskDef = TASK_LIBRARY.find(t => t.id === taskId);
+  const label = (taskDef && taskDef.assigneeLabel) || 'Ansvarig';
   return `<div class="task-assignee-section">
-    <span class="task-assignee-label">Ansvarig</span>
+    <span class="task-assignee-label">${label}</span>
     <div class="assignee-picker" id="assignee-picker-${taskId}">
       ${_buildAssigneePickerInner(taskId)}
     </div>
   </div>`;
+}
+
+// ─── PARTICIPANTS ──────────────────────────────
+function _getParticipants() {
+  return state.participants || [];
+}
+function addParticipant() {
+  const input = document.getElementById('ob-participant-input');
+  const name = input?.value.trim();
+  if (!name) return;
+  if (!state.participants) state.participants = [];
+  if (!state.participants.includes(name)) {
+    state.participants.push(name);
+    saveState();
+  }
+  input.value = '';
+  _refreshParticipantList();
+}
+function removeParticipant(name) {
+  state.participants = (state.participants || []).filter(n => n !== name);
+  saveState();
+  _refreshParticipantList();
+}
+function _refreshParticipantList() {
+  const container = document.getElementById('ob-participant-list');
+  if (!container) return;
+  container.innerHTML = (state.participants || []).map(name =>
+    `<div class="ob-participant-chip">
+      <span>${name}</span>
+      <button onclick="removeParticipant('${name.replace(/'/g, "\\'")}')" aria-label="Ta bort ${name}">×</button>
+    </div>`
+  ).join('');
 }
 
 // ─── NOTIFY LIST ──────────────────────────────
@@ -958,7 +990,7 @@ function addNotifyPerson() {
   const name = input?.value.trim();
   if (!name) return;
   const list = _getNotifyList();
-  list.push({ id: _genNotifyId(), name, notified: false });
+  list.push({ id: _genNotifyId(), name, notified: false, notifier: '' });
   _saveNotifyList(list);
   input.value = '';
   _refreshNotifyList();
@@ -977,6 +1009,12 @@ function removeNotifyPerson(personId) {
   _refreshNotifyList();
 }
 
+function setNotifyNotifier(personId, notifier) {
+  const list = _getNotifyList();
+  const person = list.find(p => p.id === personId);
+  if (person) { person.notifier = notifier; _saveNotifyList(list); }
+}
+
 function _refreshNotifyList() {
   const container = document.getElementById('notify-list-container');
   if (!container) return;
@@ -989,17 +1027,29 @@ function _refreshNotifyList() {
 
 function _buildNotifyListInner() {
   const list = _getNotifyList();
+  const participants = _getParticipants();
   if (!list.length) return '<p class="notify-empty">Inga tillagda än</p>';
-  return list.map(p => `
-    <div class="notify-person${p.notified ? ' notified' : ''}">
-      <button class="notify-check${p.notified ? ' checked' : ''}"
-        onclick="event.stopPropagation();toggleNotified('${p.id}')"
-        aria-label="Markera ${p.name} som meddelad">${p.notified ? '✓' : ''}</button>
-      <span class="notify-name">${p.name}</span>
-      <button class="notify-remove"
-        onclick="event.stopPropagation();removeNotifyPerson('${p.id}')"
-        aria-label="Ta bort ${p.name}">×</button>
-    </div>`).join('');
+  return list.map(p => {
+    const safeId = p.id;
+    const notifierSelect = participants.length > 0
+      ? `<select class="notify-notifier-select" onclick="event.stopPropagation()"
+           onchange="event.stopPropagation();setNotifyNotifier('${safeId}',this.value)">
+           <option value="">Vem ringer?</option>
+           ${participants.map(n => `<option value="${n}"${p.notifier === n ? ' selected' : ''}>${n}</option>`).join('')}
+         </select>`
+      : '';
+    return `
+      <div class="notify-person${p.notified ? ' notified' : ''}">
+        <button class="notify-check${p.notified ? ' checked' : ''}"
+          onclick="event.stopPropagation();toggleNotified('${safeId}')"
+          aria-label="Markera ${p.name} som meddelad">${p.notified ? '✓' : ''}</button>
+        <span class="notify-name">${p.name}</span>
+        ${notifierSelect}
+        <button class="notify-remove"
+          onclick="event.stopPropagation();removeNotifyPerson('${safeId}')"
+          aria-label="Ta bort ${p.name}">×</button>
+      </div>`;
+  }).join('');
 }
 
 function renderNotifyList() {
@@ -1182,6 +1232,22 @@ function showDocForm(type) {
   }
   if (type === 'bulk') {
     initBulkForm();
+    const abNotes = getTaskNote('abonnemang');
+    if (abNotes) {
+      const services = abNotes.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+      if (services.length > 0) {
+        document.getElementById('bulk-rows').innerHTML = '';
+        _bulkRowId = 0;
+        services.forEach(svc => {
+          addBulkRow();
+          const rows = document.querySelectorAll('#bulk-rows .bulk-row');
+          const lastRow = rows[rows.length - 1];
+          const input = lastRow?.querySelector('.bulk-name');
+          if (input) input.value = svc;
+        });
+        addBulkRow(); // one empty row at end
+      }
+    }
     const sEl = document.getElementById('bulk-sender');
     if (sEl && !sEl.value && sender.name) sEl.value = sender.name;
     const eEl = document.getElementById('bulk-email');
@@ -1522,15 +1588,15 @@ function copyDocument() {
 function getShareableState() {
   return {
     relation:   state.relation,
-    timing:     state.timing,
     testamente: state.testamente,
     fastighet:  state.fastighet,
     foretag:    state.foretag,
     skulder:    state.skulder,
     utland:     state.utland,
     minderarig: state.minderarig,
-    ansvar:     state.ansvar,
-    name:       state.name,
+    ansvar:       state.ansvar,
+    name:         state.name,
+    participants: state.participants || [],
     // personnr intentionally excluded from share links (privacy)
   };
 }
