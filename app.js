@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   CLOSURE — App Logic
+   EFTERPLAN — App Logic
    MVP v1.0
 ════════════════════════════════════════════ */
 
@@ -41,7 +41,8 @@ function startOnboarding() {
 }
 
 function editAnswers() {
-  // Same as startOnboarding but pre-fills existing answers
+  const confirmed = window.confirm('Vill du ändra dina svar? Planen uppdateras när du är klar — dina anteckningar och markeringar behålls.');
+  if (!confirmed) return;
   startOnboarding();
   obPrefillAnswers();
 }
@@ -51,10 +52,18 @@ function obPrefillAnswers() {
   document.querySelectorAll('#ob-step-1 .ob-choice').forEach(btn => {
     btn.classList.toggle('selected', btn.dataset.val === state.relation);
   });
+  if (state.relation) {
+    const nb = document.querySelector('#ob-step-1 .ob-next-btn');
+    if (nb) nb.disabled = false;
+  }
   // Step 2 — timing
   document.querySelectorAll('#ob-step-2 .ob-choice').forEach(btn => {
     btn.classList.toggle('selected', btn.dataset.val === state.timing);
   });
+  if (state.timing) {
+    const nb = document.querySelector('#ob-step-2 .ob-next-btn');
+    if (nb) nb.disabled = false;
+  }
   // Step 3 — checkboxes (:has CSS handles visual state)
   document.querySelectorAll('#ob-step-3 input[type="checkbox"]').forEach(cb => {
     cb.checked = !!state[cb.dataset.key];
@@ -63,6 +72,10 @@ function obPrefillAnswers() {
   document.querySelectorAll('#ob-step-4 .ob-choice').forEach(btn => {
     btn.classList.toggle('selected', btn.dataset.val === state.ansvar);
   });
+  if (state.ansvar) {
+    const nb = document.querySelector('#ob-step-4 .ob-next-btn');
+    if (nb) nb.disabled = false;
+  }
   // Step 5 — name
   const nameEl = document.getElementById('deceased-name');
   if (nameEl) nameEl.value = state.name || '';
@@ -96,7 +109,7 @@ function obUpdateDots(step) {
   }
 }
 
-function obChoose(btn, nextStep) {
+function obChoose(btn) {
   const key = btn.dataset.key;
   const val = btn.dataset.val;
   state[key] = val;
@@ -104,7 +117,10 @@ function obChoose(btn, nextStep) {
   btn.closest('.ob-choices').querySelectorAll('.ob-choice').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
 
-  setTimeout(() => obGoTo(nextStep), 220);
+  // Enable the Nästa button for this step
+  const step = btn.closest('.ob-step');
+  const nextBtn = step?.querySelector('.ob-next-btn');
+  if (nextBtn) nextBtn.disabled = false;
 }
 
 function obGoTo(step) {
@@ -636,9 +652,10 @@ function renderPlan() {
     }
   }
 
-  renderTaskList('tasks-today', today);
-  renderTaskList('tasks-week',  week);
-  renderTaskList('tasks-later', later);
+  const nextTaskId = firstTask?.id;
+  renderTaskList('tasks-today', today,  nextTaskId);
+  renderTaskList('tasks-week',  week,   nextTaskId);
+  renderTaskList('tasks-later', later,  nextTaskId);
 
   // Show Skatteverket doc button only if deceased had a company (F-skatt relevant)
   const skvBtn = document.getElementById('doc-btn-skatteverket');
@@ -655,7 +672,7 @@ function renderPlan() {
 
 let expandedTaskId = null;
 
-function renderTaskList(containerId, tasks) {
+function renderTaskList(containerId, tasks, nextTaskId) {
   const container = document.getElementById(containerId);
   container.innerHTML = '';
 
@@ -697,8 +714,10 @@ function renderTaskList(containerId, tasks) {
       : `<button class="task-expand-start-btn" onclick="event.stopPropagation();markTaskStarted('${task.id}')">Påbörjad</button>
          <button class="task-expand-btn" onclick="event.stopPropagation();markTaskDone('${task.id}')">Markera som klar</button>`;
 
-    const cardClass = task.done ? ' done' : task.started ? ' started' : '';
+    const isNext = !task.done && task.id === nextTaskId;
+    const cardClass = task.done ? ' done' : task.started ? ' started' : (isNext ? ' task-card--next' : '');
     const checkClass = task.done ? ' checked' : task.started ? ' started' : '';
+    const nextBadge = isNext ? `<span class="task-next-badge">Nästa steg</span>` : '';
     const startedBadge = task.started && !task.done
       ? `<span class="task-started-badge">Påbörjad</span>`
       : '';
@@ -710,7 +729,7 @@ function renderTaskList(containerId, tasks) {
       <div class="task-card${cardClass}" id="task-card-${task.id}">
         <div class="task-check${checkClass}" id="check-${task.id}"></div>
         <div class="task-body">
-          <div class="task-title">${task.title}</div>
+          <div class="task-title">${task.title}${nextBadge}</div>
           <div class="task-time">${task.time}${startedBadge}${assigneeBadge}</div>
         </div>
         <div class="task-chevron" id="chevron-${task.id}" aria-hidden="true">›</div>
@@ -851,10 +870,10 @@ function markTaskDone(taskId) {
 
 // ─── ASSIGNEES ────────────────────────────────
 function _getAssignees() {
-  try { return JSON.parse(localStorage.getItem('closure_assignees') || '[]'); } catch(e) { return []; }
+  try { return JSON.parse(localStorage.getItem('efterplan_assignees') || '[]'); } catch(e) { return []; }
 }
 function _saveAssignees(list) {
-  try { localStorage.setItem('closure_assignees', JSON.stringify(list)); } catch(e) {}
+  try { localStorage.setItem('efterplan_assignees', JSON.stringify(list)); } catch(e) {}
 }
 function getTaskAssignee(taskId) {
   const task = state.tasks.find(t => t.id === taskId);
@@ -925,10 +944,10 @@ function renderAssigneePicker(taskId) {
 
 // ─── NOTIFY LIST ──────────────────────────────
 function _getNotifyList() {
-  try { return JSON.parse(localStorage.getItem('closure_notify_list') || '[]'); } catch(e) { return []; }
+  try { return JSON.parse(localStorage.getItem('efterplan_notify_list') || '[]'); } catch(e) { return []; }
 }
 function _saveNotifyList(list) {
-  try { localStorage.setItem('closure_notify_list', JSON.stringify(list)); } catch(e) {}
+  try { localStorage.setItem('efterplan_notify_list', JSON.stringify(list)); } catch(e) {}
 }
 function _genNotifyId() {
   return Math.random().toString(36).slice(2, 10);
@@ -1095,6 +1114,24 @@ function switchTab(name) {
   window.scrollTo(0, 0);
 }
 
+// ─── SENDER INFO PERSISTENCE ─────────────────
+function saveSenderInfo(name, email) {
+  try {
+    if (name)  localStorage.setItem('efterplan_sender_name',  name);
+    if (email) localStorage.setItem('efterplan_sender_email', email);
+  } catch(e) {}
+}
+function getSenderInfo() {
+  return {
+    name:  localStorage.getItem('efterplan_sender_name')  || '',
+    email: localStorage.getItem('efterplan_sender_email') || ''
+  };
+}
+function getRelationLabel() {
+  const map = { partner: 'Make/Maka', foralder: 'Barn', syskon: 'Syskon', barn: 'Förälder', annan: '' };
+  return map[state.relation] || '';
+}
+
 // ─── DOCUMENT GENERATOR ──────────────────────
 function getDocContext() {
   return {
@@ -1108,24 +1145,49 @@ function showDocForm(type) {
   document.getElementById('doc-chooser').classList.add('hidden');
   document.querySelectorAll('.doc-form').forEach(f => f.classList.add('hidden'));
 
-  if (type === 'annons' && state.name) {
+  const sender = getSenderInfo();
+  const relation = getRelationLabel();
+
+  if (type === 'annons') {
     const el = document.getElementById('annons-name');
-    if (el && !el.value) el.value = state.name;
+    if (el && !el.value && state.name) el.value = state.name;
   }
   if (type === 'forsakring') {
     const saved = getTaskNote('forsakringar');
     const el = document.getElementById('fors-bolag');
     if (el && !el.value && saved) el.value = saved.split('\n')[0];
+    const sEl = document.getElementById('fors-sender');
+    if (sEl && !sEl.value && sender.name) sEl.value = sender.name;
+    const eEl = document.getElementById('fors-email');
+    if (eEl && !eEl.value && sender.email) eEl.value = sender.email;
+    const rEl = document.getElementById('fors-relation');
+    if (rEl && !rEl.value && relation) rEl.value = relation;
   }
   if (type === 'bank') {
     const saved = getTaskNote('banker');
     const el = document.getElementById('bank-name');
     if (el && !el.value && saved) el.value = saved.split('\n')[0];
+    const sEl = document.getElementById('bank-sender');
+    if (sEl && !sEl.value && sender.name) sEl.value = sender.name;
+    const eEl = document.getElementById('bank-email');
+    if (eEl && !eEl.value && sender.email) eEl.value = sender.email;
+    const rEl = document.getElementById('bank-relation');
+    if (rEl && !rEl.value && relation) rEl.value = relation;
   }
-
+  if (type === 'letter') {
+    const sEl = document.getElementById('letter-sender');
+    if (sEl && !sEl.value && sender.name) sEl.value = sender.name;
+    const eEl = document.getElementById('letter-email');
+    if (eEl && !eEl.value && sender.email) eEl.value = sender.email;
+  }
   if (type === 'bulk') {
     initBulkForm();
+    const sEl = document.getElementById('bulk-sender');
+    if (sEl && !sEl.value && sender.name) sEl.value = sender.name;
+    const eEl = document.getElementById('bulk-email');
+    if (eEl && !eEl.value && sender.email) eEl.value = sender.email;
   }
+
   document.getElementById(`doc-form-${type}`).classList.remove('hidden');
   window.scrollTo(0, 0);
 }
@@ -1171,6 +1233,7 @@ function generateBulkLetters() {
   const email  = document.getElementById('bulk-email').value.trim();
   clearFormError('err-bulk');
   if (!sender || !email) { showFormError('err-bulk', 'Fyll i ditt namn och din e-post.'); return; }
+  saveSenderInfo(sender, email);
 
   const services = [];
   document.querySelectorAll('.bulk-row').forEach(row => {
@@ -1224,6 +1287,7 @@ function generateLetter() {
   const email   = document.getElementById('letter-email').value.trim();
   clearFormError('err-letter');
   if (!service || !sender || !email) { showFormError('err-letter', 'Fyll i de obligatoriska fälten (märkta med *).'); return; }
+  saveSenderInfo(sender, email);
 
   const { deceased, personnr, today } = getDocContext();
   const custnrLine = custnr ? `\nKundnummer: ${custnr}` : '';
@@ -1259,6 +1323,7 @@ function generateBank() {
   const email    = document.getElementById('bank-email').value.trim();
   clearFormError('err-bank');
   if (!bank || !sender || !relation || !email) { showFormError('err-bank', 'Fyll i de obligatoriska fälten (märkta med *).'); return; }
+  saveSenderInfo(sender, email);
 
   const { deceased, personnr, today } = getDocContext();
 
@@ -1298,6 +1363,7 @@ function generateForsakring() {
   const email    = document.getElementById('fors-email').value.trim();
   clearFormError('err-forsakring');
   if (!bolag || !sender || !relation || !email) { showFormError('err-forsakring', 'Fyll i de obligatoriska fälten (märkta med *).'); return; }
+  saveSenderInfo(sender, email);
 
   const { deceased, personnr, today } = getDocContext();
 
@@ -1475,10 +1541,28 @@ function generateShareURL() {
 }
 
 function openShareModal() {
-  document.getElementById('share-url-box').textContent = generateShareURL();
+  const url = generateShareURL();
+  if (navigator.share) {
+    navigator.share({
+      title: 'Efterplan — ' + (state.name ? state.name + 's plan' : 'min plan'),
+      text: 'Här är min plan för dödsboet.',
+      url
+    }).catch(() => {}); // user cancelled
+    return;
+  }
+  document.getElementById('share-url-box').textContent = url;
   document.getElementById('share-confirm').classList.add('hidden');
   openModal('modal-share');
 }
+
+function toggleMemoryPhrase(btn) {
+  btn.classList.toggle('selected');
+  const selected = [...document.querySelectorAll('#memory-chips .phrase-chip.selected')]
+    .map(b => b.textContent).join('. ');
+  const ta = document.getElementById('annons-memory');
+  if (ta && !ta.dataset.manual) ta.value = selected ? selected + '.' : '';
+}
+
 
 function copyShareLink() {
   const url = document.getElementById('share-url-box').textContent;

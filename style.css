@@ -3,7 +3,6 @@
    Tone: Calm, trustworthy, minimal
 ════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
 
 :root {
   --bg:           #F8F7F5;
@@ -105,8 +104,6 @@ body {
   font-size: 1.1rem;
   width: auto;
   border-radius: 10px;
-  /* Fix #17: animera vid scroll istället för efter fast 1.5s delay */
-  animation: ctaPulse 1.8s ease 0.3s 2;
 }
 
 @keyframes ctaPulse {
@@ -537,6 +534,20 @@ body {
   margin-top: 8px;
 }
 .ob-next-btn:hover { background: var(--accent-dark); }
+.ob-next-btn:disabled {
+  background: var(--disabled-bg);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+.ob-next-btn:disabled:hover { background: var(--disabled-bg); }
+.ob-check-group-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 16px 0 6px;
+}
 
 /* ─── CHOICE GRID ────────────────────────────── */
 .choice-grid {
@@ -741,7 +752,7 @@ body {
   border-color: var(--accent);
 }
 .task-card.done {
-  opacity: 0.55;
+  opacity: 0.72;
   cursor: pointer;  /* klickbar för att visa Ångra */
 }
 .task-check {
@@ -1097,6 +1108,21 @@ body {
 }
 .start-here-title { font-size: 1rem; font-weight: 700; line-height: 1.3; }
 .start-here-arrow { margin-left: auto; font-size: 1.5rem; flex-shrink: 0; opacity: 0.8; }
+.task-card--next { border-color: var(--accent) !important; }
+.task-card--next .task-next-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-light);
+  border-radius: 4px;
+  padding: 2px 7px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.task-next-badge { display: none; }
 
 /* ─── DOC FORMS ──────────────────────────────── */
 #doc-chooser.hidden { display: none; }
@@ -1112,6 +1138,24 @@ body {
   margin-bottom: 6px;
 }
 .required { color: var(--red); }
+.form-label-hint { font-weight: 400; color: var(--text-muted); }
+.phrase-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.phrase-chip {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-family: var(--font);
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: var(--transition);
+}
+.phrase-chip.selected {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  color: var(--accent);
+}
 .form-row { display: grid; grid-template-columns: 1fr; gap: 12px; }
 
 /* ─── DOC OUTPUT ─────────────────────────────── */

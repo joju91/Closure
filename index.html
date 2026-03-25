@@ -19,6 +19,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -94,12 +95,13 @@
         <h2 class="ob-title">Vem har gått bort?</h2>
         <p class="ob-hint">Det hjälper oss förstå vad som behöver göras.</p>
         <div class="ob-choices">
-          <button class="ob-choice" data-key="relation" data-val="make" onclick="obChoose(this, 2)">Make / maka</button>
-          <button class="ob-choice" data-key="relation" data-val="forälder" onclick="obChoose(this, 2)">Förälder</button>
-          <button class="ob-choice" data-key="relation" data-val="barn" onclick="obChoose(this, 2)">Barn</button>
-          <button class="ob-choice" data-key="relation" data-val="syskon" onclick="obChoose(this, 2)">Syskon</button>
-          <button class="ob-choice" data-key="relation" data-val="annan" onclick="obChoose(this, 2)">Annan anhörig</button>
+          <button class="ob-choice" data-key="relation" data-val="make" onclick="obChoose(this)">Make / maka</button>
+          <button class="ob-choice" data-key="relation" data-val="forälder" onclick="obChoose(this)">Förälder</button>
+          <button class="ob-choice" data-key="relation" data-val="barn" onclick="obChoose(this)">Barn</button>
+          <button class="ob-choice" data-key="relation" data-val="syskon" onclick="obChoose(this)">Syskon</button>
+          <button class="ob-choice" data-key="relation" data-val="annan" onclick="obChoose(this)">Annan anhörig</button>
         </div>
+        <button class="ob-next-btn" onclick="obGoTo(2)" disabled>Nästa →</button>
       </div>
     </div>
 
@@ -110,11 +112,12 @@
         <h2 class="ob-title">Hur länge sedan hände det?</h2>
         <p class="ob-hint">Det avgör vad som är akut just nu.</p>
         <div class="ob-choices">
-          <button class="ob-choice" data-key="timing" data-val="idag" onclick="obChoose(this, 3)">Idag</button>
-          <button class="ob-choice" data-key="timing" data-val="igår" onclick="obChoose(this, 3)">Igår</button>
-          <button class="ob-choice" data-key="timing" data-val="dagar" onclick="obChoose(this, 3)">2–7 dagar sedan</button>
-          <button class="ob-choice" data-key="timing" data-val="veckor" onclick="obChoose(this, 3)">Mer än en vecka</button>
+          <button class="ob-choice" data-key="timing" data-val="idag" onclick="obChoose(this)">Idag</button>
+          <button class="ob-choice" data-key="timing" data-val="igår" onclick="obChoose(this)">Igår</button>
+          <button class="ob-choice" data-key="timing" data-val="dagar" onclick="obChoose(this)">2–7 dagar sedan</button>
+          <button class="ob-choice" data-key="timing" data-val="veckor" onclick="obChoose(this)">Mer än en vecka</button>
         </div>
+        <button class="ob-next-btn" onclick="obGoTo(3)" disabled>Nästa →</button>
       </div>
     </div>
 
@@ -125,6 +128,7 @@
         <h2 class="ob-title">Gäller något av detta?</h2>
         <p class="ob-hint">Välj allt som stämmer. Du kan alltid ändra senare.</p>
         <div class="ob-checks">
+          <p class="ob-check-group-label">Juridiskt</p>
           <label class="ob-check">
             <input type="checkbox" data-key="testamente" onchange="updateCheckboxState()">
             <span class="ob-check-box"></span>
@@ -132,6 +136,15 @@
               <span class="ob-check-hint">Hittades bland papperen, i bankfack eller hos notarie</span>
             </span>
           </label>
+          <label class="ob-check">
+            <input type="checkbox" data-key="minderarig" onchange="updateCheckboxState()">
+            <span class="ob-check-box"></span>
+            <span class="ob-check-label">Minderårigt barn ärver
+              <span class="ob-check-hint">Barn under 18 år som är arvinge</span>
+            </span>
+          </label>
+
+          <p class="ob-check-group-label">Bostad</p>
           <label class="ob-check">
             <input type="checkbox" data-key="fastighet" onchange="updateCheckboxState()">
             <span class="ob-check-box"></span>
@@ -146,13 +159,8 @@
               <span class="ob-check-hint">Hyresrätt — betalade hyra till hyresvärd (inte bostadsrätt)</span>
             </span>
           </label>
-          <label class="ob-check">
-            <input type="checkbox" data-key="minderarig" onchange="updateCheckboxState()">
-            <span class="ob-check-box"></span>
-            <span class="ob-check-label">Minderårigt barn ärver
-              <span class="ob-check-hint">Barn under 18 år som är arvinge</span>
-            </span>
-          </label>
+
+          <p class="ob-check-group-label">Övrigt</p>
           <label class="ob-check">
             <input type="checkbox" data-key="foretag" onchange="updateCheckboxState()">
             <span class="ob-check-box"></span>
@@ -202,9 +210,10 @@
         <h2 class="ob-title">Hanterar du det här ensam?</h2>
         <p class="ob-hint">Syskon, föräldrar, svärmor — alla som delar på det praktiska räknas. Vi lägger till en fullmaktsmall och anpassar planen.</p>
         <div class="ob-choices">
-          <button class="ob-choice" data-key="ansvar" data-val="ensam" onclick="obChoose(this, 5)">Ja, jag sköter det</button>
-          <button class="ob-choice" data-key="ansvar" data-val="flera" onclick="obChoose(this, 5)">Vi är flera</button>
+          <button class="ob-choice" data-key="ansvar" data-val="ensam" onclick="obChoose(this)">Ja, jag sköter det</button>
+          <button class="ob-choice" data-key="ansvar" data-val="flera" onclick="obChoose(this)">Vi är flera</button>
         </div>
+        <button class="ob-next-btn" onclick="obGoTo(5)" disabled>Nästa →</button>
       </div>
     </div>
 
@@ -338,7 +347,7 @@
             <span class="doc-type-sub">Meddela banken om dödsfallet</span>
           </button>
           <button class="doc-type-btn" onclick="showDocForm('annons')">
-            <span class="doc-icon">❧</span>
+            <span class="doc-icon">📰</span>
             <span class="doc-type-title">Dödsannons</span>
             <span class="doc-type-sub">Formulera ett minnesvärigt meddelande</span>
           </button>
@@ -465,8 +474,16 @@
           <input type="text" id="annons-survivors" class="text-input" placeholder="t.ex. Maka Birgitta, barnen Erik och Anna" />
         </div>
         <div class="form-group">
-          <label>Berätta något om personen</label>
-          <textarea id="annons-memory" class="text-input textarea" placeholder="Vad var hen? Vad minns du? T.ex. 'En varm och nyfiken människa som älskade trädgård och att laga mat för familjen.'" rows="3"></textarea>
+          <label>Berätta något om personen <span class="form-label-hint">(valfritt)</span></label>
+          <div class="phrase-chips" id="memory-chips">
+            <button type="button" class="phrase-chip" onclick="toggleMemoryPhrase(this)">Varm och omtänksam</button>
+            <button type="button" class="phrase-chip" onclick="toggleMemoryPhrase(this)">Älskade naturen</button>
+            <button type="button" class="phrase-chip" onclick="toggleMemoryPhrase(this)">Levde för familjen</button>
+            <button type="button" class="phrase-chip" onclick="toggleMemoryPhrase(this)">Passionerad trädgårdsodlare</button>
+            <button type="button" class="phrase-chip" onclick="toggleMemoryPhrase(this)">Glad och skrattande</button>
+            <button type="button" class="phrase-chip" onclick="toggleMemoryPhrase(this)">Älskade musik</button>
+          </div>
+          <textarea id="annons-memory" class="text-input textarea" placeholder="Lägg till egna ord om du vill…" rows="2"></textarea>
         </div>
         <div class="form-group">
           <label>Begravning (om känt)</label>
