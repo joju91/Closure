@@ -5,6 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Efterplan – Checklista efter dödsfall</title>
   <meta name="description" content="Checklista efter dödsfall – vi hjälper dig få ordning på allt praktiskt. Gratis, ingen registrering krävs." />
+  <link rel="canonical" href="https://joju91.github.io/Closure/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://joju91.github.io/Closure/" />
+  <meta property="og:title" content="Efterplan – Checklista efter dödsfall" />
+  <meta property="og:description" content="Vi hjälper dig få ordning på allt praktiskt efter ett dödsfall. Personlig plan, färdiga brev och arbetsfördelning — gratis, ingen registrering." />
+  <meta property="og:image" content="https://joju91.github.io/Closure/icon.svg" />
+  <meta name="twitter:card" content="summary" />
+
+  <!-- Schema.org: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Efterplan",
+    "url": "https://joju91.github.io/Closure/",
+    "description": "Personlig checklista efter dödsfall — anpassad efter din situation, med färdiga brev och arbetsfördelning.",
+    "applicationCategory": "LifestyleApplication",
+    "inLanguage": "sv",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "SEK" }
+  }
+  </script>
+
+  <!-- Schema.org: FAQ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Vad ska man göra när någon dör?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Det första du ska göra är att kontakta en begravningsbyrå — de tar hand om kroppen och guidar dig. Sedan ska dödsfallsintyg beställas från Skatteverket, närstående meddelas och en bouppteckning planeras. Efterplan ger dig en personlig checklista baserad på din situation." }
+      },
+      {
+        "@type": "Question",
+        "name": "Vad är ett dödsbo?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Dödsboet är ett tillfälligt juridiskt begrepp för allt den som gick bort lämnade efter sig — tillgångar och skulder. Det upphör när arvet är fördelat." }
+      },
+      {
+        "@type": "Question",
+        "name": "Hur lång tid har man på sig att göra bouppteckning?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Bouppteckningen ska vara klar inom 3 månader från dödsfallet och skickas in till Skatteverket inom 4 månader." }
+      },
+      {
+        "@type": "Question",
+        "name": "Ärver man skulder när någon dör?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Nej. Som anhörig ärver du inte den avlidnas skulder. Skulderna betalas av dödsboet om det finns tillgångar — men din privatekonomi är skyddad." }
+      }
+    ]
+  }
+  </script>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.json" />
@@ -245,7 +298,6 @@
     <div class="nav-plan-actions">
       <div id="plan-participants" class="plan-participants"></div>
       <button class="btn-ghost btn-sm" onclick="editAnswers()">Ändra svar</button>
-      <button class="btn-ghost btn-sm" onclick="openShareModal()">Dela plan</button>
     </div>
   </nav>
 
@@ -578,32 +630,6 @@
 
 </div>
 
-<!-- ═══════════════════════════════════════════
-     MODAL: DELA PLAN
-════════════════════════════════════════════ -->
-<div id="modal-share" class="modal-overlay hidden"
-     role="dialog" aria-modal="true" aria-labelledby="modal-share-title"
-     onclick="closeModalIfOutside(event, 'modal-share')">
-  <div class="modal modal-sm">
-    <div class="modal-header">
-      <h2 class="modal-title" id="modal-share-title">Dela planen</h2>
-      <button class="modal-close" onclick="closeModal('modal-share')" aria-label="Stäng">✕</button>
-    </div>
-    <p class="modal-sub">Alla med länken kan se planen och bocka av uppgifter — ingen inloggning krävs.</p>
-    <div class="share-url-wrap">
-      <div class="share-url-box" id="share-url-box"></div>
-    </div>
-    <button class="btn-primary" onclick="copyShareLink()">Kopiera länk</button>
-    <p id="share-confirm" class="share-confirm hidden">Länk kopierad!</p>
-  </div>
-</div>
-
-<!-- BANNER: Delad plan -->
-<div id="shared-banner" class="shared-banner hidden">
-  Du ser <strong id="shared-banner-name">planen</strong> — du kan bocka av uppgifter.
-</div>
-
-
 <!-- UNDO TOAST -->
 <!-- MODAL: DELTAGARE -->
 <div id="modal-participants" class="modal-overlay hidden"
@@ -635,5 +661,7 @@
     window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
   }
 </script>
+<!-- Analytics: byt ut efterplan.se mot din domän när du registrerat den -->
+<script defer data-domain="efterplan.se" src="https://plausible.io/js/script.js"></script>
 </body>
 </html>

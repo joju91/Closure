@@ -603,12 +603,21 @@ function renderParticipants() {
   const container = document.getElementById('plan-participants');
   if (!container) return;
   const participants = state.participants || [];
+  const deceased = state.name ? state.name.trim() : '';
+
+  // Deceased first (different style — primary chip)
+  const deceasedChip = deceased
+    ? `<span class="plan-participant-chip plan-participant-chip--deceased"
+         title="${deceased}">${deceased.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase()}</span>`
+    : '';
+
   const chips = participants.map(name => {
     const initials = name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
     return `<span class="plan-participant-chip" title="${name}">${initials}</span>`;
   }).join('');
-  container.innerHTML = chips +
-    `<button class="plan-participant-add-btn" onclick="openModal('modal-participants')" title="Hantera deltagare" aria-label="Hantera deltagare">+</button>`;
+
+  container.innerHTML = deceasedChip + chips +
+    `<button class="plan-participant-add-btn" onclick="openModal('modal-participants')" title="Lägg till deltagare" aria-label="Lägg till deltagare">+</button>`;
 }
 
 // ─── RENDER PLAN ─────────────────────────────
@@ -1615,21 +1624,6 @@ function generateShareURL() {
   return `${location.origin}${location.pathname}#plan=${encoded}`;
 }
 
-function openShareModal() {
-  const url = generateShareURL();
-  if (navigator.share) {
-    navigator.share({
-      title: 'Efterplan — ' + (state.name ? state.name + 's plan' : 'min plan'),
-      text: 'Här är min plan för dödsboet.',
-      url
-    }).catch(() => {}); // user cancelled
-    return;
-  }
-  document.getElementById('share-url-box').textContent = url;
-  document.getElementById('share-confirm').classList.add('hidden');
-  openModal('modal-share');
-}
-
 function toggleMemoryPhrase(btn) {
   btn.classList.toggle('selected');
   const selected = [...document.querySelectorAll('#memory-chips .phrase-chip.selected')]
@@ -1638,15 +1632,6 @@ function toggleMemoryPhrase(btn) {
   if (ta && !ta.dataset.manual) ta.value = selected ? selected + '.' : '';
 }
 
-
-function copyShareLink() {
-  const url = document.getElementById('share-url-box').textContent;
-  copyToClipboard(url, () => {
-    const msg = document.getElementById('share-confirm');
-    msg.classList.remove('hidden');
-    setTimeout(() => msg.classList.add('hidden'), 2500);
-  });
-}
 
 // ─── FORM VALIDATION ─────────────────────────
 function showFormError(errId, msg) {
