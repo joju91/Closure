@@ -1476,6 +1476,17 @@ body {
   padding: 0;
 }
 .assignee-add-btn:hover { border-color: var(--accent); color: var(--accent); }
+.assignee-add-hint {
+  font-size: 0.78rem;
+  color: var(--accent);
+  background: none;
+  border: 1px dashed var(--accent);
+  border-radius: 20px;
+  padding: 3px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.assignee-add-hint:hover { background: var(--accent-light); }
 .assignee-new-input {
   font-size: 0.8rem;
   border: 1px solid var(--border);

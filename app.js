@@ -882,11 +882,10 @@ function markTaskDone(taskId) {
 }
 
 // ─── ASSIGNEES ────────────────────────────────
+// Single source of truth: state.participants — same list used for task
+// assignment and notify notifier. Add people via the + button in the nav.
 function _getAssignees() {
-  try { return JSON.parse(localStorage.getItem('efterplan_assignees') || '[]'); } catch(e) { return []; }
-}
-function _saveAssignees(list) {
-  try { localStorage.setItem('efterplan_assignees', JSON.stringify(list)); } catch(e) {}
+  return state.participants || [];
 }
 function getTaskAssignee(taskId) {
   const task = state.tasks.find(t => t.id === taskId);
@@ -899,21 +898,6 @@ function setTaskAssignee(taskId, name) {
   saveTaskState();
   _refreshAssigneePicker(taskId);
   _refreshAssigneeBadge(taskId);
-}
-function addNewAssignee(taskId) {
-  const input = document.getElementById(`assignee-input-${taskId}`);
-  const name = input ? input.value.trim() : '';
-  if (!name) return;
-  const list = _getAssignees();
-  if (!list.includes(name)) { list.push(name); _saveAssignees(list); }
-  setTaskAssignee(taskId, name);
-  if (input) { input.value = ''; input.classList.add('hidden'); }
-}
-function toggleAssigneeInput(taskId) {
-  const input = document.getElementById(`assignee-input-${taskId}`);
-  if (!input) return;
-  input.classList.toggle('hidden');
-  if (!input.classList.contains('hidden')) input.focus();
 }
 function _refreshAssigneePicker(taskId) {
   const picker = document.getElementById(`assignee-picker-${taskId}`);
@@ -933,18 +917,17 @@ function _refreshAssigneeBadge(taskId) {
 function _buildAssigneePickerInner(taskId) {
   const assignees = _getAssignees();
   const current = getTaskAssignee(taskId);
-  const chips = assignees.map(n =>
+  if (!assignees.length) {
+    return `<button class="assignee-add-hint"
+              onclick="event.stopPropagation();openModal('modal-participants')"
+              title="Lägg till deltagare">+ Lägg till deltagare</button>`;
+  }
+  return assignees.map(n =>
     `<button class="assignee-chip${n === current ? ' selected' : ''}"
              onclick="event.stopPropagation();setTaskAssignee('${taskId}','${n.replace(/'/g,"\\'")}')">
        ${n}
      </button>`
   ).join('');
-  return `${chips}
-    <button class="assignee-add-btn" title="Lägg till person" onclick="event.stopPropagation();toggleAssigneeInput('${taskId}')">+</button>
-    <input class="assignee-new-input hidden" id="assignee-input-${taskId}"
-           placeholder="Namn…"
-           onkeydown="if(event.key==='Enter'){event.preventDefault();addNewAssignee('${taskId}')}"
-           onclick="event.stopPropagation()" />`;
 }
 function renderAssigneePicker(taskId) {
   const taskDef = TASK_LIBRARY.find(t => t.id === taskId);
@@ -972,11 +955,18 @@ function addParticipant() {
   }
   input.value = '';
   _refreshParticipantList();
+  renderParticipants();
+  _refreshAllAssigneePickers();
+}
+
+function _refreshAllAssigneePickers() {
+  state.tasks.forEach(t => _refreshAssigneePicker(t.id));
 }
 function removeParticipant(name) {
   state.participants = (state.participants || []).filter(n => n !== name);
   saveState();
   _refreshParticipantList();
+  _refreshAllAssigneePickers();
 }
 function _refreshParticipantList() {
   const container = document.getElementById('ob-participant-list');
