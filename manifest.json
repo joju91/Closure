@@ -2,18 +2,35 @@
   "name": "Efterplan",
   "short_name": "Efterplan",
   "description": "Checklista efter dödsfall – vi hjälper dig få ordning på allt praktiskt.",
+  "lang": "sv",
+  "dir": "ltr",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#F8F7F5",
   "theme_color": "#2C4A6E",
+  "categories": ["utilities", "productivity"],
   "icons": [
     {
       "src": "icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Starta guide",
+      "short_name": "Guide",
+      "description": "Starta onboarding-guiden",
+      "url": "./#start"
     }
   ]
 }

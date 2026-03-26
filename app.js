@@ -1765,6 +1765,13 @@ function saveState() {
       loadTaskState();
       renderPlan();
       showScreen('screen-plan');
+      return;
     }
   } catch(e) {}
+
+  // PWA shortcut: ./#start forces onboarding even on revisit
+  if (window.location.hash === '#start') {
+    history.replaceState(null, '', window.location.pathname);
+    startOnboarding();
+  }
 })();

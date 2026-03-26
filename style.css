@@ -476,6 +476,17 @@ body {
   margin-bottom: 12px;
 }
 
+.ob-reassure {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  margin-bottom: 28px;
+  padding: 8px 12px;
+  background: var(--accent-light);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+}
+
 .ob-title {
   font-size: clamp(1.7rem, 4vw, 2.4rem);
   font-weight: 700;
