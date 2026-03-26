@@ -255,6 +255,16 @@ const TASK_LIBRARY = [
 
   // ── ALWAYS ─────────────────────────────────
   {
+    id: 'konstatera_dodsfall',
+    title: 'Konstatera dödsfallet',
+    desc: '<strong>Om dödsfallet var oväntat eller plötsligt — ring 112 omedelbart.</strong><br><br>Om personen avled hemma efter en längre tids sjukdom ringer du jourhavande läkare via 1177 — de skickar en läkare som utfärdar dödsbeviset. Utan ett utfärdat dödsbevis kan inget annat steg påbörjas.',
+    urgency: 'today',
+    time: 'Direkt',
+    phone: '112',
+    triggers: [],
+    notesPlaceholder: 'Noterat klockslag, vem som kontaktades…',
+  },
+  {
     id: 'narmaste_anhörig',
     title: 'Meddela närstående',
     desc: 'Det här sker i etapper — du behöver inte nå alla på en gång. Börja med de allra närmaste: familj och nära vänner. Övriga kan meddelas under de kommande dagarna. Det är okej att be någon annan hjälpa till.',
