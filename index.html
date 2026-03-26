@@ -367,7 +367,7 @@
 <!-- ═══════════════════════════════════════════
      SCREEN: PLAN (Dashboard)
 ════════════════════════════════════════════ -->
-<div id="screen-plan" class="screen" id="main-content">
+<div id="screen-plan" class="screen" tabindex="-1">
 
   <!-- Nav -->
   <nav class="nav nav-light nav-plan">
@@ -401,34 +401,42 @@
 
       <div class="completion-message" id="completion-message" role="status">
         <p>Du har gått igenom allt. Ta ett djupt andetag — du klarade det.</p>
+        <button class="btn-ghost btn-sm" onclick="printPlan()" style="margin-top:12px">Spara som PDF / Skriv ut →</button>
       </div>
+
+      <button class="plan-print-btn" onclick="printPlan()" aria-label="Skriv ut eller spara som PDF">
+        <span>PDF</span>
+      </button>
 
       <button id="start-here" class="start-here hidden" aria-label="Gå till nästa uppgift"></button>
 
       <div class="task-sections">
         <div class="task-section" id="section-today">
           <div class="section-header">
-            <span class="section-dot dot-red"></span>
+            <span class="section-dot dot-red" id="dot-today"></span>
             <h2 class="section-title">Gör idag</h2>
             <span class="section-count" id="count-today"></span>
+            <span class="section-done-badge hidden" id="badge-today">✓ Klar</span>
           </div>
           <div class="task-list" id="tasks-today"></div>
         </div>
 
         <div class="task-section" id="section-week">
           <div class="section-header">
-            <span class="section-dot dot-yellow"></span>
+            <span class="section-dot dot-yellow" id="dot-week"></span>
             <h2 class="section-title">Denna vecka</h2>
             <span class="section-count" id="count-week"></span>
+            <span class="section-done-badge hidden" id="badge-week">✓ Klar</span>
           </div>
           <div class="task-list" id="tasks-week"></div>
         </div>
 
         <div class="task-section" id="section-later">
           <div class="section-header">
-            <span class="section-dot dot-grey"></span>
+            <span class="section-dot dot-grey" id="dot-later"></span>
             <h2 class="section-title">Senare</h2>
             <span class="section-count" id="count-later"></span>
+            <span class="section-done-badge hidden" id="badge-later">✓ Klar</span>
           </div>
           <div class="task-list" id="tasks-later"></div>
         </div>
@@ -485,6 +493,15 @@
             <span class="doc-type-title">Fullmakt</span>
             <span class="doc-type-sub">Ge en person rätt att företräda dödsboet</span>
           </button>
+        </div>
+
+        <!-- Paywall card — dold tills PAYWALL_ENABLED = true i app.js -->
+        <div id="paywall-card" class="paywall-card hidden">
+          <div class="paywall-lock" aria-hidden="true">🔒</div>
+          <h2 class="paywall-title">Lås upp alla dokument</h2>
+          <p class="paywall-desc">Generera obegränsat med brev — bank, försäkring, abonnemang och mer.</p>
+          <button class="btn-primary paywall-cta" onclick="handlePaywallCTA()">Lås upp — 149 kr</button>
+          <p class="paywall-note">Engångsbetalning. Inga prenumerationer.</p>
         </div>
       </div>
 

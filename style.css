@@ -1911,3 +1911,140 @@ body {
     max-width: none;
   }
 }
+
+/* ═══════════════════════════════════════════
+   SECTION DONE BADGE
+════════════════════════════════════════════ */
+.section-done-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--green);
+  background: #EBF5EE;
+  border: 1px solid #C3DFC9;
+  padding: 2px 8px;
+  border-radius: 20px;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.section-done-badge.hidden {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════
+   PDF / PRINT BUTTON (floating)
+════════════════════════════════════════════ */
+.plan-print-btn {
+  position: fixed;
+  bottom: calc(var(--bottom-nav-height) + 16px);
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(44,74,110,0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  z-index: 80;
+  transition: background 0.15s, transform 0.15s;
+}
+.plan-print-btn:hover  { background: var(--accent-dark); transform: scale(1.06); }
+.plan-print-btn:active { transform: scale(0.96); }
+@media (min-width: 601px) {
+  .plan-print-btn { bottom: 24px; right: 24px; width: 48px; height: 48px; }
+}
+
+/* ═══════════════════════════════════════════
+   PAYWALL CARD
+════════════════════════════════════════════ */
+.paywall-card {
+  border: 1.5px solid #C8D6E5;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, #EDF2F7 0%, #F8F7F5 100%);
+  padding: 28px 24px;
+  text-align: center;
+  margin-top: 16px;
+}
+.paywall-card.hidden { display: none; }
+
+.paywall-lock {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+.paywall-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.paywall-desc {
+  font-size: 0.88rem;
+  color: var(--text-soft);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.paywall-cta {
+  width: 100%;
+  max-width: 260px;
+  padding: 13px 20px;
+  font-size: 0.95rem;
+}
+.paywall-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 10px;
+}
+
+/* ═══════════════════════════════════════════
+   PRINT / PDF EXPORT
+════════════════════════════════════════════ */
+@media print {
+  /* Hide everything except the plan screen */
+  body > *:not(#screen-plan) { display: none !important; }
+  #screen-plan { display: block !important; }
+
+  /* Hide interactive chrome */
+  .nav, .plan-tabs-bar, .bottom-nav,
+  .plan-print-btn, .plan-fab,
+  .btn-ghost, .task-expand-actions,
+  .undo-toast, .offline-banner,
+  .skip-link, #completion-message { display: none !important; }
+
+  /* Reset colors for legibility on paper */
+  body { background: #fff; color: #000; }
+  .task-card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+  .section-header { border-bottom: 1px solid #ccc; padding-bottom: 6px; margin-bottom: 8px; }
+  .task-title { font-size: 0.9rem; }
+
+  /* Show all task sections regardless of tab */
+  .task-section { display: block !important; }
+
+  /* Expand all tasks slightly */
+  .task-card { margin-bottom: 6px; }
+
+  /* Remove rounded corners and shadows */
+  .task-card, .plan-header, .progress-wrap { border-radius: 0; box-shadow: none; }
+
+  /* Footer with URL */
+  #screen-plan::after {
+    content: "Efterplan — efterplan.se";
+    display: block;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #999;
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid #ddd;
+  }
+}

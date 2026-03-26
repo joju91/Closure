@@ -3,6 +3,9 @@
    MVP v1.0
 ════════════════════════════════════════════ */
 
+// ─── FEATURE FLAGS ───────────────────────────
+const PAYWALL_ENABLED = false; // set true when Stripe is wired up
+
 // ─── STATE ───────────────────────────────────
 const state = {
   relation:    null,
@@ -904,6 +907,16 @@ function updateProgress() {
     summaryEl.innerHTML = `<strong>${done} av ${total}</strong> uppgifter klara`;
     if (completionEl) completionEl.classList.remove('visible');
   }
+
+  // ── Section-done badges ───────────────────────
+  ['today', 'week', 'later'].forEach(section => {
+    const urgencyMap = { today: 'today', week: 'week', later: 'later' };
+    const sectionTasks = state.tasks.filter(t => t.urgency === urgencyMap[section]);
+    if (sectionTasks.length === 0) return;
+    const allDone = sectionTasks.every(t => t.done);
+    const badge = document.getElementById(`badge-${section}`);
+    if (badge) badge.classList.toggle('hidden', !allDone);
+  });
 }
 
 function autoStartOnNote(taskId) {
@@ -1755,6 +1768,26 @@ function saveState() {
   if (!navigator.onLine) show();
 })();
 
+// ─── PDF / PRINT ─────────────────────────────
+function printPlan() {
+  track('Plan Printed');
+  window.print();
+}
+
+// ─── PAYWALL ─────────────────────────────────
+(function initPaywall() {
+  const card = document.getElementById('paywall-card');
+  if (!card) return;
+  if (PAYWALL_ENABLED) card.classList.remove('hidden');
+})();
+
+function handlePaywallCTA() {
+  // Placeholder — wire Stripe Checkout URL here when ready
+  track('Paywall CTA Clicked');
+  alert('Betalning är inte aktiverat ännu — kom tillbaka snart!');
+}
+
+// ─── INIT ─────────────────────────────────────
 (function init() {
   // Restore own plan from localStorage
   try {
