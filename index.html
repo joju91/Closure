@@ -87,6 +87,10 @@
 </head>
 <body>
 
+<div id="offline-banner" class="offline-banner" role="alert" aria-live="polite">
+  Ingen uppkoppling just nu — dina ändringar sparas ändå lokalt.
+</div>
+
 <!-- ═══════════════════════════════════════════
      SCREEN: LANDING
 ════════════════════════════════════════════ -->
@@ -182,6 +186,10 @@
      SCREEN: ONBOARDING (fullscreen, conversational)
 ════════════════════════════════════════════ -->
 <div id="screen-onboarding" class="screen">
+
+  <div class="ob-progress-bar-wrap" aria-hidden="true">
+    <div class="ob-progress-bar-fill" id="ob-progress-bar-fill"></div>
+  </div>
 
   <div class="ob-topbar">
     <button class="ob-back" id="ob-back-btn" onclick="obBack()">← Tillbaka</button>

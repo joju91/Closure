@@ -158,6 +158,12 @@ function obShowStep(step) {
   if (OB_FOCUS_IDS[step]) {
     setTimeout(() => document.getElementById(OB_FOCUS_IDS[step])?.focus(), 350);
   }
+  // Update visual progress bar
+  const fillEl = document.getElementById('ob-progress-bar-fill');
+  if (fillEl) {
+    const logicalStep = (OB_TOTAL === 5 && step >= 5) ? step - 1 : step;
+    fillEl.style.width = `${Math.round((logicalStep / OB_TOTAL) * 100)}%`;
+  }
 }
 
 function obBack() {
@@ -1716,6 +1722,17 @@ function saveState() {
 }
 
 // ─── INIT ─────────────────────────────────────
+// ─── OFFLINE DETECTION ───────────────────────
+(function initOfflineBanner() {
+  const banner = document.getElementById('offline-banner');
+  if (!banner) return;
+  const show = () => banner.classList.add('is-offline');
+  const hide = () => banner.classList.remove('is-offline');
+  window.addEventListener('offline', show);
+  window.addEventListener('online',  hide);
+  if (!navigator.onLine) show();
+})();
+
 (function init() {
   // Restore own plan from localStorage
   try {
