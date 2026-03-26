@@ -87,6 +87,8 @@
 </head>
 <body>
 
+<a href="#main-content" class="skip-link">Hoppa till innehållet</a>
+
 <div id="offline-banner" class="offline-banner" role="alert" aria-live="polite">
   Ingen uppkoppling just nu — dina ändringar sparas ändå lokalt.
 </div>
@@ -318,10 +320,10 @@
         <p class="ob-label">Steg 4 av 6</p>
         <h2 class="ob-title">Vilka hjälper till?</h2>
         <p class="ob-hint">Börja med ditt eget namn, lägg sedan till övriga.</p>
-        <label class="ob-field-label">Ditt namn</label>
+        <label class="ob-field-label" for="ob-self-name">Ditt namn</label>
         <input type="text" id="ob-self-name" class="ob-text-input" placeholder="Namn" autocomplete="name"
           onkeydown="if(event.key==='Enter') document.getElementById('ob-participant-name').focus()" />
-        <label class="ob-field-label">Övriga som hjälper till</label>
+        <label class="ob-field-label" for="ob-participant-name">Övriga som hjälper till</label>
         <div class="ob-participant-list" id="ob-participant-list"></div>
         <div class="ob-participant-input-row">
           <input type="text" id="ob-participant-name" class="ob-text-input" placeholder="Namn" autocomplete="off"
@@ -364,7 +366,7 @@
 <!-- ═══════════════════════════════════════════
      SCREEN: PLAN (Dashboard)
 ════════════════════════════════════════════ -->
-<div id="screen-plan" class="screen">
+<div id="screen-plan" class="screen" id="main-content">
 
   <!-- Nav -->
   <nav class="nav nav-light nav-plan">
@@ -491,11 +493,11 @@
         <h2 class="plan-title" style="margin-bottom:6px">Avsluta tjänster</h2>
         <p class="plan-sub" style="margin-bottom:28px">Fyll i ditt namn och lägg till tjänster — vi skriver alla brev åt dig.</p>
         <div class="form-group">
-          <label>Ditt namn <span class="required">*</span></label>
+          <label for="bulk-sender">Ditt namn <span class="required">*</span></label>
           <input type="text" id="bulk-sender" class="text-input" placeholder="Ditt fullständiga namn" />
         </div>
         <div class="form-group">
-          <label>Din e-post <span class="required">*</span></label>
+          <label for="bulk-email">Din e-post <span class="required">*</span></label>
           <input type="email" id="bulk-email" class="text-input" placeholder="din@epost.se" />
         </div>
         <div class="form-group">
@@ -522,19 +524,19 @@
         <h2 class="plan-title" style="margin-bottom:6px">Uppsägningsbrev</h2>
         <p class="plan-sub" style="margin-bottom:28px">Vi skriver brevet — du kopierar och skickar.</p>
         <div class="form-group">
-          <label>Tjänstens namn <span class="required">*</span></label>
+          <label for="letter-service">Tjänstens namn <span class="required">*</span></label>
           <input type="text" id="letter-service" class="text-input" placeholder="t.ex. Spotify, Dagens Nyheter, Elbolaget" />
         </div>
         <div class="form-group">
-          <label>Kundnummer (om känt)</label>
+          <label for="letter-custnr">Kundnummer (om känt)</label>
           <input type="text" id="letter-custnr" class="text-input" placeholder="Frivilligt" />
         </div>
         <div class="form-group">
-          <label>Ditt namn <span class="required">*</span></label>
+          <label for="letter-sender">Ditt namn <span class="required">*</span></label>
           <input type="text" id="letter-sender" class="text-input" placeholder="Ditt fullständiga namn" />
         </div>
         <div class="form-group">
-          <label>Din e-post <span class="required">*</span></label>
+          <label for="letter-email">Din e-post <span class="required">*</span></label>
           <input type="email" id="letter-email" class="text-input" placeholder="din@epost.se" />
         </div>
         <p class="form-error hidden" id="err-letter" role="alert"></p>
@@ -547,19 +549,19 @@
         <h2 class="plan-title" style="margin-bottom:6px">Brev till banken</h2>
         <p class="plan-sub" style="margin-bottom:28px">Vi skriver brevet — du kopierar och skickar.</p>
         <div class="form-group">
-          <label>Bank <span class="required">*</span></label>
+          <label for="bank-name">Bank <span class="required">*</span></label>
           <input type="text" id="bank-name" class="text-input" placeholder="t.ex. Swedbank, Handelsbanken, SEB" />
         </div>
         <div class="form-group">
-          <label>Ditt namn <span class="required">*</span></label>
+          <label for="bank-sender">Ditt namn <span class="required">*</span></label>
           <input type="text" id="bank-sender" class="text-input" placeholder="Ditt fullständiga namn" />
         </div>
         <div class="form-group">
-          <label>Din relation till den avlidne <span class="required">*</span></label>
+          <label for="bank-relation">Din relation till den avlidne <span class="required">*</span></label>
           <input type="text" id="bank-relation" class="text-input" placeholder="t.ex. Make, Dotter, Son" />
         </div>
         <div class="form-group">
-          <label>Din e-post <span class="required">*</span></label>
+          <label for="bank-email">Din e-post <span class="required">*</span></label>
           <input type="email" id="bank-email" class="text-input" placeholder="din@epost.se" />
         </div>
         <p class="form-error hidden" id="err-bank" role="alert"></p>
@@ -572,26 +574,26 @@
         <h2 class="plan-title" style="margin-bottom:6px">Dödsannons</h2>
         <p class="plan-sub" style="margin-bottom:28px">Berätta lite — vi formulerar resten.</p>
         <div class="form-group">
-          <label>Den avlidnes namn <span class="required">*</span></label>
+          <label for="annons-name">Den avlidnes namn <span class="required">*</span></label>
           <input type="text" id="annons-name" class="text-input" placeholder="Fullständigt namn" />
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Född</label>
+            <label for="annons-born">Född</label>
             <input type="text" id="annons-born" class="text-input" placeholder="t.ex. 12 mars 1945" />
           </div>
           <div class="form-group">
-            <label>Avled</label>
+            <label for="annons-died">Avled</label>
             <input type="text" id="annons-died" class="text-input" placeholder="t.ex. 8 januari 2025" />
           </div>
         </div>
         <div class="form-group">
-          <label>Efterlevande (namn och relation)</label>
+          <label for="annons-survivors">Efterlevande (namn och relation)</label>
           <input type="text" id="annons-survivors" class="text-input" placeholder="t.ex. Maka Birgitta, barnen Erik och Anna" />
         </div>
         <div class="form-group">
-          <label>Berätta något om personen <span class="form-label-hint">(valfritt)</span></label>
-          <div class="phrase-chips" id="memory-chips">
+          <label for="annons-memory">Berätta något om personen <span class="form-label-hint">(valfritt)</span></label>
+          <div class="phrase-chips" id="memory-chips" role="group" aria-label="Välj fraser">
             <button type="button" class="phrase-chip" onclick="toggleMemoryPhrase(this)">Varm och omtänksam</button>
             <button type="button" class="phrase-chip" onclick="toggleMemoryPhrase(this)">Älskade naturen</button>
             <button type="button" class="phrase-chip" onclick="toggleMemoryPhrase(this)">Levde för familjen</button>
@@ -602,11 +604,11 @@
           <textarea id="annons-memory" class="text-input textarea" placeholder="Lägg till egna ord om du vill…" rows="2"></textarea>
         </div>
         <div class="form-group">
-          <label>Begravning (om känt)</label>
+          <label for="annons-funeral">Begravning (om känt)</label>
           <input type="text" id="annons-funeral" class="text-input" placeholder="t.ex. Storkyrkan, Stockholm, 15 februari kl 14:00" />
         </div>
         <div class="form-group">
-          <label>Vill du lägga till något mer kan du göra det här</label>
+          <label for="annons-ovrigt">Vill du lägga till något mer</label>
           <textarea id="annons-ovrigt" class="text-input textarea" placeholder="t.ex. citat, hälsning, önskemål om blombidrag, kontaktuppgifter…" rows="2"></textarea>
         </div>
         <p class="form-error hidden" id="err-annons" role="alert"></p>
@@ -619,19 +621,19 @@
         <h2 class="plan-title" style="margin-bottom:6px">Brev till försäkringsbolaget</h2>
         <p class="plan-sub" style="margin-bottom:28px">Vi skriver brevet — du kopierar och skickar.</p>
         <div class="form-group">
-          <label>Försäkringsbolag <span class="required">*</span></label>
+          <label for="fors-bolag">Försäkringsbolag <span class="required">*</span></label>
           <input type="text" id="fors-bolag" class="text-input" placeholder="t.ex. Folksam, If, Länsförsäkringar, Skandia" />
         </div>
         <div class="form-group">
-          <label>Ditt namn <span class="required">*</span></label>
+          <label for="fors-sender">Ditt namn <span class="required">*</span></label>
           <input type="text" id="fors-sender" class="text-input" placeholder="Ditt fullständiga namn" />
         </div>
         <div class="form-group">
-          <label>Din relation till den avlidne <span class="required">*</span></label>
+          <label for="fors-relation">Din relation till den avlidne <span class="required">*</span></label>
           <input type="text" id="fors-relation" class="text-input" placeholder="t.ex. Make, Dotter, Son" />
         </div>
         <div class="form-group">
-          <label>Din e-post <span class="required">*</span></label>
+          <label for="fors-email">Din e-post <span class="required">*</span></label>
           <input type="email" id="fors-email" class="text-input" placeholder="din@epost.se" />
         </div>
         <p class="form-error hidden" id="err-forsakring" role="alert"></p>
@@ -644,19 +646,19 @@
         <h2 class="plan-title" style="margin-bottom:6px">Fullmakt — dödsbo</h2>
         <p class="plan-sub" style="margin-bottom:28px">Utser en person att företräda dödsboet gentemot banker och myndigheter. Alla dödsbodelägare bör skriva under i original.</p>
         <div class="form-group">
-          <label>Ditt namn (fullmaktsgivare) <span class="required">*</span></label>
+          <label for="fullmakt-grantor1">Ditt namn (fullmaktsgivare) <span class="required">*</span></label>
           <input type="text" id="fullmakt-grantor1" class="text-input" placeholder="Ditt fullständiga namn" />
         </div>
         <div class="form-group">
-          <label>Övriga dödsbodelägares namn (valfritt)</label>
+          <label for="fullmakt-grantor2">Övriga dödsbodelägares namn (valfritt)</label>
           <input type="text" id="fullmakt-grantor2" class="text-input" placeholder="t.ex. Erik Karlsson, Anna Karlsson" />
         </div>
         <div class="form-group">
-          <label>Fullmaktstagaren — vem ska ha fullmakten <span class="required">*</span></label>
+          <label for="fullmakt-agent">Fullmaktstagaren — vem ska ha fullmakten <span class="required">*</span></label>
           <input type="text" id="fullmakt-agent" class="text-input" placeholder="Fullständigt namn" />
         </div>
         <div class="form-group">
-          <label>Fullmaktstagarens relation till dödsboet</label>
+          <label for="fullmakt-relation">Fullmaktstagarens relation till dödsboet</label>
           <input type="text" id="fullmakt-relation" class="text-input" placeholder="t.ex. Son, Dotter, Make" />
         </div>
         <p class="form-error hidden" id="err-fullmakt" role="alert"></p>
@@ -670,15 +672,15 @@
         <p class="plan-sub" style="margin-bottom:28px">Begär avregistrering av F-skatt och enskild firma hos Skatteverket. Kopiera brevet och skicka via Skatteverkets e-tjänst eller post.</p>
         <input type="hidden" id="skv-arende" value="fskatt" />
         <div class="form-group">
-          <label>Ditt namn <span class="required">*</span></label>
+          <label for="skv-sender">Ditt namn <span class="required">*</span></label>
           <input type="text" id="skv-sender" class="text-input" placeholder="Ditt fullständiga namn" />
         </div>
         <div class="form-group">
-          <label>Din relation till den avlidne <span class="required">*</span></label>
+          <label for="skv-relation">Din relation till den avlidne <span class="required">*</span></label>
           <input type="text" id="skv-relation" class="text-input" placeholder="t.ex. Make, Dotter, Son" />
         </div>
         <div class="form-group">
-          <label>Din e-post <span class="required">*</span></label>
+          <label for="skv-email">Din e-post <span class="required">*</span></label>
           <input type="email" id="skv-email" class="text-input" placeholder="din@epost.se" />
         </div>
         <p class="form-error hidden" id="err-skatteverket" role="alert"></p>
@@ -736,6 +738,6 @@
   }
 </script>
 <!-- Analytics: byt ut efterplan.se mot din domän när du registrerat den -->
-<script defer data-domain="efterplan.se" src="https://plausible.io/js/script.js"></script>
+<script defer data-domain="efterplan.se" src="https://plausible.io/js/script.outbound-links.js"></script>
 </body>
 </html>

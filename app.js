@@ -31,7 +31,16 @@ function showScreen(id) {
 
 function goToLanding() { showScreen('screen-landing'); }
 
+// ─── ANALYTICS ───────────────────────────────
+// Plausible custom events — safe noop if script hasn't loaded
+function track(event, props) {
+  if (typeof window.plausible === 'function') {
+    window.plausible(event, props ? { props } : undefined);
+  }
+}
+
 function startOnboarding() {
+  track('Onboarding Start');
   obCurrentStep = 1;
   document.querySelectorAll('.ob-step').forEach(s => s.classList.remove('active', 'exit'));
   document.getElementById('ob-step-1').classList.add('active');
@@ -233,6 +242,7 @@ function generatePlan() {
   buildTasks();
   renderPlan();
   saveState();
+  track('Plan Generated', { relation: state.relation || 'okänd', ansvar: state.ansvar || 'okänd' });
   showScreen('screen-plan');
 }
 
@@ -935,6 +945,7 @@ function markTaskDone(taskId) {
   if (!task) return;
   task.done = true;
   saveTaskState();
+  track('Task Complete', { task: taskId, urgency: task.urgency || 'unknown' });
 
   const card  = document.getElementById(`task-card-${taskId}`);
   const check = document.getElementById(`check-${taskId}`);
@@ -1373,6 +1384,14 @@ function generateBulkLetters() {
   const email  = document.getElementById('bulk-email').value.trim();
   clearFormError('err-bulk');
   if (!sender || !email) { showFormError('err-bulk', 'Fyll i ditt namn och din e-post.'); return; }
+
+  // Show loading state — lets browser repaint before synchronous work
+  const genBtn = document.querySelector('#doc-form-bulk .btn-primary');
+  if (genBtn) { genBtn.disabled = true; genBtn.textContent = 'Förbereder brev…'; }
+  requestAnimationFrame(() => setTimeout(() => _doGenerateBulk(sender, email, genBtn), 0));
+}
+
+function _doGenerateBulk(sender, email, genBtn) {
   saveSenderInfo(sender, email);
 
   const services = [];
@@ -1408,6 +1427,8 @@ function generateBulkLetters() {
   document.getElementById('doc-chooser').classList.add('hidden');
   document.querySelectorAll('.doc-form').forEach(f => f.classList.add('hidden'));
   document.getElementById('doc-result-bulk').classList.remove('hidden');
+  if (genBtn) { genBtn.disabled = false; genBtn.textContent = 'Skapa alla brev →'; }
+  track('Doc Generated', { title: 'Bulk uppsägning', count: String(services.length) });
   window.scrollTo(0, 0);
 }
 
@@ -1561,6 +1582,7 @@ Sörjd och saknad.${ovrigtLine}`.trim());
 }
 
 function showDocResult(title, text, emailSubject) {
+  track('Doc Generated', { title: title.split(' — ')[0] });
   document.querySelectorAll('.doc-form').forEach(f => f.classList.add('hidden'));
   document.getElementById('doc-chooser').classList.add('hidden');
   document.getElementById('result-title').textContent = title;
