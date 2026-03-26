@@ -239,6 +239,14 @@ body {
   max-width: 620px;
   text-align: center;
 }
+.landing-brand {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
 .landing-eyebrow {
   font-size: 0.9rem;
   text-transform: uppercase;
