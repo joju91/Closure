@@ -5,15 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Efterplan – För det som blir kvar när någon är borta</title>
   <meta name="description" content="För det som blir kvar när någon är borta. Personlig plan, prioriterade uppgifter och färdiga brev — gratis, ingen registrering." />
-  <link rel="canonical" href="https://joju91.github.io/Closure/" />
+  <link rel="canonical" href="https://efterplan.se/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://joju91.github.io/Closure/" />
+  <meta property="og:url" content="https://efterplan.se/" />
   <meta property="og:title" content="Efterplan – För det som blir kvar när någon är borta" />
   <meta property="og:description" content="För det som blir kvar när någon är borta. Personlig plan, prioriterade uppgifter och färdiga brev — gratis, ingen registrering." />
-  <meta property="og:image" content="https://joju91.github.io/Closure/icon.svg" />
-  <meta name="twitter:card" content="summary" />
+  <meta property="og:image" content="https://efterplan.se/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://efterplan.se/og.png" />
 
   <!-- Schema.org: WebApplication -->
   <script type="application/ld+json">
@@ -21,7 +22,7 @@
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Efterplan",
-    "url": "https://joju91.github.io/Closure/",
+    "url": "https://efterplan.se/",
     "description": "Personlig checklista efter dödsfall — anpassad efter din situation, med färdiga brev och arbetsfördelning.",
     "applicationCategory": "LifestyleApplication",
     "inLanguage": "sv",
@@ -70,7 +71,7 @@
   </script>
 
   <!-- PWA -->
-  <link rel="manifest" href="manifest.json" />
+  <link rel="manifest" href="manifest.json?v=8" />
   <meta name="theme-color" content="#2C4A6E" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
 
@@ -83,7 +84,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=8" />
 </head>
 <body>
 
@@ -763,7 +764,7 @@
   <button onclick="undoTaskDone()">Ångra</button>
 </div>
 
-<script src="app.js"></script>
+<script src="app.js?v=8"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
