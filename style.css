@@ -87,11 +87,27 @@ body {
   border-bottom: 1px solid var(--border);
 }
 .nav-plan { padding: 12px 20px; }
+.logo-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
 .logo {
   font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: -0.5px;
   color: var(--accent);
+  line-height: 1.2;
+}
+.logo-tagline {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  letter-spacing: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 .nav-actions {
   display: none;
@@ -183,13 +199,13 @@ body {
   margin-right: 4px;
 }
 .plan-participant-add-btn {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: transparent;
   border: 1.5px dashed var(--border);
   color: var(--text-muted);
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 400;
   display: flex;
   align-items: center;
@@ -203,24 +219,26 @@ body {
   color: var(--accent);
 }
 .plan-participant-chip {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: var(--accent-light);
-  border: 1.5px solid var(--accent);
+  border: 2px solid var(--accent);
   color: var(--accent);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: default;
   flex-shrink: 0;
+  letter-spacing: 0.03em;
 }
 .plan-participant-chip--deceased {
   background: var(--accent);
   color: #fff;
   border-color: var(--accent);
+  box-shadow: 0 1px 4px rgba(44,74,110,0.25);
 }
 
 /* ─── LANDING ────────────────────────────────── */
