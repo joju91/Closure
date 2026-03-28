@@ -8,21 +8,23 @@ const PAYWALL_ENABLED = false; // set true when Stripe is wired up
 
 // ─── STATE ───────────────────────────────────
 const state = {
-  relation:    null,
-  testamente:  false,
-  fastighet:   false,
-  foretag:     false,
-  skulder:     false,
-  utland:      false,
-  minderarig:  false,
-  fordon:      false,
-  husdjur:     false,
-  hyresratt:   false,
-  ansvar:       null,
-  name:         '',
-  personnr:     '',
-  participants: [],
-  tasks:        [],
+  relation:            null,
+  testamente:          false,
+  fastighet:           false,
+  foretag:             false,
+  skulder:             false,
+  utland:              false,
+  minderarig:          false,
+  fordon:              false,
+  husdjur:             false,
+  hyresratt:           false,
+  ansvar:              null,
+  name:                '',
+  personnr:            '',
+  participants:        [],
+  participantPersonnr: {}, // name → personnr
+  taskChecklists:      {}, // taskId → {key: bool}
+  tasks:               [],
 };
 
 // ─── SCREENS ─────────────────────────────────
@@ -261,6 +263,7 @@ const TASK_LIBRARY = [
     urgency: 'today',
     time: 'Direkt',
     phone: '112',
+    phone2: '1177',
     triggers: [],
     notesPlaceholder: 'Noterat klockslag, vem som kontaktades…',
   },
@@ -422,7 +425,17 @@ Säg även upp betaltjänster som Klarna, PayPal, spelkonton — logga aldrig in
     time: 'ca 1–2 timmar',
     link: null,
     triggers: [],
-    notesPlaceholder: 'Personlig anteckning — skriv de konton du hittar. Inget skickas vidare automatiskt. (t.ex. Facebook, Google, iCloud, email…)',
+    checklist: [
+      { key: 'facebook',  label: 'Facebook / Instagram' },
+      { key: 'google',    label: 'Google-konto (Gmail, Drive, Foton)' },
+      { key: 'apple',     label: 'Apple / iCloud' },
+      { key: 'email',     label: 'Övrig e-post' },
+      { key: 'klarna',    label: 'Klarna' },
+      { key: 'paypal',    label: 'PayPal' },
+      { key: 'streaming', label: 'Streaming (Spotify, Netflix m.fl.)' },
+      { key: 'gaming',    label: 'Spelkonton' },
+    ],
+    notesPlaceholder: 'Övriga konton att avsluta…',
   },
   {
     id: 'skattedeklaration',
@@ -620,7 +633,7 @@ Säg även upp betaltjänster som Klarna, PayPal, spelkonton — logga aldrig in
     time: 'Dagar–veckor',
     desc: 'Samordna med övriga arvingar vad som sparas, säljas eller skänks bort. Gör det i god tid — en tom bostad säljs snabbare och minskar löpande hyra eller avgift som annars belastar dödsboet.<br><br><strong>Donera / sälja:</strong> Stadsmissionen, Myrorna och Erikshjälpen hämtar möbler och kläder kostnadsfritt. Blocket och Facebook Marketplace fungerar bra för lösa föremål. Begravningsbyrån kan rekommendera lokala aktörer.<br><br><strong>Anlita städhjälp:</strong> Specialiserade dödsboföretag hanterar hel tömning och städ. Typisk kostnad: 5 000–20 000 kr beroende på bostadens storlek. Betalas ur dödsboets tillgångar.<br><br><strong>RUT-avdraget gäller inte dödsbo</strong> — dödsboet är en juridisk person och Skatteverket medger inte skattereduktion.',
     triggers: [],
-    notesPlaceholder: 'Vem ansvarar för tömningen? Vad ska sparas, säljas, skänkas?',
+    notesPlaceholder: 'Vad ska sparas, säljas, skänkas? Kontakter till städfirma…',
   },
 ];
 
@@ -794,6 +807,10 @@ function renderTaskList(containerId, tasks, nextTaskId) {
       ? `<a class="task-expand-phone" href="tel:${task.phone.replace(/\s|-/g,'')}">Ring ${task.phone}</a>`
       : '';
 
+    const phone2Html = task.phone2
+      ? `<a class="task-expand-phone task-expand-phone--secondary" href="tel:${task.phone2.replace(/\s|-/g,'')}">Ring ${task.phone2}</a>`
+      : '';
+
     const resourcesHtml = task.resources?.length
       ? `<div class="task-resources">${task.resources.map(r =>
           `<a class="task-resource-link" href="${r.url}" target="_blank" rel="noopener">${r.label} ↗</a>`
@@ -804,6 +821,8 @@ function renderTaskList(containerId, tasks, nextTaskId) {
       ? `<textarea class="task-notes" id="notes-${task.id}" placeholder="${task.notesPlaceholder}" rows="2"
            oninput="autoStartOnNote('${task.id}'); saveTaskNote('${task.id}', this.value)">${getTaskNote(task.id)}</textarea>`
       : '';
+
+    const checklistHtml = task.checklist?.length ? renderTaskChecklist(task) : '';
 
     const notifyHtml = task.id === 'narmaste_anhörig' ? renderNotifyList() : '';
 
@@ -843,9 +862,11 @@ function renderTaskList(containerId, tasks, nextTaskId) {
         <div class="task-expand-desc">${task.desc}</div>
         ${linkHtml}
         ${phoneHtml}
+        ${phone2Html}
         ${resourcesHtml}
         ${(task.id === 'begravningsceremoni' && state.ansvar !== 'flera') ? '' : renderAssigneePicker(task.id)}
         ${notifyHtml}
+        ${checklistHtml}
         ${notesHtml}
         <div class="task-expand-actions">
           ${doneHtml}
@@ -918,6 +939,10 @@ function updateProgress() {
     if (completionEl) completionEl.classList.remove('visible');
   }
 
+  // ── Plan-done footer ─────────────────────────
+  const doneFooter = document.getElementById('plan-done-footer');
+  if (doneFooter) doneFooter.classList.toggle('hidden', done !== total);
+
   // ── Section-done badges ───────────────────────
   ['today', 'week', 'later'].forEach(section => {
     const urgencyMap = { today: 'today', week: 'week', later: 'later' };
@@ -927,6 +952,35 @@ function updateProgress() {
     const badge = document.getElementById(`badge-${section}`);
     if (badge) badge.classList.toggle('hidden', !allDone);
   });
+}
+
+// ─── TASK CHECKLIST ────────────────────────────
+function renderTaskChecklist(task) {
+  const saved = (state.taskChecklists || {})[task.id] || {};
+  const items = task.checklist.map(item => {
+    const checked = !!saved[item.key];
+    return `<label class="task-checklist-item${checked ? ' done' : ''}">
+      <input type="checkbox" id="checklist-${task.id}-${item.key}" ${checked ? 'checked' : ''}
+             onchange="toggleChecklistItem('${task.id}', '${item.key}')">
+      <span>${item.label}</span>
+    </label>`;
+  }).join('');
+  return `<div class="task-checklist">
+    <div class="task-checklist-label">Bocka av vartefter:</div>
+    ${items}
+  </div>`;
+}
+
+function toggleChecklistItem(taskId, key) {
+  if (!state.taskChecklists) state.taskChecklists = {};
+  if (!state.taskChecklists[taskId]) state.taskChecklists[taskId] = {};
+  state.taskChecklists[taskId][key] = !state.taskChecklists[taskId][key];
+  saveState();
+  const cb = document.getElementById(`checklist-${taskId}-${key}`);
+  if (cb) {
+    const item = cb.closest('.task-checklist-item');
+    if (item) item.classList.toggle('done', state.taskChecklists[taskId][key]);
+  }
 }
 
 function autoStartOnNote(taskId) {
@@ -1072,14 +1126,44 @@ function removeParticipant(name) {
   _refreshAllAssigneePickers();
 }
 function _refreshParticipantList() {
-  const container = document.getElementById('ob-participant-list');
-  if (!container) return;
-  container.innerHTML = (state.participants || []).map(name =>
-    `<div class="ob-participant-chip">
-      <span>${name}</span>
-      <button onclick="removeParticipant('${name.replace(/'/g, "\\'")}')" aria-label="Ta bort ${name}">×</button>
-    </div>`
-  ).join('');
+  // Onboarding list — simple chips
+  const obList = document.getElementById('ob-participant-list');
+  if (obList) {
+    obList.innerHTML = (state.participants || []).map(name =>
+      `<div class="ob-participant-chip">
+        <span>${name}</span>
+        <button onclick="removeParticipant('${name.replace(/'/g, "\\'")}')" aria-label="Ta bort ${name}">×</button>
+      </div>`
+    ).join('');
+  }
+  // Modal list — with optional personnr input
+  const modalList = document.getElementById('modal-participant-list');
+  if (modalList) {
+    if (!(state.participants || []).length) {
+      modalList.innerHTML = '<p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:8px">Inga deltagare tillagda ännu.</p>';
+      return;
+    }
+    modalList.innerHTML = (state.participants || []).map(name => {
+      const safeN = name.replace(/'/g, "\\'");
+      const personnr = (state.participantPersonnr || {})[name] || '';
+      return `<div class="modal-participant-item">
+        <div class="modal-participant-row">
+          <span class="modal-participant-name">${name}</span>
+          <button class="modal-participant-remove" onclick="removeParticipant('${safeN}')" aria-label="Ta bort ${name}">×</button>
+        </div>
+        <input type="text" class="participant-personnr-input"
+               placeholder="Personnummer (valfritt — för fullmakter)"
+               value="${personnr}"
+               onchange="saveParticipantPersonnr('${safeN}', this.value)" />
+      </div>`;
+    }).join('');
+  }
+}
+
+function saveParticipantPersonnr(name, val) {
+  if (!state.participantPersonnr) state.participantPersonnr = {};
+  state.participantPersonnr[name] = val.trim();
+  saveState();
 }
 
 // ─── NOTIFY LIST ──────────────────────────────
@@ -1231,6 +1315,7 @@ function openModal(id) {
   const overlay = document.getElementById(id);
   overlay.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  if (id === 'modal-participants') _refreshParticipantList();
   // Focus first focusable element inside
   const first = overlay.querySelector(FOCUSABLE);
   if (first) setTimeout(() => first.focus(), 50);

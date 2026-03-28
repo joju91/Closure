@@ -2074,3 +2074,134 @@ body {
     border-top: 1px solid #ddd;
   }
 }
+
+/* ═══════════════════════════════════════════
+   PHONE 2 (secondary action, e.g. 1177)
+════════════════════════════════════════════ */
+.task-expand-phone--secondary {
+  background: var(--accent-light);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.task-expand-phone--secondary:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ═══════════════════════════════════════════
+   TASK CHECKLIST (e.g. digitala konton)
+════════════════════════════════════════════ */
+.task-checklist {
+  margin: 14px 0 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.task-checklist-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 8px 12px 6px;
+  background: var(--accent-light);
+  border-bottom: 1px solid var(--border);
+}
+.task-checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.task-checklist-item:last-child { border-bottom: none; }
+.task-checklist-item:hover { background: var(--accent-light); }
+.task-checklist-item.done span {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+.task-checklist-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+/* ═══════════════════════════════════════════
+   PLAN DONE FOOTER
+════════════════════════════════════════════ */
+.plan-done-footer {
+  text-align: center;
+  padding: 48px 24px 72px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.plan-done-footer.hidden { display: none; }
+.plan-done-icon {
+  font-size: 2.8rem;
+  color: var(--green);
+  margin-bottom: 12px;
+}
+.plan-done-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+.plan-done-sub {
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  line-height: 1.6;
+  max-width: 280px;
+  margin: 0 auto 20px;
+}
+
+/* ═══════════════════════════════════════════
+   PARTICIPANTS MODAL — personnr inputs
+════════════════════════════════════════════ */
+.modal-participant-item {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-participant-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.modal-participant-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+.modal-participant-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.modal-participant-remove {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.modal-participant-remove:hover { color: var(--danger); }
+.participant-personnr-input {
+  width: 100%;
+  font-size: 0.8rem;
+  padding: 5px 9px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text-soft);
+  font-family: var(--font);
+}
+.participant-personnr-input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}

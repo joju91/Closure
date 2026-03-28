@@ -446,6 +446,15 @@
           <div class="task-list" id="tasks-later"></div>
         </div>
       </div>
+
+      <!-- Avslutningsmeddelande längst ner (visas när alla uppgifter är klara) -->
+      <div id="plan-done-footer" class="plan-done-footer hidden">
+        <div class="plan-done-icon" aria-hidden="true">✓</div>
+        <h2 class="plan-done-title">Allt är genomgånget.</h2>
+        <p class="plan-done-sub">Det har tagit tid och kraft — men du har tagit dig igenom det.<br>Ta ett djupt andetag.</p>
+        <button class="btn-ghost btn-sm" onclick="printPlan()" style="margin-top:8px">Spara som PDF →</button>
+      </div>
+
     </div>
   </div>
 
@@ -740,7 +749,7 @@
       <button class="modal-close" onclick="closeModal('modal-participants')" aria-label="Stäng">✕</button>
     </div>
     <p class="modal-sub">Namn används för arbetsfördelning och för att bestämma vem som ansvarar för vad.</p>
-    <div id="ob-participant-list" class="ob-participant-list" style="margin-bottom:12px"></div>
+    <div id="modal-participant-list" style="margin-bottom:12px"></div>
     <div class="ob-participant-add">
       <input type="text" id="ob-participant-input" class="text-input" placeholder="Lägg till namn…" autocomplete="off"
         onkeydown="if(event.key==='Enter'){event.preventDefault();addParticipant()}" />
