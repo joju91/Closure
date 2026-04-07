@@ -45,6 +45,99 @@ function track(event, props) {
   }
 }
 
+
+
+const CHECKPOINT_STORAGE_KEY = 'efterplan_checkpoints';
+const CHECKPOINT_DAYS = [7, 30, 90];
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function loadCheckpointState() {
+  try {
+    const raw = localStorage.getItem(CHECKPOINT_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.createdAt) return null;
+    if (!parsed.sent || typeof parsed.sent !== 'object') parsed.sent = {};
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function saveCheckpointState(data) {
+  try {
+    localStorage.setItem(CHECKPOINT_STORAGE_KEY, JSON.stringify(data));
+  } catch {}
+}
+
+function ensureCheckpointSchedule() {
+  let checkpoint = loadCheckpointState();
+  if (checkpoint) return checkpoint;
+  checkpoint = {
+    createdAt: new Date().toISOString(),
+    sent: {}
+  };
+  saveCheckpointState(checkpoint);
+  return checkpoint;
+}
+
+function checkpointMessage(day) {
+  if (day === 7) return 'Har du planerat bouppteckningen? Vi kan guida nasta steg.';
+  if (day === 30) return '30 dagar har gatt. Har ni sakrat viktiga uppgifter i dodsboet?';
+  return '90 dagar nu. Dags att dubbelkolla att inga viktiga steg saknas.';
+}
+
+async function postCheckpointNotification(day) {
+  const title = `Efterplan checkpoint dag ${day}`;
+  const body = checkpointMessage(day);
+
+  if ('serviceWorker' in navigator) {
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      if (reg && reg.active) {
+        reg.active.postMessage({ type: 'CHECKPOINT_NOTIFY', day, title, body });
+        return;
+      }
+    } catch {}
+  }
+
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification(title, { body });
+  }
+}
+
+function maybePromptCheckpointPermission() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission !== 'default') return;
+
+  const ok = window.confirm(
+    'Vill du fa lugna checkpoint-paminnelser dag 7, 30 och 90? Du kan andra detta senare i webblasaren.'
+  );
+  if (!ok) return;
+
+  Notification.requestPermission().catch(() => {});
+}
+
+function maybeSendCheckpointNotifications() {
+  if (!('Notification' in window)) return;
+  if (Notification.permission !== 'granted') return;
+
+  const checkpoint = ensureCheckpointSchedule();
+  const createdAtMs = Date.parse(checkpoint.createdAt);
+  if (!Number.isFinite(createdAtMs)) return;
+
+  const daysSince = Math.floor((Date.now() - createdAtMs) / DAY_MS);
+
+  CHECKPOINT_DAYS.forEach((day) => {
+    if (daysSince < day) return;
+    if (checkpoint.sent[String(day)]) return;
+
+    checkpoint.sent[String(day)] = new Date().toISOString();
+    saveCheckpointState(checkpoint);
+    postCheckpointNotification(day);
+  });
+}
+
 function startOnboarding() {
   track('Onboarding Start');
   obCurrentStep = 1;
@@ -258,6 +351,9 @@ function generatePlan() {
   saveState();
   saveTaskState(); // spara default-tilldelningar
   track('Plan Generated', { relation: state.relation || 'okänd', ansvar: state.ansvar || 'okänd' });
+  ensureCheckpointSchedule();
+  maybePromptCheckpointPermission();
+  maybeSendCheckpointNotifications();
   showScreen('screen-plan');
 }
 
@@ -2085,6 +2181,8 @@ function handlePaywallCTA() {
       loadBills();
       renderPlan();
       showScreen('screen-plan');
+      ensureCheckpointSchedule();
+      maybeSendCheckpointNotifications();
       return;
     }
   } catch(e) {}
