@@ -4,7 +4,10 @@
 ════════════════════════════════════════════ */
 
 // ─── FEATURE FLAGS ───────────────────────────
-const PAYWALL_ENABLED = false; // set true when Stripe is wired up
+const PAYWALL_ENABLED = true;
+const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_00wbJ22ysgum2P22eXfjG00';
+const PAYWALL_UNLOCK_KEY = 'efterplan_paid_unlock';
+const PAYWALL_GATE = 'docs';
 
 // ─── STATE ───────────────────────────────────
 const state = {
@@ -1549,6 +1552,11 @@ function getDocContext() {
 }
 
 function showDocForm(type) {
+  if (!ensureDocsUnlocked()) {
+    updatePaywallState();
+    return;
+  }
+
   document.getElementById('doc-chooser').classList.add('hidden');
   document.querySelectorAll('.doc-form').forEach(f => f.classList.add('hidden'));
 
@@ -2062,15 +2070,68 @@ function printPlan() {
 
 // ─── PAYWALL ─────────────────────────────────
 (function initPaywall() {
-  const card = document.getElementById('paywall-card');
-  if (!card) return;
-  if (PAYWALL_ENABLED) card.classList.remove('hidden');
+  hydratePaywallFromUrl();
+  updatePaywallState();
 })();
 
+function isPaywallUnlocked() {
+  if (!PAYWALL_ENABLED) return true;
+  return localStorage.getItem(PAYWALL_UNLOCK_KEY) === '1';
+}
+
+function markPaywallUnlocked(source) {
+  const alreadyUnlocked = localStorage.getItem(PAYWALL_UNLOCK_KEY) === '1';
+  localStorage.setItem(PAYWALL_UNLOCK_KEY, '1');
+  if (!alreadyUnlocked) {
+    track('Purchase', { source: source || 'unknown' });
+  }
+  updatePaywallState();
+}
+
+function hydratePaywallFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const paymentOk =
+    params.get('payment') === 'success' ||
+    params.get('purchase') === 'success' ||
+    params.get('unlock') === '1';
+
+  if (!paymentOk) return;
+
+  markPaywallUnlocked('stripe_return');
+
+  // Keep URL clean after unlocking.
+  params.delete('payment');
+  params.delete('purchase');
+  params.delete('unlock');
+  const cleanQuery = params.toString();
+  const next = `${window.location.pathname}${cleanQuery ? '?' + cleanQuery : ''}${window.location.hash || ''}`;
+  history.replaceState(null, '', next);
+}
+
+function updatePaywallState() {
+  const card = document.getElementById('paywall-card');
+  if (!card) return;
+
+  const unlocked = isPaywallUnlocked();
+  if (PAYWALL_ENABLED && !unlocked) {
+    card.classList.remove('hidden');
+    return;
+  }
+
+  card.classList.add('hidden');
+}
+
+function ensureDocsUnlocked() {
+  if (!PAYWALL_ENABLED) return true;
+  if (isPaywallUnlocked()) return true;
+
+  alert('Dokumentfunktionen ?r l?st tills betalning ?r genomf?rd. Klicka p? "L?s upp ? 149 kr" f?rst.');
+  return false;
+}
+
 function handlePaywallCTA() {
-  // Placeholder — wire Stripe Checkout URL here when ready
   track('Paywall CTA Clicked');
-  alert('Betalning är inte aktiverat ännu — kom tillbaka snart!');
+  window.location.href = STRIPE_PAYMENT_LINK;
 }
 
 // ─── INIT ─────────────────────────────────────
