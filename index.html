@@ -1,13 +1,87 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-T1T40TYPQB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-T1T40TYPQB');
+</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Efterplan – Checklista efter dödsfall</title>
-  <meta name="description" content="Checklista efter dödsfall – vi hjälper dig få ordning på allt praktiskt. Gratis, ingen registrering krävs." />
+  <title>Efterplan – Vad gör man när någon dör? Checklista och guide</title>
+  <meta name="description" content="Praktisk hjälp när någon dör — personlig checklista för dödsbo, bouppteckning och färdiga brev. Gratis, ingen registrering krävs." />
+  <link rel="canonical" href="https://efterplan.se/" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://efterplan.se/" />
+  <meta property="og:title" content="Efterplan – För det som blir kvar när någon är borta" />
+  <meta property="og:description" content="För det som blir kvar när någon är borta. Personlig plan, prioriterade uppgifter och färdiga brev — gratis, ingen registrering." />
+  <meta property="og:image" content="https://efterplan.se/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://efterplan.se/og.png" />
+
+  <!-- Schema.org: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Efterplan",
+    "url": "https://efterplan.se/",
+    "description": "Personlig checklista efter dödsfall — anpassad efter din situation, med färdiga brev och arbetsfördelning.",
+    "applicationCategory": "LifestyleApplication",
+    "inLanguage": "sv",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "SEK" }
+  }
+  </script>
+
+  <!-- Schema.org: FAQ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Vad ska man göra när någon dör?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Om dödsfallet är oväntat eller plötsligt — ring 112 omedelbart. Om personen dog hemma efter en tids sjukdom, ring jourhavande läkare via 1177 för att konstatera dödsfallet. Därefter kontaktar du en begravningsbyrå som tar hand om kroppen och guidar dig vidare. Sedan beställs dödsfallsintyg från Skatteverket, närstående meddelas och en bouppteckning planeras." }
+      },
+      {
+        "@type": "Question",
+        "name": "Vad är ett dödsbo?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Dödsboet är ett tillfälligt juridiskt begrepp för allt den som gick bort lämnade efter sig — tillgångar och skulder. Det upphör när arvet är fördelat." }
+      },
+      {
+        "@type": "Question",
+        "name": "Hur lång tid har man på sig att göra bouppteckning?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Bouppteckningen ska vara klar inom 3 månader från dödsfallet och skickas in till Skatteverket inom 4 månader." }
+      },
+      {
+        "@type": "Question",
+        "name": "Ärver man skulder när någon dör?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Nej. Som anhörig ärver du aldrig den avlidnas skulder. Skulder betalas av dödsboet om det finns tillgångar — men din privatekonomi är helt skyddad." }
+      },
+      {
+        "@type": "Question",
+        "name": "Vad händer med hyresrätten när hyresgästen dör?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Hyreskontrakt upphör inte automatiskt vid dödsfall. Dödsboet måste säga upp kontraktet skriftligt. Om det görs inom en månad från dödsfallet är uppsägningstiden normalt en månad. Väntar man längre gäller vanlig uppsägningstid (ofta 3 månader)." }
+      },
+      {
+        "@type": "Question",
+        "name": "Vad är skillnaden på dödsbevis och dödsfallsintyg?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Dödsbeviset utfärdas automatiskt av läkaren. Dödsfallsintyget med släktutredning beställer du själv från Skatteverket (0771-567 567) — det är detta banker och myndigheter kräver för att du ska få företräda dödsboet." }
+      }
+    ]
+  }
+  </script>
 
   <!-- PWA -->
-  <link rel="manifest" href="manifest.json" />
+  <link rel="manifest" href="manifest.json?v=8" />
   <meta name="theme-color" content="#2C4A6E" />
   <link rel="icon" href="icon.svg" type="image/svg+xml" />
 
@@ -20,9 +94,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=14" />
 </head>
 <body>
+
+<a href="#screen-landing" class="skip-link">Hoppa till innehållet</a>
+
+<div id="offline-banner" class="offline-banner" role="alert" aria-live="polite">
+  Ingen uppkoppling just nu — dina ändringar sparas ändå lokalt.
+</div>
 
 <!-- ═══════════════════════════════════════════
      SCREEN: LANDING
@@ -37,18 +117,55 @@
   </nav>
   <div class="landing-hero">
     <div class="landing-content">
-      <p class="landing-eyebrow">Checklista efter dödsfall</p>
-      <h1 class="landing-headline">Du tar hand om det som betyder något.<br>Vi hjälper dig med resten.</h1>
-      <p class="landing-sub">Efterplan bygger din personliga plan, genererar brev och håller koll på allt som behöver göras — så att du slipper.</p>
+      <p class="landing-brand">Efterplan</p>
+      <h1 class="landing-eyebrow">Vad gör man när någon dör?</h1>
+      <h2 class="landing-headline">Du tar hand om det som betyder något.<br>Vi hjälper dig med resten.</h2>
+      <p class="landing-sub">Svar på vad du ska göra, i vilken ordning — och färdiga brev att skicka direkt.</p>
       <ul class="landing-payoff">
         <li>En prioriterad checklista anpassad efter din situation</li>
         <li>Färdiga brev till banker, försäkringsbolag och myndigheter</li>
-        <li>En plan att dela med övriga i familjen</li>
+        <li>Tilldela uppgifter till rätt person om ni är flera</li>
       </ul>
       <button class="btn-primary btn-large" onclick="startOnboarding()">Kom igång — tar 2 minuter</button>
       <p class="landing-note">Gratis att börja. Ingen registrering krävs.</p>
     </div>
   </div>
+
+  <!-- FAQ -->
+  <section class="landing-section landing-section--faq" id="section-faq">
+    <h2>Vanliga frågor</h2>
+
+    <div class="faq-item">
+      <h3>Vad ska man göra när någon dör?</h3>
+      <p><strong>Om dödsfallet är oväntat eller plötsligt — ring 112 omedelbart.</strong> Om personen dog hemma efter en längre tids sjukdom ringer du istället jourhavande läkare via 1177 för att konstatera dödsfallet och utfärda dödsbeviset.</p>
+      <p>Därefter kontaktar du en begravningsbyrå — de tar hand om kroppen, sköter registreringen hos Skatteverket och guidar dig vidare. Sedan behöver du beställa dödsfallsintyg med släktutredning från Skatteverket, meddela närstående, kontakta banker och planera bouppteckningen. Efterplan ger dig en prioriterad checklista baserad på just din situation. <a href="./vad-gora-nar-nagon-dor.html">Läs vår guide om vad man gör när någon dör.</a></p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Vad är skillnaden på dödsbevis och dödsfallsintyg?</h3>
+      <p>Dödsbeviset utfärdas automatiskt av läkaren som konstaterat dödsfallet — du behöver inte göra något. Dödsfallsintyget med släktutredning är det dokument du själv beställer från Skatteverket (telefon: 0771-567 567). Det är detta intyg som banker, försäkringsbolag och myndigheter kräver för att du ska kunna företräda dödsboet.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Hur lång tid har man på sig att göra bouppteckning?</h3>
+      <p>Bouppteckningen ska vara genomförd inom 3 månader från dödsfallet och skickas in till Skatteverket inom 4 månader. Vid behov kan du ansöka om anstånd. Bouppteckning kan göras av familjen själv om boet är enkelt, men vid fastighet, testamente eller oenighet rekommenderas jurist. <a href="./bouppteckning-guide.html">Läs vår guide om bouppteckning.</a></p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Ärver man skulder när någon dör?</h3>
+      <p>Nej. Som anhörig ärver du aldrig den avlidnas skulder. Skulder betalas av dödsboet om det finns tillgångar — men din privatekonomi är helt skyddad. Om skulder överstiger tillgångarna kan dödsboet försättas i konkurs, och arvingarna får ingenting men är inte skyldiga att betala. <a href="./checklista-dodsbo.html">Se vår checklista för dödsbo.</a></p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Vad händer med hyresrätten när hyresgästen dör?</h3>
+      <p>Hyreskontrakt upphör inte automatiskt vid dödsfall. Dödsboet måste säga upp kontraktet skriftligt till hyresvärden. Om det görs inom en månad från dödsfallet är uppsägningstiden normalt en månad. Väntar man längre gäller vanlig uppsägningstid (ofta 3 månader), och hyran belastar dödsboet under hela perioden.</p>
+    </div>
+
+    <div class="faq-item">
+      <h3>Vad gäller för digitala konton och sociala medier?</h3>
+      <p>Digitala konton avslutas inte automatiskt. Facebook och Instagram kan antingen minnesmärkas eller raderas — båda kräver att du kontaktar plattformens support med dödsfallsintyg. Google har en funktion för "hantering av inaktiva konton" som den avlidne kan ha förinställt. Apple/iCloud kräver ofta domstolsbeslut utan förinställd digital arvskontakt. Säg alltid upp betaltjänster som Klarna och PayPal via de officiella vägarna.</p>
+    </div>
+  </section>
 
   <!-- Om Efterplan -->
   <section class="landing-section" id="section-om">
@@ -77,6 +194,11 @@
        <a href="#section-integritet">Integritet</a> &nbsp;·&nbsp;
        <a href="#section-om">Om</a>
     </p>
+    <p class="landing-footer-links">
+      <a href="./vad-gora-nar-nagon-dor.html">Vad gör man när någon dör?</a> &nbsp;·&nbsp;
+      <a href="./checklista-dodsbo.html">Checklista dödsbo</a> &nbsp;·&nbsp;
+      <a href="./bouppteckning-guide.html">Bouppteckning guide</a>
+    </p>
   </footer>
 </div>
 
@@ -84,6 +206,10 @@
      SCREEN: ONBOARDING (fullscreen, conversational)
 ════════════════════════════════════════════ -->
 <div id="screen-onboarding" class="screen">
+
+  <div class="ob-progress-bar-wrap" aria-hidden="true">
+    <div class="ob-progress-bar-fill" id="ob-progress-bar-fill"></div>
+  </div>
 
   <div class="ob-topbar">
     <button class="ob-back" id="ob-back-btn" onclick="obBack()">← Tillbaka</button>
@@ -99,6 +225,7 @@
         <p class="ob-label">Steg 1 av 5</p>
         <h2 class="ob-title">Vem har gått bort?</h2>
         <p class="ob-hint">Det hjälper oss förstå vad som behöver göras.</p>
+        <p class="ob-reassure">Du kan inte göra fel — vi guidar dig hela vägen.</p>
         <div class="ob-choices">
           <button class="ob-choice" data-key="relation" data-val="make" onclick="obChoose(this)">Make / maka</button>
           <button class="ob-choice" data-key="relation" data-val="forälder" onclick="obChoose(this)">Förälder</button>
@@ -119,14 +246,14 @@
         <div class="ob-checks">
           <p class="ob-check-group-label">Juridiskt</p>
           <label class="ob-check">
-            <input type="checkbox" data-key="testamente" onchange="updateCheckboxState()">
+            <input type="checkbox" data-key="testamente" onchange="updateCheckboxState(this.dataset.key)">
             <span class="ob-check-box"></span>
             <span class="ob-check-label">Testamente finns
               <span class="ob-check-hint">Hittades bland papperen, i bankfack eller hos notarie</span>
             </span>
           </label>
           <label class="ob-check">
-            <input type="checkbox" data-key="minderarig" onchange="updateCheckboxState()">
+            <input type="checkbox" data-key="minderarig" onchange="updateCheckboxState(this.dataset.key)">
             <span class="ob-check-box"></span>
             <span class="ob-check-label">Minderårigt barn ärver
               <span class="ob-check-hint">Barn under 18 år som är arvinge</span>
@@ -135,14 +262,14 @@
 
           <p class="ob-check-group-label">Bostad</p>
           <label class="ob-check">
-            <input type="checkbox" data-key="fastighet" onchange="updateCheckboxState()">
+            <input type="checkbox" data-key="fastighet" onchange="updateCheckboxState(this.dataset.key)">
             <span class="ob-check-box"></span>
             <span class="ob-check-label">Ägde sin bostad
               <span class="ob-check-hint">Villa, radhus eller bostadsrätt — den avlidna <strong>ägde</strong> (inte hyrde)</span>
             </span>
           </label>
           <label class="ob-check">
-            <input type="checkbox" data-key="hyresratt" onchange="updateCheckboxState()">
+            <input type="checkbox" data-key="hyresratt" onchange="updateCheckboxState(this.dataset.key)">
             <span class="ob-check-box"></span>
             <span class="ob-check-label">Hyrde sin bostad
               <span class="ob-check-hint">Hyresrätt — betalade hyra till hyresvärd (inte bostadsrätt)</span>
@@ -151,21 +278,21 @@
 
           <p class="ob-check-group-label">Övrigt</p>
           <label class="ob-check">
-            <input type="checkbox" data-key="foretag" onchange="updateCheckboxState()">
+            <input type="checkbox" data-key="foretag" onchange="updateCheckboxState(this.dataset.key)">
             <span class="ob-check-box"></span>
             <span class="ob-check-label">Eget företag
               <span class="ob-check-hint">Enskild firma, aktiebolag eller F-skattsedel</span>
             </span>
           </label>
           <label class="ob-check">
-            <input type="checkbox" data-key="utland" onchange="updateCheckboxState()">
+            <input type="checkbox" data-key="utland" onchange="updateCheckboxState(this.dataset.key)">
             <span class="ob-check-box"></span>
             <span class="ob-check-label">Tillgångar utomlands
               <span class="ob-check-hint">Bankkonto, bostad eller pension i annat land</span>
             </span>
           </label>
           <label class="ob-check">
-            <input type="checkbox" data-key="skulder" onchange="updateCheckboxState()">
+            <input type="checkbox" data-key="skulder" onchange="updateCheckboxState(this.dataset.key)">
             <span class="ob-check-box"></span>
             <span class="ob-check-label">Skulder eller lån
               <span class="ob-check-hint">Banklån, skulder hos Kronofogden eller kreditkort</span>
@@ -173,14 +300,14 @@
             </span>
           </label>
           <label class="ob-check">
-            <input type="checkbox" data-key="fordon" onchange="updateCheckboxState()">
+            <input type="checkbox" data-key="fordon" onchange="updateCheckboxState(this.dataset.key)">
             <span class="ob-check-box"></span>
             <span class="ob-check-label">Bil eller annat fordon
               <span class="ob-check-hint">Bil eller fordon som den avlidna ägde eller delade</span>
             </span>
           </label>
           <label class="ob-check">
-            <input type="checkbox" data-key="husdjur" onchange="updateCheckboxState()">
+            <input type="checkbox" data-key="husdjur" onchange="updateCheckboxState(this.dataset.key)">
             <span class="ob-check-box"></span>
             <span class="ob-check-label">Husdjur
               <span class="ob-check-hint">Hund, katt eller annat djur som behöver ny ägare</span>
@@ -206,26 +333,49 @@
       </div>
     </div>
 
-    <!-- Step 4 (fd. steg 5) -->
+    <!-- Step 4 — deltagare (visas bara om "vi är flera") -->
     <div class="ob-step" id="ob-step-4">
       <div class="ob-content">
-        <p class="ob-label">Steg 4 av 5</p>
-        <h2 class="ob-title">Vad hette personen?</h2>
-        <p class="ob-hint">Det gör planen och breven lite mer personliga.</p>
-        <input type="text" id="deceased-name" class="ob-text-input" placeholder="Förnamn Efternamn" autocomplete="off"
-          onkeydown="if(event.key==='Enter') obGoTo(5)" />
-        <p class="ob-skip">Frivilligt — du kan hoppa över detta.</p>
-        <button class="ob-next-btn" onclick="obGoTo(5)">Nästa →</button>
+        <p class="ob-label">Steg 4 av 6</p>
+        <h2 class="ob-title">Vilka hjälper till?</h2>
+        <p class="ob-hint">Börja med ditt eget namn, lägg sedan till övriga.</p>
+        <label class="ob-field-label" for="ob-self-name">Ditt namn</label>
+        <input type="text" id="ob-self-name" class="ob-text-input" placeholder="Namn" autocomplete="name"
+          onkeydown="if(event.key==='Enter') document.getElementById('ob-participant-name').focus()" />
+        <label class="ob-field-label" for="ob-participant-name">Övriga som hjälper till</label>
+        <div class="ob-participant-list" id="ob-participant-list"></div>
+        <div class="ob-participant-input-row">
+          <input type="text" id="ob-participant-name" class="ob-text-input" placeholder="Namn" autocomplete="off"
+            onkeydown="if(event.key==='Enter') obAddParticipant()" />
+          <button class="btn-ghost btn-sm" type="button" onclick="obAddParticipant()">+ Lägg till</button>
+        </div>
+        <p class="ob-why">Vi använder detta för att du ska kunna tilldela uppgifter till rätt person.</p>
+        <button class="ob-next-btn" onclick="obSaveParticipantsAndContinue()">Nästa →</button>
       </div>
     </div>
 
-    <!-- Step 5 (fd. steg 6) -->
+    <!-- Step 5 — namn -->
     <div class="ob-step" id="ob-step-5">
       <div class="ob-content">
-        <p class="ob-label">Steg 5 av 5 — helt frivilligt</p>
+        <p class="ob-label">Steg 5 av 6</p>
+        <h2 class="ob-title">Vilket namn har den som avled?</h2>
+        <p class="ob-hint">Det gör planen och breven lite mer personliga.</p>
+        <input type="text" id="deceased-name" class="ob-text-input" placeholder="Förnamn Efternamn" autocomplete="off"
+          aria-label="Den avlidnes förnamn och efternamn"
+          onkeydown="if(event.key==='Enter') obGoTo(6)" />
+        <p class="ob-skip">Frivilligt — du kan hoppa över detta.</p>
+        <button class="ob-next-btn" onclick="obGoTo(6)">Nästa →</button>
+      </div>
+    </div>
+
+    <!-- Step 6 — personnr -->
+    <div class="ob-step" id="ob-step-6">
+      <div class="ob-content">
+        <p class="ob-label">Steg 6 av 6 — helt frivilligt</p>
         <h2 class="ob-title">Personnummer?</h2>
         <p class="ob-hint">Vi fyller i det automatiskt i alla brev du genererar — sparar tid. Annars kan du fylla i det manuellt direkt i breven. Sparas bara lokalt i din webbläsare, aldrig på någon server.</p>
         <input type="text" id="deceased-personnr" class="ob-text-input" placeholder="ÅÅÅÅMMDD-XXXX" autocomplete="off"
+          aria-label="Den avlidnes personnummer" inputmode="numeric"
           onkeydown="if(event.key==='Enter') generatePlan()" />
         <button class="ob-next-btn" onclick="generatePlan()">Visa min plan →</button>
       </div>
@@ -237,15 +387,17 @@
 <!-- ═══════════════════════════════════════════
      SCREEN: PLAN (Dashboard)
 ════════════════════════════════════════════ -->
-<div id="screen-plan" class="screen">
+<div id="screen-plan" class="screen" role="main" tabindex="-1">
 
   <!-- Nav -->
   <nav class="nav nav-light nav-plan">
-    <div class="logo">Efterplan</div>
+    <div class="logo-wrap">
+      <div class="logo">Efterplan</div>
+      <div class="logo-tagline">För det som blir kvar när någon är borta</div>
+    </div>
     <div class="nav-plan-actions">
       <div id="plan-participants" class="plan-participants"></div>
       <button class="btn-ghost btn-sm" onclick="editAnswers()">Ändra svar</button>
-      <button class="btn-ghost btn-sm" onclick="openShareModal()">Dela plan</button>
     </div>
   </nav>
 
@@ -272,38 +424,74 @@
 
       <div class="completion-message" id="completion-message" role="status">
         <p>Du har gått igenom allt. Ta ett djupt andetag — du klarade det.</p>
+        <button class="btn-ghost btn-sm" onclick="printPlan()" style="margin-top:12px">Spara som PDF / Skriv ut →</button>
       </div>
+
+      <button class="plan-print-btn" onclick="printPlan()" aria-label="Skriv ut eller spara som PDF">
+        <span>PDF</span>
+      </button>
 
       <button id="start-here" class="start-here hidden" aria-label="Gå till nästa uppgift"></button>
 
       <div class="task-sections">
         <div class="task-section" id="section-today">
           <div class="section-header">
-            <span class="section-dot dot-red"></span>
+            <span class="section-dot dot-red" id="dot-today"></span>
             <h2 class="section-title">Gör idag</h2>
             <span class="section-count" id="count-today"></span>
+            <span class="section-done-badge hidden" id="badge-today">✓ Klar</span>
           </div>
           <div class="task-list" id="tasks-today"></div>
         </div>
 
         <div class="task-section" id="section-week">
           <div class="section-header">
-            <span class="section-dot dot-yellow"></span>
+            <span class="section-dot dot-yellow" id="dot-week"></span>
             <h2 class="section-title">Denna vecka</h2>
             <span class="section-count" id="count-week"></span>
+            <span class="section-done-badge hidden" id="badge-week">✓ Klar</span>
           </div>
           <div class="task-list" id="tasks-week"></div>
         </div>
 
         <div class="task-section" id="section-later">
           <div class="section-header">
-            <span class="section-dot dot-grey"></span>
+            <span class="section-dot dot-grey" id="dot-later"></span>
             <h2 class="section-title">Senare</h2>
             <span class="section-count" id="count-later"></span>
+            <span class="section-done-badge hidden" id="badge-later">✓ Klar</span>
           </div>
           <div class="task-list" id="tasks-later"></div>
         </div>
       </div>
+
+      <!-- Räkningar (T067) -->
+      <section class="bills-section" id="bills-section">
+        <div class="bills-header">
+          <h2 class="section-title">Räkningar</h2>
+          <button class="btn-ghost bills-add-btn" onclick="showBillForm()">+ Lägg till</button>
+        </div>
+        <div class="bill-form hidden" id="bill-form">
+          <input type="text" id="bill-desc-input" aria-label="Beskrivning" placeholder="Beskrivning (t.ex. Telia faktura)" class="bill-input">
+          <input type="number" id="bill-amount-input" aria-label="Belopp i kronor" placeholder="Belopp (kr)" class="bill-input bill-amount-input">
+          <p class="form-error hidden" id="err-bills" role="alert"></p>
+          <div class="bill-form-actions">
+            <button class="btn-primary" onclick="submitBill()">Lägg till</button>
+            <button class="btn-ghost" onclick="hideBillForm()">Avbryt</button>
+          </div>
+        </div>
+        <ul id="bills-list" class="bills-list"></ul>
+        <p class="bills-empty hidden" id="bills-empty">Inga räkningar registrerade än.</p>
+      </section>
+
+      <!-- Avslutningsmeddelande längst ner (visas när alla uppgifter är klara) -->
+      <div id="plan-done-footer" class="plan-done-footer hidden">
+        <div class="plan-done-icon" aria-hidden="true">✓</div>
+        <h2 class="plan-done-title">Allt är genomgånget.</h2>
+        <p class="plan-done-sub">Det har tagit tid och kraft — men du har tagit dig igenom det.<br>Ta ett djupt andetag.</p>
+        <button class="btn-ghost btn-sm" onclick="printPlan()" style="margin-top:8px">Spara som PDF →</button>
+      </div>
+
     </div>
   </div>
 
@@ -318,7 +506,7 @@
           <p class="plan-sub">Välj vad du behöver — vi skriver det åt dig.</p>
         </div>
         <button class="doc-bulk-cta" onclick="showDocForm('bulk')">
-          <span class="doc-bulk-icon">⚡</span>
+          <span class="doc-bulk-icon" aria-hidden="true">⚡</span>
           <div class="doc-bulk-text">
             <span class="doc-bulk-title">Avsluta flera tjänster på en gång</span>
             <span class="doc-bulk-sub">Lägg till alla abonnemang — vi skriver alla brev åt dig</span>
@@ -327,35 +515,44 @@
         </button>
         <div class="doc-type-grid">
           <button class="doc-type-btn" onclick="showDocForm('letter')">
-            <span class="doc-icon">✉</span>
+            <span class="doc-icon" aria-hidden="true">✉</span>
             <span class="doc-type-title">Uppsägningsbrev</span>
             <span class="doc-type-sub">Avsluta ett abonnemang</span>
           </button>
           <button class="doc-type-btn" onclick="showDocForm('bank')">
-            <span class="doc-icon">🏦</span>
+            <span class="doc-icon" aria-hidden="true">🏦</span>
             <span class="doc-type-title">Till banken</span>
             <span class="doc-type-sub">Meddela banken om dödsfallet</span>
           </button>
           <button class="doc-type-btn" onclick="showDocForm('annons')">
-            <span class="doc-icon">📰</span>
+            <span class="doc-icon" aria-hidden="true">📰</span>
             <span class="doc-type-title">Dödsannons</span>
             <span class="doc-type-sub">Formulera ett minnesvärigt meddelande</span>
           </button>
           <button class="doc-type-btn" onclick="showDocForm('forsakring')">
-            <span class="doc-icon">🛡</span>
+            <span class="doc-icon" aria-hidden="true">🛡</span>
             <span class="doc-type-title">Till försäkringsbolaget</span>
             <span class="doc-type-sub">Meddela försäkringsbolaget om dödsfallet</span>
           </button>
           <button class="doc-type-btn hidden" id="doc-btn-skatteverket" onclick="showDocForm('skatteverket')">
-            <span class="doc-icon">🏛</span>
+            <span class="doc-icon" aria-hidden="true">🏛</span>
             <span class="doc-type-title">Skatteverket</span>
             <span class="doc-type-sub">Avsluta F-skatt / enskild firma</span>
           </button>
           <button class="doc-type-btn hidden" id="doc-btn-fullmakt" onclick="showDocForm('fullmakt')">
-            <span class="doc-icon">📋</span>
+            <span class="doc-icon" aria-hidden="true">📋</span>
             <span class="doc-type-title">Fullmakt</span>
             <span class="doc-type-sub">Ge en person rätt att företräda dödsboet</span>
           </button>
+        </div>
+
+        <!-- Paywall card — dold tills PAYWALL_ENABLED = true i app.js -->
+        <div id="paywall-card" class="paywall-card hidden">
+          <div class="paywall-lock" aria-hidden="true">🔒</div>
+          <h2 class="paywall-title">Lås upp alla dokument</h2>
+          <p class="paywall-desc">Generera obegränsat med brev — bank, försäkring, abonnemang och mer.</p>
+          <button class="btn-primary paywall-cta" onclick="handlePaywallCTA()">Lås upp — 149 kr</button>
+          <p class="paywall-note">Engångsbetalning. Inga prenumerationer.</p>
         </div>
       </div>
 
@@ -365,11 +562,11 @@
         <h2 class="plan-title" style="margin-bottom:6px">Avsluta tjänster</h2>
         <p class="plan-sub" style="margin-bottom:28px">Fyll i ditt namn och lägg till tjänster — vi skriver alla brev åt dig.</p>
         <div class="form-group">
-          <label>Ditt namn <span class="required">*</span></label>
+          <label for="bulk-sender">Ditt namn <span class="required">*</span></label>
           <input type="text" id="bulk-sender" class="text-input" placeholder="Ditt fullständiga namn" />
         </div>
         <div class="form-group">
-          <label>Din e-post <span class="required">*</span></label>
+          <label for="bulk-email">Din e-post <span class="required">*</span></label>
           <input type="email" id="bulk-email" class="text-input" placeholder="din@epost.se" />
         </div>
         <div class="form-group">
@@ -396,19 +593,19 @@
         <h2 class="plan-title" style="margin-bottom:6px">Uppsägningsbrev</h2>
         <p class="plan-sub" style="margin-bottom:28px">Vi skriver brevet — du kopierar och skickar.</p>
         <div class="form-group">
-          <label>Tjänstens namn <span class="required">*</span></label>
+          <label for="letter-service">Tjänstens namn <span class="required">*</span></label>
           <input type="text" id="letter-service" class="text-input" placeholder="t.ex. Spotify, Dagens Nyheter, Elbolaget" />
         </div>
         <div class="form-group">
-          <label>Kundnummer (om känt)</label>
+          <label for="letter-custnr">Kundnummer (om känt)</label>
           <input type="text" id="letter-custnr" class="text-input" placeholder="Frivilligt" />
         </div>
         <div class="form-group">
-          <label>Ditt namn <span class="required">*</span></label>
+          <label for="letter-sender">Ditt namn <span class="required">*</span></label>
           <input type="text" id="letter-sender" class="text-input" placeholder="Ditt fullständiga namn" />
         </div>
         <div class="form-group">
-          <label>Din e-post <span class="required">*</span></label>
+          <label for="letter-email">Din e-post <span class="required">*</span></label>
           <input type="email" id="letter-email" class="text-input" placeholder="din@epost.se" />
         </div>
         <p class="form-error hidden" id="err-letter" role="alert"></p>
@@ -421,19 +618,19 @@
         <h2 class="plan-title" style="margin-bottom:6px">Brev till banken</h2>
         <p class="plan-sub" style="margin-bottom:28px">Vi skriver brevet — du kopierar och skickar.</p>
         <div class="form-group">
-          <label>Bank <span class="required">*</span></label>
+          <label for="bank-name">Bank <span class="required">*</span></label>
           <input type="text" id="bank-name" class="text-input" placeholder="t.ex. Swedbank, Handelsbanken, SEB" />
         </div>
         <div class="form-group">
-          <label>Ditt namn <span class="required">*</span></label>
+          <label for="bank-sender">Ditt namn <span class="required">*</span></label>
           <input type="text" id="bank-sender" class="text-input" placeholder="Ditt fullständiga namn" />
         </div>
         <div class="form-group">
-          <label>Din relation till den avlidne <span class="required">*</span></label>
+          <label for="bank-relation">Din relation till den avlidne <span class="required">*</span></label>
           <input type="text" id="bank-relation" class="text-input" placeholder="t.ex. Make, Dotter, Son" />
         </div>
         <div class="form-group">
-          <label>Din e-post <span class="required">*</span></label>
+          <label for="bank-email">Din e-post <span class="required">*</span></label>
           <input type="email" id="bank-email" class="text-input" placeholder="din@epost.se" />
         </div>
         <p class="form-error hidden" id="err-bank" role="alert"></p>
@@ -446,26 +643,26 @@
         <h2 class="plan-title" style="margin-bottom:6px">Dödsannons</h2>
         <p class="plan-sub" style="margin-bottom:28px">Berätta lite — vi formulerar resten.</p>
         <div class="form-group">
-          <label>Den avlidnes namn <span class="required">*</span></label>
+          <label for="annons-name">Den avlidnes namn <span class="required">*</span></label>
           <input type="text" id="annons-name" class="text-input" placeholder="Fullständigt namn" />
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Född</label>
+            <label for="annons-born">Född</label>
             <input type="text" id="annons-born" class="text-input" placeholder="t.ex. 12 mars 1945" />
           </div>
           <div class="form-group">
-            <label>Avled</label>
+            <label for="annons-died">Avled</label>
             <input type="text" id="annons-died" class="text-input" placeholder="t.ex. 8 januari 2025" />
           </div>
         </div>
         <div class="form-group">
-          <label>Efterlevande (namn och relation)</label>
+          <label for="annons-survivors">Efterlevande (namn och relation)</label>
           <input type="text" id="annons-survivors" class="text-input" placeholder="t.ex. Maka Birgitta, barnen Erik och Anna" />
         </div>
         <div class="form-group">
-          <label>Berätta något om personen <span class="form-label-hint">(valfritt)</span></label>
-          <div class="phrase-chips" id="memory-chips">
+          <label for="annons-memory">Berätta något om personen <span class="form-label-hint">(valfritt)</span></label>
+          <div class="phrase-chips" id="memory-chips" role="group" aria-label="Välj fraser">
             <button type="button" class="phrase-chip" onclick="toggleMemoryPhrase(this)">Varm och omtänksam</button>
             <button type="button" class="phrase-chip" onclick="toggleMemoryPhrase(this)">Älskade naturen</button>
             <button type="button" class="phrase-chip" onclick="toggleMemoryPhrase(this)">Levde för familjen</button>
@@ -476,11 +673,11 @@
           <textarea id="annons-memory" class="text-input textarea" placeholder="Lägg till egna ord om du vill…" rows="2"></textarea>
         </div>
         <div class="form-group">
-          <label>Begravning (om känt)</label>
+          <label for="annons-funeral">Begravning (om känt)</label>
           <input type="text" id="annons-funeral" class="text-input" placeholder="t.ex. Storkyrkan, Stockholm, 15 februari kl 14:00" />
         </div>
         <div class="form-group">
-          <label>Vill du lägga till något mer kan du göra det här</label>
+          <label for="annons-ovrigt">Vill du lägga till något mer</label>
           <textarea id="annons-ovrigt" class="text-input textarea" placeholder="t.ex. citat, hälsning, önskemål om blombidrag, kontaktuppgifter…" rows="2"></textarea>
         </div>
         <p class="form-error hidden" id="err-annons" role="alert"></p>
@@ -493,19 +690,19 @@
         <h2 class="plan-title" style="margin-bottom:6px">Brev till försäkringsbolaget</h2>
         <p class="plan-sub" style="margin-bottom:28px">Vi skriver brevet — du kopierar och skickar.</p>
         <div class="form-group">
-          <label>Försäkringsbolag <span class="required">*</span></label>
+          <label for="fors-bolag">Försäkringsbolag <span class="required">*</span></label>
           <input type="text" id="fors-bolag" class="text-input" placeholder="t.ex. Folksam, If, Länsförsäkringar, Skandia" />
         </div>
         <div class="form-group">
-          <label>Ditt namn <span class="required">*</span></label>
+          <label for="fors-sender">Ditt namn <span class="required">*</span></label>
           <input type="text" id="fors-sender" class="text-input" placeholder="Ditt fullständiga namn" />
         </div>
         <div class="form-group">
-          <label>Din relation till den avlidne <span class="required">*</span></label>
+          <label for="fors-relation">Din relation till den avlidne <span class="required">*</span></label>
           <input type="text" id="fors-relation" class="text-input" placeholder="t.ex. Make, Dotter, Son" />
         </div>
         <div class="form-group">
-          <label>Din e-post <span class="required">*</span></label>
+          <label for="fors-email">Din e-post <span class="required">*</span></label>
           <input type="email" id="fors-email" class="text-input" placeholder="din@epost.se" />
         </div>
         <p class="form-error hidden" id="err-forsakring" role="alert"></p>
@@ -518,19 +715,19 @@
         <h2 class="plan-title" style="margin-bottom:6px">Fullmakt — dödsbo</h2>
         <p class="plan-sub" style="margin-bottom:28px">Utser en person att företräda dödsboet gentemot banker och myndigheter. Alla dödsbodelägare bör skriva under i original.</p>
         <div class="form-group">
-          <label>Ditt namn (fullmaktsgivare) <span class="required">*</span></label>
+          <label for="fullmakt-grantor1">Ditt namn (fullmaktsgivare) <span class="required">*</span></label>
           <input type="text" id="fullmakt-grantor1" class="text-input" placeholder="Ditt fullständiga namn" />
         </div>
         <div class="form-group">
-          <label>Övriga dödsbodelägares namn (valfritt)</label>
+          <label for="fullmakt-grantor2">Övriga dödsbodelägares namn (valfritt)</label>
           <input type="text" id="fullmakt-grantor2" class="text-input" placeholder="t.ex. Erik Karlsson, Anna Karlsson" />
         </div>
         <div class="form-group">
-          <label>Fullmaktstagaren — vem ska ha fullmakten <span class="required">*</span></label>
+          <label for="fullmakt-agent">Fullmaktstagaren — vem ska ha fullmakten <span class="required">*</span></label>
           <input type="text" id="fullmakt-agent" class="text-input" placeholder="Fullständigt namn" />
         </div>
         <div class="form-group">
-          <label>Fullmaktstagarens relation till dödsboet</label>
+          <label for="fullmakt-relation">Fullmaktstagarens relation till dödsboet</label>
           <input type="text" id="fullmakt-relation" class="text-input" placeholder="t.ex. Son, Dotter, Make" />
         </div>
         <p class="form-error hidden" id="err-fullmakt" role="alert"></p>
@@ -544,15 +741,15 @@
         <p class="plan-sub" style="margin-bottom:28px">Begär avregistrering av F-skatt och enskild firma hos Skatteverket. Kopiera brevet och skicka via Skatteverkets e-tjänst eller post.</p>
         <input type="hidden" id="skv-arende" value="fskatt" />
         <div class="form-group">
-          <label>Ditt namn <span class="required">*</span></label>
+          <label for="skv-sender">Ditt namn <span class="required">*</span></label>
           <input type="text" id="skv-sender" class="text-input" placeholder="Ditt fullständiga namn" />
         </div>
         <div class="form-group">
-          <label>Din relation till den avlidne <span class="required">*</span></label>
+          <label for="skv-relation">Din relation till den avlidne <span class="required">*</span></label>
           <input type="text" id="skv-relation" class="text-input" placeholder="t.ex. Make, Dotter, Son" />
         </div>
         <div class="form-group">
-          <label>Din e-post <span class="required">*</span></label>
+          <label for="skv-email">Din e-post <span class="required">*</span></label>
           <input type="email" id="skv-email" class="text-input" placeholder="din@epost.se" />
         </div>
         <p class="form-error hidden" id="err-skatteverket" role="alert"></p>
@@ -578,32 +775,6 @@
 
 </div>
 
-<!-- ═══════════════════════════════════════════
-     MODAL: DELA PLAN
-════════════════════════════════════════════ -->
-<div id="modal-share" class="modal-overlay hidden"
-     role="dialog" aria-modal="true" aria-labelledby="modal-share-title"
-     onclick="closeModalIfOutside(event, 'modal-share')">
-  <div class="modal modal-sm">
-    <div class="modal-header">
-      <h2 class="modal-title" id="modal-share-title">Dela planen</h2>
-      <button class="modal-close" onclick="closeModal('modal-share')" aria-label="Stäng">✕</button>
-    </div>
-    <p class="modal-sub">Alla med länken kan se planen och bocka av uppgifter — ingen inloggning krävs.</p>
-    <div class="share-url-wrap">
-      <div class="share-url-box" id="share-url-box"></div>
-    </div>
-    <button class="btn-primary" onclick="copyShareLink()">Kopiera länk</button>
-    <p id="share-confirm" class="share-confirm hidden">Länk kopierad!</p>
-  </div>
-</div>
-
-<!-- BANNER: Delad plan -->
-<div id="shared-banner" class="shared-banner hidden">
-  Du ser <strong id="shared-banner-name">planen</strong> — du kan bocka av uppgifter.
-</div>
-
-
 <!-- UNDO TOAST -->
 <!-- MODAL: DELTAGARE -->
 <div id="modal-participants" class="modal-overlay hidden"
@@ -615,9 +786,9 @@
       <button class="modal-close" onclick="closeModal('modal-participants')" aria-label="Stäng">✕</button>
     </div>
     <p class="modal-sub">Namn används för arbetsfördelning och för att bestämma vem som ansvarar för vad.</p>
-    <div id="ob-participant-list" class="ob-participant-list" style="margin-bottom:12px"></div>
+    <div id="modal-participant-list" style="margin-bottom:12px"></div>
     <div class="ob-participant-add">
-      <input type="text" id="ob-participant-input" class="text-input" placeholder="Lägg till namn…" autocomplete="off"
+      <input type="text" id="ob-participant-input" aria-label="Deltagarens namn" class="text-input" placeholder="Lägg till namn…" autocomplete="off"
         onkeydown="if(event.key==='Enter'){event.preventDefault();addParticipant()}" />
       <button class="btn-ghost btn-sm" onclick="addParticipant()">Lägg till</button>
     </div>
@@ -629,11 +800,43 @@
   <button onclick="undoTaskDone()">Ångra</button>
 </div>
 
-<script src="app.js"></script>
+<!-- ═══════════════════════════════════════════
+     COMPLETION OVERLAY — visas när allt är klart
+════════════════════════════════════════════ -->
+<div id="completion-overlay" class="completion-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="co-title">
+  <div class="completion-overlay-inner">
+    <div class="co-check" aria-hidden="true">
+      <svg viewBox="0 0 52 52" class="co-check-svg">
+        <circle class="co-check-circle" cx="26" cy="26" r="24" fill="none"/>
+        <path class="co-check-mark" fill="none" d="M14 26l9 9 15-17"/>
+      </svg>
+    </div>
+    <h1 class="co-title" id="co-title">Allt är klart.</h1>
+    <p class="co-name" id="co-name"></p>
+    <p class="co-body">
+      Det har tagit tid och kraft — men du har tagit dig igenom det.<br>
+      Steg för steg, uppgift för uppgift.<br>
+      Nu kan du lämna det praktiska bakom dig.
+    </p>
+    <ul class="co-next-steps">
+      <li>Spara planen som PDF för dina egna arkiv</li>
+      <li>Dela PDF:en med övriga som var inblandade</li>
+      <li>Läs mer: <a href="./vad-gora-nar-nagon-dor.html" class="co-link">Vad gör man när någon dör?</a></li>
+    </ul>
+    <div class="co-actions">
+      <button class="btn-primary co-pdf-btn" onclick="printPlan()">Spara som PDF</button>
+      <button class="btn-ghost co-close-btn" onclick="closeCompletionOverlay()">Tillbaka till planen</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js?v=15"></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
   }
 </script>
+<!-- Analytics: byt ut efterplan.se mot din dom�n n�r du registrerat den -->
+<script defer data-domain="efterplan.se" src="https://plausible.io/js/script.outbound-links.js"></script>
 </body>
 </html>
