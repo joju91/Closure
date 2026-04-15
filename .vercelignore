@@ -1,0 +1,7 @@
+.git
+.gitignore
+README.md
+_redirects
+.claude
+node_modules
+*.log
