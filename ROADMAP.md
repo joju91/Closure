@@ -52,10 +52,10 @@ Senast uppdaterad: april 2026
 
 | Källa | Potential | Status |
 |-------|-----------|--------|
-| 1177.se länkbegäran | ⭐⭐⭐⭐⭐ | ⬜ Ej gjort |
+| 1177.se länkbegäran | ⭐⭐⭐⭐⭐ | ✅ Mejl skickat |
 | Mediepitch Aftonbladet/DN/SVT | ⭐⭐⭐⭐⭐ | ⬜ Ej gjort |
-| Försäkringsbolag (Folksam, Läns, Trygg-Hansa, Skandia) | ⭐⭐⭐⭐ | ⬜ Ej gjort |
-| Banker (Swedbank, SEB, Handelsbanken, Nordea) | ⭐⭐⭐⭐ | ⬜ Ej gjort |
+| Försäkringsbolag (Folksam, Läns, Trygg-Hansa, Skandia) | ⭐⭐⭐⭐ | ✅ Mejl skickat |
+| Banker (Swedbank, SEB, Handelsbanken, Nordea) | ⭐⭐⭐⭐ | ✅ Mejl skickat |
 | Sorgorganisationer (SPES, Sorg.se, Svenska kyrkan) | ⭐⭐⭐ | ⬜ Ej gjort |
 | Begravningsbyråer (10-20 lokala) | ⭐⭐⭐ | ⬜ Ej gjort |
 | Reddit r/sweden + r/privatekonomi | ⭐⭐ | ⬜ Ej gjort |
