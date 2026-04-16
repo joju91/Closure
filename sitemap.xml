@@ -19,8 +19,20 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://efterplan.se/dodsbo-checklista-7-dagar.html</loc>
+    <lastmod>2026-04-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://efterplan.se/bouppteckning-guide.html</loc>
     <lastmod>2026-04-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://efterplan.se/bouppteckning-tidslinje.html</loc>
+    <lastmod>2026-04-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
