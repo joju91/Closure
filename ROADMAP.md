@@ -27,7 +27,13 @@ Senast uppdaterad: april 2026
 | fullmakt-dodsbo.html | fullmakt dödsfall | 1 500 | ✅ Byggt |
 | bankkonto-dodsfall.html | bankkonto dödsfall | 2 500 | ✅ Byggt |
 
-**Estimerad total organisk räckvidd när alla 18 sidor är indexerade: ~50 000 sök/mån**
+| dodsbo-checklista-7-dagar.html | dödsbo checklista 7 dagar | — | ✅ Byggt |
+| bouppteckning-tidslinje.html | bouppteckning tidslinje | — | ✅ Byggt |
+| dodsbo-auktion.html | dödsbo auktion | 1 200 | ✅ Byggt |
+| digital-dodsbo.html | digitalt dödsbo | 1 000 | ✅ Byggt |
+| dodsbo-bil.html | dödsbo bil | 1 000 | ✅ Byggt |
+
+**Estimerad total organisk räckvidd när alla 23 sidor är indexerade: ~53 000+ sök/mån**
 
 ---
 
@@ -98,8 +104,6 @@ Potentiella sidor att bygga om trafikdata bekräftar efterfrågan:
 
 | Sida | Sökord | Est. sök/mån |
 |------|--------|-------------|
-| gravsten.html | gravsten kostnad | 1 500 |
-| dodsbo-auktion.html | dödsbo auktion | 1 200 |
-| begravning-utomlands.html | begravning utlandet | 800 |
-| digital-dodsbo.html | digitalt dödsbo | 1 000 |
-| dodsbo-bil.html | dödsbo bil | 1 000 |
+| boutredningsman.html | boutredningsman | 1 500 |
+| dodsbo-okand-arvinge.html | dödsbo okänd arvinge | 800 |
+| brostarvinge.html | bröstarvinge arv | 2 000 |
