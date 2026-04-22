@@ -2816,6 +2816,37 @@ body {
   padding: 12px 22px;
 }
 
+/* ─── TRUST BADGES (T095) ──────────────────────── */
+.trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin: var(--space-md) 0 var(--space-lg);
+}
+.trust-badge-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 160px;
+  min-height: 100px;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px dashed var(--rule-strong);
+  border-radius: var(--radius);
+  color: var(--ink-muted);
+  font-size: var(--fs-xs);
+  text-align: center;
+  background: var(--paper-card);
+}
+.trust-badge-placeholder span { font-weight: 600; color: var(--ink-soft); }
+.trust-badge-placeholder small {
+  margin-top: 4px;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
 .seo-footer {
   text-align: left;
   padding: var(--space-lg) var(--space-md);
