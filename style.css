@@ -334,6 +334,8 @@ body {
   padding: var(--space-xl) var(--space-md) var(--space-lg);
   background: transparent;
   position: relative;
+  max-width: 960px;
+  margin: 0 auto;
 }
 /* Editorial ornament — asymmetric rule, purposeful (not decorative filler) */
 .landing-hero::after {
