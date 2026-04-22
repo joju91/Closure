@@ -85,6 +85,9 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Förhindra horisontell scroll på smala skärmar (T096) */
+html, body { overflow-x: hidden; }
+
 /* ─── SKIP LINK ──────────────────────────────── */
 .skip-link {
   position: absolute;
@@ -190,6 +193,7 @@ body {
   border: none;
   border-radius: var(--radius-sm);
   padding: 13px 22px;
+  min-height: 44px;
   font-family: var(--font);
   font-size: var(--fs-sm);
   font-weight: 500;
@@ -231,6 +235,7 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 10px 20px;
+  min-height: 44px;
   font-size: 0.95rem;
   cursor: pointer;
   transition: var(--transition);
