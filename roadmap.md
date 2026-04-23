@@ -474,3 +474,22 @@ Säkerställ att sidans innehåll centreras korrekt i bredare webbläsarfönster
 Kontrollera max-width och margin: auto på root-containern.
 Testa i Chrome, Firefox, Safari vid 1440px+ bredd.
 
+---
+
+### T098 ☐ — Räkningar: integrera i layout + OCR/beskrivningsfält
+Räkningar-sektionen ligger löst i botten av index — den behöver placeras i ett tydligt sammanhang (t.ex. egen flik, inom plan-flödet eller som en collapsible sektion bredvid uppgifterna).
+- Hitta lämplig hemvist i informationsarkitekturen (inte fri-svävande längst ned).
+- Lägg till fält för OCR/betalningsreferens (utöver befintligt belopp + beskrivning).
+- Eventuellt även: förfallodatum, status (obetald/betald), bilduppladdning för OCR-skanning.
+
+---
+
+### T099 ☐ — Paywall, Stripe & Swish — färdigställ betalflöde
+Återuppta T028–T032 som tidigare markerats som ej aktuella.
+- Sätt upp Stripe-konto och Swish Företag.
+- Bestäm paywall-punkt (vilka steg/dokument är gratis vs. premium).
+- Bygg betalflöde: Stripe Checkout + Swish Handel som alternativ.
+- Implementera unlock-logik (localStorage-token eller server-side om Supabase införs).
+- End-to-end-test av hela köpflödet (gratis-preview → betala → fullt innehåll).
+- Uppdatera /om.html och prissättning.
+
