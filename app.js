@@ -1137,6 +1137,9 @@ function autoStartOnNote(taskId) {
 }
 
 // ─── BILLS ───────────────────────────────────
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
 function loadBills() {
   try { state.bills = JSON.parse(localStorage.getItem('efterplan_bills')) || []; } catch(e) { state.bills = []; }
 }
@@ -1153,15 +1156,35 @@ function renderBills() {
     return;
   }
   empty && empty.classList.add('hidden');
-  list.innerHTML = state.bills.map(b => `
+  list.innerHTML = state.bills.map(b => {
+    const due = b.dueDate ? formatBillDue(b.dueDate, b.paid) : '';
+    const meta = [
+      b.amount ? `${b.amount} kr` : '',
+      due,
+      b.ocr ? `OCR: ${escapeHtml(b.ocr)}` : '',
+    ].filter(Boolean).join(' · ');
+    return `
     <li class="bill-item${b.paid ? ' paid' : ''}" id="bill-${b.id}">
       <button class="bill-check" onclick="toggleBillPaid('${b.id}')" aria-label="${b.paid ? 'Markera som obetald' : 'Markera som betald'}"></button>
       <div class="bill-info">
-        <span class="bill-desc">${b.desc}</span>
-        ${b.amount ? `<span class="bill-amount">${b.amount} kr</span>` : ''}
+        <span class="bill-desc">${escapeHtml(b.desc)}</span>
+        ${meta ? `<span class="bill-meta">${meta}</span>` : ''}
       </div>
       <button class="bill-delete" onclick="deleteBill('${b.id}')" aria-label="Ta bort">×</button>
-    </li>`).join('');
+    </li>`;
+  }).join('');
+}
+function formatBillDue(dueIso, paid) {
+  const d = new Date(dueIso);
+  if (isNaN(d.getTime())) return '';
+  const label = d.toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' });
+  if (paid) return `Förfaller ${label}`;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diff = Math.round((d - today) / 86400000);
+  if (diff < 0) return `<span class="bill-overdue">Försenad ${Math.abs(diff)} dag${Math.abs(diff) === 1 ? '' : 'ar'}</span>`;
+  if (diff === 0) return `<span class="bill-due-soon">Förfaller idag</span>`;
+  if (diff <= 7) return `<span class="bill-due-soon">Förfaller om ${diff} dag${diff === 1 ? '' : 'ar'}</span>`;
+  return `Förfaller ${label}`;
 }
 function showBillForm() {
   document.getElementById('bill-form').classList.remove('hidden');
@@ -1169,8 +1192,9 @@ function showBillForm() {
 }
 function hideBillForm() {
   document.getElementById('bill-form').classList.add('hidden');
-  document.getElementById('bill-desc-input').value = '';
-  document.getElementById('bill-amount-input').value = '';
+  ['bill-desc-input','bill-amount-input','bill-due-input','bill-ocr-input'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
 }
 function submitBill() {
   const desc = document.getElementById('bill-desc-input').value.trim();
@@ -1181,8 +1205,10 @@ function submitBill() {
     return;
   }
   if (errEl) { errEl.textContent = ''; errEl.classList.add('hidden'); }
-  const amount = document.getElementById('bill-amount-input').value.trim();
-  state.bills.push({ id: Date.now().toString(), desc, amount: amount || '', paid: false });
+  const amount  = document.getElementById('bill-amount-input').value.trim();
+  const dueDate = document.getElementById('bill-due-input')?.value || '';
+  const ocr     = document.getElementById('bill-ocr-input')?.value.trim() || '';
+  state.bills.push({ id: Date.now().toString(), desc, amount: amount || '', dueDate, ocr, paid: false });
   saveBills();
   renderBills();
   hideBillForm();
