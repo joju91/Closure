@@ -44,7 +44,7 @@ Each step improves the product or the company in a meaningful way.
 
 | T001 | Read the entire Manifest sheet and confirm scope | Fas 1 | 📋 Manifest | 🔴 | Principle | ☐ |
 
-| T002 | Buy domain: kaascha.se (and .com if available) | Fas 1 | 🏢 Company Plan | 🔴 | Infra | ☐ |
+| T002 | Buy domain: kaascha.se (and .com if available) | Fas 1 | 🏢 Company Plan | 🔴 | Infra | x |
 
 | T003 | Register company / sole proprietorship + apply for F‑tax | Fas 1 | 🏢 Company Plan | 🔴 | Bolag | ☐ |
 
@@ -264,8 +264,8 @@ Each step improves the product or the company in a meaningful way.
 
 | T042 | Core Web Vitals | Fas 8 | 📱 App Plan | 🟡 | Dev | ✔ |
 | T084 | Fix mobile PageSpeed: eliminera redirect chain + reduce unused JS (mål LCP <2.5s) | Fas 8 | SEO Audit | 🟠 | Dev | ☐ |
-| T085 | Lägg till Organization schema (Identity Schema) på index-sidan | Fas 8 | SEO Audit | 🟡 | Dev | ☐ |
-| T086 | Ta bort plain text email — ersätt med kontaktformulär eller obfuskerad mailto | Fas 8 | SEO Audit | 🟡 | Dev | ☐ |
+| T085 | Lägg till Organization schema (Identity Schema) på index-sidan | Fas 8 | SEO Audit | 🟡 | Dev | ✔ |
+| T086 | Ta bort plain text email — ersätt med kontaktformulär eller obfuskerad mailto | Fas 8 | SEO Audit | 🟡 | Dev | ✔ |
 
 
 
@@ -313,7 +313,7 @@ Each step improves the product or the company in a meaningful way.
 
 | T049 | Improve weakest content | Fas 10 | 📱 App Plan | 🟠 | Content | ☐ |
 
-| T050 | PDF export | Fas 10 | 📱 App Plan | 🟡 | Dev | ☐ |
+| T050 | PDF export | Fas 10 | 📱 App Plan | 🟡 | Dev | ✔ |
 
 | T051 | Supabase: DB + auth | Fas 10 | 📱 App Plan | 🟡 | Infra | ☐ |
 
@@ -321,7 +321,7 @@ Each step improves the product or the company in a meaningful way.
 
 | T053 | Account system | Fas 10 | 📱 App Plan | 🟢 | Dev | ☐ |
 
-| T054 | Automation: letters, authorities | Fas 10 | 📱 App Plan | 🟢 | Dev | ☐ |
+| T054 | Automation: letters, authorities | Fas 10 | 📱 App Plan | 🟢 | Dev | ✔ |
 
 
 
@@ -379,9 +379,9 @@ Each step improves the product or the company in a meaningful way.
 
 |----|------|--------|---------|----------|--------|---------|
 
-| T067 | Bills overview (manual or OCR) | Fas 10 | 📱 App Plan | 🟡 | Dev | x |
+| T067 | Bills overview (manual or OCR) | Fas 10 | 📱 App Plan | 🟡 | Dev | ✔ |
 
-| T068 | Notes field per task | Fas 10 | 📱 App Plan | 🟡 | UX | x |
+| T068 | Notes field per task | Fas 10 | 📱 App Plan | 🟡 | UX | ✔ |
 
 | T069 | Accessibility: voice input (speech‑to‑text) | Fas 10 | 📱 App Plan | 🟢 | UX | ☐ |
 
@@ -401,9 +401,9 @@ Each step improves the product or the company in a meaningful way.
 
 | T070 | Verify Search Console + sitemap | 2026‑04‑13 | Fas 11 | SEO Sprint | 🟡 | SEO | x |
 
-| T071 | Publish landing page “dodsbo‑checklista‑7‑dagar” | 2026‑04‑14 | Fas 11 | SEO Sprint | 🟡 | SEO | ☐ |
+| T071 | Publish landing page “dodsbo‑checklista‑7‑dagar” | 2026‑04‑14 | Fas 11 | SEO Sprint | 🟡 | SEO | ✔ |
 
-| T072 | Publish “bouppteckning‑tidslinje” + FAQ schema | 2026‑04‑15 | Fas 11 | SEO Sprint | 🟡 | SEO | ☐ |
+| T072 | Publish “bouppteckning‑tidslinje” + FAQ schema | 2026‑04‑15 | Fas 11 | SEO Sprint | 🟡 | SEO | ✔ |
 
 | T073 | Set up dashboard: traffic → onboarding → plan generated | 2026‑04‑16 | Fas 11 | Analytics Sprint | 🟡 | Analytics | ☐ |
 
@@ -435,41 +435,41 @@ Each step improves the product or the company in a meaningful way.
 
 ## Sprint 3 — Tillväxt & Kvalitet
 
-### T092 — SEO: tomma-dodsbo.html
+### T092 ✔ — SEO: tomma-dodsbo.html
 Bygg ny SEO-sida för sökordet "tomma dödsbo" (hög sökvolym).
 Följ samma mall som T089–T091: Article/FAQPage/Breadcrumb schema, interna länkar, CTA till huvudverktyget, /om.html i footer.
 Uppdatera sitemap. Submita till GSC.
 
 ---
 
-### T093 — Konvertering: CTA/funnel-optimering
+### T093 ☐ — Konvertering: CTA/funnel-optimering
 Analysera GA4-data för dropout-punkter i flödet.
 Testa och justera CTA-text, placering och antal steg.
 Mål: öka andelen användare som når slutet av checklistan.
 
 ---
 
-### T094 — Outreach-uppföljning
+### T094 ☐ — Outreach-uppföljning
 Följ upp obesvarade mejl från tidigare outreach-batch.
 Prioritet: hitta rätt journalist på Aftonbladet och skicka pitch.
 Logga svar i outreach-logg.
 
 ---
 
-### T095 — Kvalitetsstämplar & certifikat
+### T095 ☐ — Kvalitetsstämplar & certifikat
 Identifiera relevanta svenska kvalitetsmärken, certifieringar eller trovärdighetsmarkörer lämpliga för efterplan.se (t.ex. Trygg E-handel, GDPR-märkning, branschorganisationer).
 Ansök och integrera godkända märken synligt på sidan.
 
 ---
 
-### T096 — Mobilwebb & app-funktionalitet
+### T096 ✔ — Mobilwebb & app-funktionalitet
 Säkerställ att efterplan.se fungerar korrekt i mobilwebbläsare (iOS Safari, Android Chrome).
 Testa hela flödet i mobil. Åtgärda layoutbrytningar, klickzoner och formulär.
 Kontrollera även PWA-möjligheter om relevant.
 
 ---
 
-### T097 — Centrera layout i browser
+### T097 ✔ — Centrera layout i browser
 Säkerställ att sidans innehåll centreras korrekt i bredare webbläsarfönster (desktop).
 Kontrollera max-width och margin: auto på root-containern.
 Testa i Chrome, Firefox, Safari vid 1440px+ bredd.
