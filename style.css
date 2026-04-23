@@ -2869,3 +2869,19 @@ body {
 }
 .landing-footer-links { font-size: 0.8rem; margin-top: 6px; opacity: 0.7; }
 .landing-footer-links a { color: inherit; }
+
+details.info-box {
+  background: #f0f4f8;
+  border-left: 3px solid #4a90a4;
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+}
+details.info-box summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #4a90a4;
+}
+details.info-box p {
+  margin-top: 0.75rem;
+}
