@@ -430,6 +430,19 @@
 ════════════════════════════════════════════ -->
 <div id="screen-plan" class="screen" role="main" tabindex="-1">
 
+  <!-- Shared-view banner (visible only when viewing a shared plan) -->
+  <div id="shared-banner" class="shared-banner hidden" role="status">
+    <div class="shared-banner-inner">
+      <span class="shared-banner-icon" aria-hidden="true">👥</span>
+      <div class="shared-banner-text">
+        <strong>Delad plan (läsläge)</strong>
+        <span id="shared-banner-from"></span>
+        <span class="shared-banner-sub">Dina ändringar sparas bara på din enhet.</span>
+      </div>
+      <button class="btn-ghost btn-sm" onclick="startOwnPlanFromShare()">Skapa min egen plan</button>
+    </div>
+  </div>
+
   <!-- Nav -->
   <nav class="nav nav-light nav-plan">
     <div class="logo-wrap">
@@ -438,6 +451,7 @@
     </div>
     <div class="nav-plan-actions">
       <div id="plan-participants" class="plan-participants"></div>
+      <button class="btn-ghost btn-sm" id="btn-share-plan" onclick="openShareModal()">Dela plan</button>
       <button class="btn-ghost btn-sm" onclick="editAnswers()">Ändra svar</button>
     </div>
   </nav>
@@ -843,6 +857,29 @@
 </div>
 
 <!-- UNDO TOAST -->
+<!-- MODAL: DELA PLAN -->
+<div id="modal-share" class="modal-overlay hidden"
+     role="dialog" aria-modal="true" aria-labelledby="modal-share-title"
+     onclick="closeModalIfOutside(event, 'modal-share')">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-share-title">Dela planen</h2>
+      <button class="modal-close" onclick="closeModal('modal-share')" aria-label="Stäng">✕</button>
+    </div>
+    <p class="modal-sub">Skicka länken till anhöriga. De ser din plan i läsläge och kan markera klart i sin egen kopia — inget synkas tillbaka.</p>
+    <div class="share-link-wrap">
+      <input type="text" id="share-link-input" readonly class="text-input share-link-input" aria-label="Delningslänk">
+      <button class="btn-primary btn-sm" id="share-copy-btn" onclick="copyShareLink()">Kopiera</button>
+    </div>
+    <p class="share-copied hidden" id="share-copied">Länken är kopierad.</p>
+    <div class="share-actions">
+      <button class="btn-ghost btn-sm" id="share-native-btn" onclick="shareNatively()" hidden>Dela via…</button>
+      <button class="btn-ghost btn-sm" onclick="shareViaEmail()">Skicka via e-post</button>
+    </div>
+    <p class="share-hint">Länken innehåller hela planen men inga personnummer.</p>
+  </div>
+</div>
+
 <!-- MODAL: DELTAGARE -->
 <div id="modal-participants" class="modal-overlay hidden"
      role="dialog" aria-modal="true" aria-labelledby="modal-participants-title"

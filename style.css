@@ -2891,3 +2891,74 @@ details.info-box summary {
 details.info-box p {
   margin-top: 0.75rem;
 }
+
+/* ─── SHARED-VIEW BANNER (T052) ──────────────── */
+.shared-banner {
+  background: #fff7e6;
+  border-bottom: 1px solid #f0c88c;
+  padding: 10px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+.shared-banner.hidden { display: none; }
+.shared-banner-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.shared-banner-icon { font-size: 1.4rem; flex-shrink: 0; }
+.shared-banner-text {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+.shared-banner-text strong { font-weight: 600; }
+.shared-banner-sub { color: var(--text-soft); font-size: 0.82rem; }
+
+/* Hide write/edit affordances in shared (read-only) view */
+body.is-shared #btn-share-plan,
+body.is-shared .nav-plan-actions .btn-ghost[onclick*="editAnswers"],
+body.is-shared .bills-add-btn,
+body.is-shared #bill-form,
+body.is-shared .bill-delete,
+body.is-shared .plan-participant-add-btn,
+body.is-shared .plan-print-btn,
+body.is-shared .btn-print-inline { display: none !important; }
+body.is-shared .trust-band { display: none; }
+
+/* ─── SHARE MODAL (T052) ─────────────────────── */
+.share-link-wrap {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 4px;
+}
+.share-link-input {
+  flex: 1;
+  font-size: 0.85rem;
+  font-family: ui-monospace, Menlo, monospace;
+}
+.share-copied {
+  color: var(--green, #5a8a5a);
+  font-size: 0.85rem;
+  margin: 4px 0 0;
+}
+.share-copied.hidden { display: none; }
+.share-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.share-hint {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  margin-top: 12px;
+}

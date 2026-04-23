@@ -773,6 +773,7 @@ function getTaskNote(taskId) {
 }
 
 function saveTaskState() {
+  if (isSharedView) { sharedSaveTaskProgress(); return; }
   const saved = {};
   state.tasks.forEach(t => { saved[t.id] = { done: t.done, started: t.started, assignee: t.assignee || null }; });
   try { localStorage.setItem('efterplan_tasks', JSON.stringify(saved)); } catch(e) {}
@@ -1144,6 +1145,7 @@ function loadBills() {
   try { state.bills = JSON.parse(localStorage.getItem('efterplan_bills')) || []; } catch(e) { state.bills = []; }
 }
 function saveBills() {
+  if (isSharedView) return; // viewer sees sender's bills read-only; no local write
   try { localStorage.setItem('efterplan_bills', JSON.stringify(state.bills)); } catch(e) {}
 }
 function renderBills() {
@@ -2159,8 +2161,169 @@ function handlePaywallCTA() {
   alert('Betalning är inte aktiverat ännu — kom tillbaka snart!');
 }
 
+// ─── SHARING (T052) ──────────────────────────
+// Read-only plan sharing via URL. Recipients see the plan and can mark tasks
+// done in their own local copy, but nothing syncs back to the sender.
+const SHARE_PARAM = 'share';
+let isSharedView = false;
+
+function encodeShare(payload) {
+  const json = JSON.stringify(payload);
+  return btoa(unescape(encodeURIComponent(json)))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function decodeShare(encoded) {
+  try {
+    const b64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = b64 + '='.repeat((4 - b64.length % 4) % 4);
+    return JSON.parse(decodeURIComponent(escape(atob(padded))));
+  } catch(e) { return null; }
+}
+
+function buildSharePayload() {
+  const shareable = getShareableState();
+  const taskProgress = {};
+  state.tasks.forEach(t => {
+    taskProgress[t.id] = {
+      done: !!t.done, started: !!t.started,
+      assignee: t.assignee || null,
+    };
+  });
+  let notes = {};
+  try { notes = JSON.parse(localStorage.getItem('efterplan_notes') || '{}'); } catch(e) {}
+  let checklists = {};
+  try { checklists = JSON.parse(localStorage.getItem('efterplan_task_checklists') || '{}'); } catch(e) {}
+  const billsSanitized = (state.bills || []).map(b => ({
+    id: b.id, desc: b.desc, amount: b.amount || '',
+    dueDate: b.dueDate || '', ocr: b.ocr || '', paid: !!b.paid,
+  }));
+  return { v: 1, s: shareable, t: taskProgress, n: notes, c: checklists, b: billsSanitized };
+}
+
+function openShareModal() {
+  const payload = buildSharePayload();
+  const encoded = encodeShare(payload);
+  const url = `${window.location.origin}${window.location.pathname}?${SHARE_PARAM}=${encoded}`;
+  const input = document.getElementById('share-link-input');
+  if (input) input.value = url;
+  const nativeBtn = document.getElementById('share-native-btn');
+  if (nativeBtn) nativeBtn.hidden = typeof navigator.share !== 'function';
+  openModal('modal-share');
+  track('Share Modal Opened');
+}
+
+function copyShareLink() {
+  const input = document.getElementById('share-link-input');
+  if (!input) return;
+  copyToClipboard(input.value, () => {
+    const msg = document.getElementById('share-copied');
+    if (msg) { msg.classList.remove('hidden'); setTimeout(() => msg.classList.add('hidden'), 2500); }
+    track('Share Link Copied');
+  });
+}
+
+function shareNatively() {
+  const input = document.getElementById('share-link-input');
+  if (!input || typeof navigator.share !== 'function') return;
+  const senderName = state.name ? ` efter ${state.name}` : '';
+  navigator.share({
+    title: 'Plan för dödsbo',
+    text: `Jag delar en plan${senderName} med dig via Efterplan.`,
+    url: input.value,
+  }).then(() => track('Share Native Used')).catch(() => {});
+}
+
+function shareViaEmail() {
+  const input = document.getElementById('share-link-input');
+  if (!input) return;
+  const subject = encodeURIComponent('Plan för dödsbo (Efterplan)');
+  const senderName = state.name ? ` efter ${state.name}` : '';
+  const body = encodeURIComponent(
+    `Hej,\n\nJag vill dela en plan${senderName} med dig via Efterplan.\n\nÖppna länken för att se planen:\n${input.value}\n\nDu kan markera uppgifter som klara i din egen kopia — inget synkas tillbaka.\n`
+  );
+  window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  track('Share Email Opened');
+}
+
+function applySharedState(payload) {
+  if (!payload || !payload.s) return false;
+  Object.assign(state, payload.s);
+  buildTasks();
+  // Overlay task progress from share, then let localStorage override if recipient has their own marks
+  if (payload.t) {
+    state.tasks = state.tasks.map(t => {
+      const p = payload.t[t.id];
+      return p ? { ...t, done: !!p.done, started: !!p.started, assignee: p.assignee || null } : t;
+    });
+  }
+  // Recipient's local progress on this share (stored under a namespaced key)
+  const shareKey = 'efterplan_shared_progress';
+  try {
+    const localProgress = JSON.parse(localStorage.getItem(shareKey) || '{}');
+    state.tasks = state.tasks.map(t => {
+      const lp = localProgress[t.id];
+      return lp ? { ...t, done: !!lp.done, started: !!lp.started } : t;
+    });
+  } catch(e) {}
+  if (payload.n) {
+    try { localStorage.setItem('efterplan_notes_shared', JSON.stringify(payload.n)); } catch(e) {}
+  }
+  if (payload.b) state.bills = payload.b;
+  return true;
+}
+
+function enterSharedView(payload) {
+  isSharedView = true;
+  document.body.classList.add('is-shared');
+  const banner = document.getElementById('shared-banner');
+  if (banner) banner.classList.remove('hidden');
+  const from = document.getElementById('shared-banner-from');
+  if (from && payload.s && payload.s.name) from.textContent = `efter ${payload.s.name}`;
+}
+
+function startOwnPlanFromShare() {
+  if (!confirm('Skapa en egen plan? Du lämnar den delade planen.')) return;
+  isSharedView = false;
+  document.body.classList.remove('is-shared');
+  try {
+    localStorage.removeItem('efterplan_shared_progress');
+    localStorage.removeItem('efterplan_notes_shared');
+  } catch(e) {}
+  history.replaceState(null, '', window.location.pathname);
+  // Clear in-memory state and restart onboarding
+  Object.keys(state).forEach(k => { state[k] = Array.isArray(state[k]) ? [] : (typeof state[k] === 'object' && state[k] !== null ? {} : (typeof state[k] === 'boolean' ? false : null)); });
+  state.name = ''; state.personnr = '';
+  showScreen('screen-landing');
+  track('Shared View Exit');
+}
+
+// Intercept task-done toggle and bill changes in shared mode
+function sharedSaveTaskProgress() {
+  const key = 'efterplan_shared_progress';
+  const progress = {};
+  state.tasks.forEach(t => {
+    if (t.done || t.started) progress[t.id] = { done: !!t.done, started: !!t.started };
+  });
+  try { localStorage.setItem(key, JSON.stringify(progress)); } catch(e) {}
+}
+
 // ─── INIT ─────────────────────────────────────
 (function init() {
+  // Shared view takes priority over local state
+  const params = new URLSearchParams(window.location.search);
+  const shareParam = params.get(SHARE_PARAM);
+  if (shareParam) {
+    const payload = decodeShare(shareParam);
+    if (payload && applySharedState(payload)) {
+      enterSharedView(payload);
+      loadTaskState = () => {}; // prevent overriding shared state with sender's localStorage
+      renderPlan();
+      showScreen('screen-plan');
+      track('Shared Plan Viewed');
+      return;
+    }
+  }
+
   // Restore own plan from localStorage
   try {
     const saved = localStorage.getItem('efterplan_state');
