@@ -263,7 +263,7 @@ Each step improves the product or the company in a meaningful way.
 | T041 | FAQ structured data | Fas 8 | 🏢 Company Plan | 🟡 | Dev | ✔ |
 
 | T042 | Core Web Vitals | Fas 8 | 📱 App Plan | 🟡 | Dev | ✔ |
-| T084 | Fix mobile PageSpeed: eliminera redirect chain + reduce unused JS (mål LCP <2.5s) | Fas 8 | SEO Audit | 🟠 | Dev | ☐ |
+| T084 | Fix mobile PageSpeed: eliminera redirect chain + reduce unused JS (mål LCP <2.5s) | Fas 8 | SEO Audit | 🟠 | Dev | ✔ |
 | T085 | Lägg till Organization schema (Identity Schema) på index-sidan | Fas 8 | SEO Audit | 🟡 | Dev | ✔ |
 | T086 | Ta bort plain text email — ersätt med kontaktformulär eller obfuskerad mailto | Fas 8 | SEO Audit | 🟡 | Dev | ✔ |
 
@@ -317,7 +317,7 @@ Each step improves the product or the company in a meaningful way.
 
 | T051 | Supabase: DB + auth | Fas 10 | 📱 App Plan | 🟡 | Infra | ☐ |
 
-| T052 | Sharing feature — read-only delning via länk (anhöriga ser plan, markerar klart i egen kopia) | Fas 10 | 📱 App Plan | 🟡 | Dev | ☐ |
+| T052 | Sharing feature — read-only delning via länk (anhöriga ser plan, markerar klart i egen kopia) | Fas 10 | 📱 App Plan | 🟡 | Dev | ✔ |
 
 | T053 | Account system | Fas 10 | 📱 App Plan | 🟢 | Dev | ☐ |
 
@@ -476,7 +476,7 @@ Testa i Chrome, Firefox, Safari vid 1440px+ bredd.
 
 ---
 
-### T098 ☐ — Räkningar: egen flik + OCR/beskrivningsfält
+### T098 ✔ — Räkningar: egen flik + OCR/beskrivningsfält
 Flytta räkningar-sektionen från botten av index till en **egen flik** bredvid Plan/Dokument.
 - Ny flik "Räkningar" i plan-tabs, med tydlig intro som förklarar syftet: hålla koll på obetalda räkningar från dödsboet.
 - Utöka bill-objektet: `ocr` (textfält), `dueDate` (datum), `status` (obetald/betald).
