@@ -42,7 +42,7 @@ Each step improves the product or the company in a meaningful way.
 
 |----|------|--------|---------|----------|--------|---------|
 
-| T001 | Read the entire Manifest sheet and confirm scope | Fas 1 | 📋 Manifest | 🔴 | Principle | ☐ |
+| T001 | Read the entire Manifest sheet and confirm scope | Fas 1 | 📋 Manifest | 🔴 | Principle | ✔ |
 
 | T002 | Buy domain: kaascha.se (and .com if available) | Fas 1 | 🏢 Company Plan | 🔴 | Infra | x |
 
@@ -180,7 +180,7 @@ Each step improves the product or the company in a meaningful way.
 
 | T024 | End‑to‑end test | Fas 5 | 📱 App Plan | 🔴 | QA | ✔ |
 
-| T025 | Publish MVP on domain — all free | Fas 5 | 🏢 Company Plan | 🔴 | Launch | ☐ |
+| T025 | Publish MVP on domain — all free | Fas 5 | 🏢 Company Plan | 🔴 | Launch | ✔ |
 
 | T026 | Share with 5 target users, collect feedback | Fas 5 | 📋 Manifest | 🔴 | Research | ☐ |
 
@@ -317,7 +317,7 @@ Each step improves the product or the company in a meaningful way.
 
 | T051 | Supabase: DB + auth | Fas 10 | 📱 App Plan | 🟡 | Infra | ☐ |
 
-| T052 | Sharing feature | Fas 10 | 📱 App Plan | 🟡 | Dev | ☐ |
+| T052 | Sharing feature — read-only delning via länk (anhöriga ser plan, markerar klart i egen kopia) | Fas 10 | 📱 App Plan | 🟡 | Dev | ☐ |
 
 | T053 | Account system | Fas 10 | 📱 App Plan | 🟢 | Dev | ☐ |
 
@@ -383,7 +383,7 @@ Each step improves the product or the company in a meaningful way.
 
 | T068 | Notes field per task | Fas 10 | 📱 App Plan | 🟡 | UX | ✔ |
 
-| T069 | Accessibility: voice input (speech‑to‑text) | Fas 10 | 📱 App Plan | 🟢 | UX | ☐ |
+| T069 | Accessibility: voice input (speech‑to‑text) | Fas 10 | 📱 App Plan | 🟢 | UX | x |
 
 
 
@@ -399,7 +399,7 @@ Each step improves the product or the company in a meaningful way.
 
 |----|------|--------|---------|----------|--------|---------|---------|
 
-| T070 | Verify Search Console + sitemap | 2026‑04‑13 | Fas 11 | SEO Sprint | 🟡 | SEO | x |
+| T070 | Verify Search Console + sitemap | 2026‑04‑13 | Fas 11 | SEO Sprint | 🟡 | SEO | ☐ |
 
 | T071 | Publish landing page “dodsbo‑checklista‑7‑dagar” | 2026‑04‑14 | Fas 11 | SEO Sprint | 🟡 | SEO | ✔ |
 
@@ -476,20 +476,23 @@ Testa i Chrome, Firefox, Safari vid 1440px+ bredd.
 
 ---
 
-### T098 ☐ — Räkningar: integrera i layout + OCR/beskrivningsfält
-Räkningar-sektionen ligger löst i botten av index — den behöver placeras i ett tydligt sammanhang (t.ex. egen flik, inom plan-flödet eller som en collapsible sektion bredvid uppgifterna).
-- Hitta lämplig hemvist i informationsarkitekturen (inte fri-svävande längst ned).
-- Lägg till fält för OCR/betalningsreferens (utöver befintligt belopp + beskrivning).
-- Eventuellt även: förfallodatum, status (obetald/betald), bilduppladdning för OCR-skanning.
+### T098 ☐ — Räkningar: egen flik + OCR/beskrivningsfält
+Flytta räkningar-sektionen från botten av index till en **egen flik** bredvid Plan/Dokument.
+- Ny flik "Räkningar" i plan-tabs, med tydlig intro som förklarar syftet: hålla koll på obetalda räkningar från dödsboet.
+- Utöka bill-objektet: `ocr` (textfält), `dueDate` (datum), `status` (obetald/betald).
+- Lägg till input-fält i `bill-form`: OCR-referens + förfallodatum + status-toggle.
+- Uppdatera rendering i `bills-list` så OCR/datum/status visas.
+- OCR som bilduppladdning skippas nu — endast textfält.
 
 ---
 
-### T099 ☐ — Paywall, Stripe & Swish — färdigställ betalflöde
-Återuppta T028–T032 som tidigare markerats som ej aktuella.
-- Sätt upp Stripe-konto och Swish Företag.
-- Bestäm paywall-punkt (vilka steg/dokument är gratis vs. premium).
+### T099 ☐ — Paywall, Stripe & Swish + fördela uppgifter
+Återuppta T028–T032. Paywall-princip (beslutad): **gratis = checklista + plan-flöde, premium = färdiga dokument + fördela uppgifter**.
+- Sätt upp Stripe-konto och Swish Företag (kräver företagsregistrering, T003/T004).
 - Bygg betalflöde: Stripe Checkout + Swish Handel som alternativ.
-- Implementera unlock-logik (localStorage-token eller server-side om Supabase införs).
-- End-to-end-test av hela köpflödet (gratis-preview → betala → fullt innehåll).
-- Uppdatera /om.html och prissättning.
+- Implementera unlock-logik (localStorage-token; magic-link senare om behov uppstår).
+- **Premium-feature: fördela uppgifter** — inom ägarens app, markera vem som gör vad per task (använd befintlig `assigneeLabel`-infrastruktur i app.js).
+- End-to-end-test (gratis-preview → betala → fullt innehåll + task-delegation).
+- Uppdatera /om.html och lägg till pris-sida.
+- Slutgiltigt pris fastställs efter FAS A (5 användarintervjuer).
 
