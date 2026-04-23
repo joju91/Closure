@@ -1,5 +1,5 @@
 /* Efterplan — Service Worker */
-const CACHE = 'efterplan-v15';
+const CACHE = 'efterplan-v17';
 const ASSETS = [
   './',
   './index.html',
@@ -7,7 +7,6 @@ const ASSETS = [
   './app.js',
   './manifest.json',
   './icon.svg',
-  './og.png',
   './favicon.png',
   './icon-192.png',
   './icon-512.png',
