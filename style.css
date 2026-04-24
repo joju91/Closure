@@ -520,6 +520,33 @@ body {
   padding-bottom: 0;
   border-bottom: none;
 }
+
+/* Secondary CTA after FAQ (T093 funnel optimization) */
+.landing-cta-secondary {
+  margin-top: var(--space-xl);
+  padding: var(--space-lg) var(--space-md);
+  text-align: center;
+  background: var(--paper-soft);
+  border-radius: 12px;
+}
+.landing-cta-secondary-lead {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 36, 'SOFT' 40, 'wght' 500;
+  font-size: var(--fs-lg);
+  color: var(--ink);
+  margin: 0 0 var(--space-xs) 0;
+}
+.landing-cta-secondary-sub {
+  font-size: var(--fs-base);
+  color: var(--ink-soft);
+  margin: 0 0 var(--space-md) 0;
+  max-width: 48ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+.landing-cta-secondary .btn-primary {
+  display: inline-flex;
+}
 .faq-item h3 {
   font-family: var(--font-display);
   font-variation-settings: 'opsz' 36, 'SOFT' 40, 'wght' 500;
@@ -1181,6 +1208,48 @@ body {
   line-height: 1.5;
 }
 .task-notes:focus { outline: none; border-color: var(--accent); }
+
+/* Voice input mic button (T069) */
+.task-notes-wrap { position: relative; }
+.task-notes-wrap .task-notes { padding-right: 44px; }
+.task-notes-mic {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.55;
+  transition: opacity .15s, background .15s, border-color .15s;
+  touch-action: manipulation;
+}
+.task-notes-mic:hover,
+.task-notes-mic:focus-visible {
+  opacity: 1;
+  background: var(--accent-light);
+  outline: none;
+}
+.task-notes-mic.is-recording {
+  opacity: 1;
+  background: #E8574A;
+  color: #fff;
+  border-color: #C0423A;
+  animation: mic-pulse 1.2s ease-in-out infinite;
+}
+@keyframes mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232,87,74,0.6); }
+  50%       { box-shadow: 0 0 0 6px rgba(232,87,74,0);   }
+}
+.no-voice-input .task-notes-mic { display: none; }
+.no-voice-input .task-notes-wrap .task-notes { padding-right: 12px; }
 .task-expand-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .task-expand-btn {
   background: var(--accent);
@@ -2869,3 +2938,151 @@ body {
 }
 .landing-footer-links { font-size: 0.8rem; margin-top: 6px; opacity: 0.7; }
 .landing-footer-links a { color: inherit; }
+
+/* ═══ T051/T053: Auth nav + modal ═══
+   Nav links are hidden until supabase-client.js decides the state:
+   - no-supabase class  → hide both (no config loaded)
+   - has-supabase-session → show only "Mitt konto"
+   - otherwise (configured, signed out) → show only "Logga in" */
+.nav-auth-signin,
+.nav-auth-account { display: none; }
+body.has-supabase:not(.has-supabase-session) .nav-auth-signin { display: inline; }
+body.has-supabase-session .nav-auth-account { display: inline; }
+
+/* Auth modal */
+.auth-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.auth-modal.hidden { display: none; }
+.auth-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 25, 43, 0.48);
+  backdrop-filter: blur(3px);
+}
+.auth-modal-card {
+  position: relative;
+  background: var(--paper-card);
+  border-radius: 16px;
+  padding: 32px 28px 28px;
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.22);
+}
+.auth-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: var(--ink-muted);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  line-height: 1;
+}
+.auth-modal-close:hover { background: var(--accent-light); color: var(--ink); }
+.auth-modal-title {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 36, 'SOFT' 40, 'wght' 500;
+  font-size: var(--fs-lg);
+  color: var(--ink);
+  margin: 0 0 12px 0;
+  letter-spacing: -0.015em;
+}
+.auth-modal-desc {
+  font-size: var(--fs-base);
+  color: var(--ink-soft);
+  margin: 0 0 20px 0;
+  line-height: 1.55;
+}
+.auth-modal-note {
+  margin-top: 20px;
+  font-size: var(--fs-xs);
+  color: var(--ink-muted);
+  line-height: 1.55;
+}
+.auth-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.auth-account-details {
+  list-style: none;
+  padding: 12px 14px;
+  margin: 0 0 4px 0;
+  background: var(--paper-soft);
+  border-radius: 10px;
+  font-size: var(--fs-sm, 0.9rem);
+  color: var(--ink-soft);
+}
+.auth-account-details li { padding: 3px 0; }
+.auth-account-details li strong { color: var(--ink); }
+
+/* T052: only show Supabase-gated controls when configured */
+.has-supabase-only { display: none; }
+body.has-supabase .has-supabase-only { display: inline-flex; }
+
+.share-url-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.share-url-row input {
+  flex: 1;
+  font-size: 0.85rem;
+  background: var(--paper-soft);
+}
+.form-hint {
+  font-size: var(--fs-xs);
+  color: var(--ink-muted);
+  margin-top: 6px;
+}
+
+/* T052: Read-only banner when viewing someone else's shared plan */
+.shared-view-banner {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--ink-teal);
+  color: #fff;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.shared-view-banner.hidden { display: none; }
+.shared-view-exit {
+  color: #fff;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+/* Disable interactions in shared view */
+body.shared-view .task-expand-btn,
+body.shared-view .task-expand-start-btn,
+body.shared-view .task-expand-undo-btn,
+body.shared-view .task-expand-doc,
+body.shared-view .task-check,
+body.shared-view .btn-print-inline[onclick*="openShareModal"],
+body.shared-view .btn-print-inline[onclick*="printPlan"],
+body.shared-view .task-notes-mic,
+body.shared-view .nav-auth-signin,
+body.shared-view .nav-auth-account {
+  display: none !important;
+}
+body.shared-view .task-notes { pointer-events: none; opacity: 0.8; }

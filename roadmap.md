@@ -482,3 +482,65 @@ Regenerera `icon-192.png`, `icon-512.png`, `favicon.png` (64×64) och lägg till
 OG-bilder komprimerade från PNG → JPG: `og.png` (1.1 MB) → `og.jpg` (89 KB, 1200×630), samma för variant 2 (`og-2.jpg`, 61 KB).
 Uppdatera `<meta og:image>` + `<meta twitter:image>` i alla 33 HTML-sidor. Tog bort oanvänd `og.svg`.
 
+---
+
+### TNY — Meta title/description: checklista-dodsbo ✔
+Omformulerad för högre CTR på "checklista dödsbo". Title 56 tkn, description 129 tkn.
+"Checklista dödsbo — i rätt ordning, steg för steg (2026)" + "Förlorat en anhörig? Här är exakt vad du ska göra först — dag 1, vecka 1, månad 3…"
+
+---
+
+### T082 — Optimera topp 3 landningssidor ✔
+1. `/checklista-dodsbo` — meta uppdaterad (se TNY). H1 och interna länkar redan starka (10 relaterade sidor).
+2. `/` (startsida) — bytte `<h1 class="landing-eyebrow">` emotionell hook till `<p>`, gjorde content-headline till riktig `<h1>` som inkluderar primärt sökord "vad gör man när någon dör".
+3. HTTP→HTTPS — Vercel sköter redirect by default för custom domain. La till `Strict-Transport-Security` (HSTS preload-klass) i `vercel.json` för att låsa HTTPS i browsers.
+
+---
+
+### T093 — CTA/funnel-optimering ✔
+Endast copy + layout (inga nya features).
+- Hero-CTA: "Kom igång — tar 2 minuter" → "Starta min checklista — 2 minuter" (utfalls-specifik).
+- Landing note: lagt till "Inga mejlutskick" som extra friktionsreducerare.
+- Lade till sekundär CTA-block efter FAQ — återhämtar användare som scrollat förbi hero.
+
+---
+
+### T069 — Röstinmatning för anteckningar ✔
+Web Speech API (sv-SE). Mikrofon-knapp bredvid varje task notes-textarea. Visuell "is-recording"-state med puls. Feature-detection: hides via `body.no-voice-input` på browsers utan SpeechRecognition. Interim-transkript visas live; final commit persistas i localStorage via debounced `saveTaskNote`.
+
+---
+
+### T051 — Supabase: DB + auth ✔ (kräver konfiguration)
+- `supabase/schema.sql`: `plans` + `task_completions` med RLS (owner-only + anon-read för delade planer).
+- `supabase-client.js`: UMD-klient via CDN, auth (magic-link), plan-upsert, task completion sync, sharing.
+- Auth-modal med magic-link (e-post) + "Mitt konto"-vy. Hidden by default — visas endast när `SUPABASE_CONFIG.url`/`anonKey` är ifyllda.
+- Bakgrunds-sync vid `efterplan:state-changed`-event (debounced 2s). Bryter inte localStorage-flödet.
+- **Blocker**: Kräver att `SUPABASE_CONFIG` fylls i med riktigt projekt URL + anon key innan funktionaliteten kan testas live. Schema kan köras med `supabase db push` eller direkt i SQL editor.
+
+---
+
+### T052 — Dela plan (read-only-länk) ✔ (kräver T051-konfig)
+- "Dela min plan"-knapp i plan-headern (visas endast när Supabase är konfigurerad).
+- Share-modal: skapa/kopiera/återkalla delbar länk. Länk-format: `https://efterplan.se/?share=<token>` (128-bit hex).
+- Shared-view mode: `?share=<token>` i URL laddar planen read-only, visar banner, inaktiverar knappar (check, notes, mic, print, share).
+- Personnummer delas aldrig (exkluderat via `getShareableState()`).
+
+---
+
+### T053 — Konto: e-postinlogg + spara plan ✔ (kräver T051-konfig)
+Redan inbyggt i T051-auth-modalen:
+- Logga in via magic-link.
+- "Mitt konto"-vy visar e-post, antal klara uppgifter, senaste synk-tid.
+- "Synka planen nu" och "Logga ut"-knappar.
+- Auto-hydrering av state från remote vid sign-in (`_pullRemotePlan`), med lokal-först-merge (remote vinner).
+- **Assumption**: En plan per användare (unique index i schema). Om multi-plan per användare behövs i framtiden, ta bort `plans_user_single_idx` och lägg till en `plans` picker.
+
+---
+
+### T054 — Brev till myndigheter (topp 3) ✔
+- **Skatteverket** — redan fanns (F-skatt, dödsfallsintyg, slutskatt).
+- **Försäkringskassan** (ny): `generateFK()` — dödsfallsanmälan, stopp av bidrag, efterlevandestöd-info.
+- **Pensionsmyndigheten** (ny): `generatePension()` — dödsfallsanmälan + ansökan om efterlevandepension/omställningspension.
+- Auto-fill av avsändarens namn/e-post/relation från sparad sender-info.
+- Output: kopiera eller öppna i e-post, delar `showDocResult`-UI med befintliga brev.
+

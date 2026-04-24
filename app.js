@@ -750,6 +750,8 @@ function buildTasks() {
 let _notesCache = null;
 
 function _getNotes() {
+  // T052: In shared-view mode, show the owner's notes (read-only).
+  if (window._sharedNotes) return window._sharedNotes;
   if (_notesCache) return _notesCache;
   try { _notesCache = JSON.parse(localStorage.getItem('efterplan_notes') || '{}'); }
   catch(e) { _notesCache = {}; }
@@ -770,6 +772,74 @@ const saveTaskNote = _debounce(function(taskId, value) {
 
 function getTaskNote(taskId) {
   return _getNotes()[taskId] || '';
+}
+
+// ─── Voice input for task notes (T069) ────────
+// Web Speech API. Mic button is hidden via body.no-voice-input if unsupported.
+let _voiceRecognition = null;
+let _voiceActiveTaskId = null;
+
+function _getSpeechRecognition() {
+  return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+}
+
+function toggleVoiceInput(taskId) {
+  const SR = _getSpeechRecognition();
+  if (!SR) return;
+
+  if (_voiceRecognition && _voiceActiveTaskId === taskId) {
+    _voiceRecognition.stop();
+    return;
+  }
+  if (_voiceRecognition) {
+    try { _voiceRecognition.stop(); } catch(e) {}
+  }
+
+  const textarea = document.getElementById(`notes-${taskId}`);
+  const micBtn = document.getElementById(`mic-${taskId}`);
+  if (!textarea) return;
+
+  const rec = new SR();
+  rec.lang = 'sv-SE';
+  rec.interimResults = true;
+  rec.continuous = true;
+
+  let committed = textarea.value || '';
+  const sep = () => (committed && !/\s$/.test(committed) ? ' ' : '');
+
+  rec.onresult = (event) => {
+    let interim = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const t = event.results[i][0].transcript;
+      if (event.results[i].isFinal) {
+        committed += sep() + t.trim();
+      } else {
+        interim += t;
+      }
+    }
+    textarea.value = committed + (interim ? sep() + interim : '');
+  };
+
+  const cleanup = () => {
+    micBtn?.classList.remove('is-recording');
+    _voiceRecognition = null;
+    _voiceActiveTaskId = null;
+    saveTaskNote(taskId, textarea.value);
+  };
+  rec.onerror = cleanup;
+  rec.onend = () => {
+    cleanup();
+    track('Voice Input Used', { taskId });
+  };
+
+  try {
+    rec.start();
+    _voiceRecognition = rec;
+    _voiceActiveTaskId = taskId;
+    micBtn?.classList.add('is-recording');
+  } catch (e) {
+    cleanup();
+  }
 }
 
 function saveTaskState() {
@@ -948,8 +1018,15 @@ function renderTaskList(containerId, tasks, nextTaskId, globalOffset = 0) {
       : '';
 
     const notesHtml = task.notesPlaceholder && !task.done
-      ? `<textarea class="task-notes" id="notes-${task.id}" placeholder="${task.notesPlaceholder}" rows="2"
-           oninput="autoStartOnNote('${task.id}'); saveTaskNote('${task.id}', this.value)">${getTaskNote(task.id)}</textarea>`
+      ? `<div class="task-notes-wrap">
+           <textarea class="task-notes" id="notes-${task.id}" placeholder="${task.notesPlaceholder}" rows="2"
+             oninput="autoStartOnNote('${task.id}'); saveTaskNote('${task.id}', this.value)">${getTaskNote(task.id)}</textarea>
+           <button type="button" class="task-notes-mic" id="mic-${task.id}"
+             onclick="event.stopPropagation();toggleVoiceInput('${task.id}')"
+             aria-label="Tala in anteckning" title="Tala in anteckning">
+             <span aria-hidden="true">🎤</span>
+           </button>
+         </div>`
       : '';
 
     const checklistHtml = task.checklist?.length ? renderTaskChecklist(task) : '';
@@ -1647,6 +1724,16 @@ function showDocForm(type) {
     const eEl = document.getElementById('letter-email');
     if (eEl && !eEl.value && sender.email) eEl.value = sender.email;
   }
+  // T054: Försäkringskassan and Pensionsmyndigheten auto-fill
+  if (type === 'fk' || type === 'pension') {
+    const prefix = type === 'fk' ? 'fk' : 'pm';
+    const sEl = document.getElementById(`${prefix}-sender`);
+    if (sEl && !sEl.value && sender.name) sEl.value = sender.name;
+    const eEl = document.getElementById(`${prefix}-email`);
+    if (eEl && !eEl.value && sender.email) eEl.value = sender.email;
+    const rEl = document.getElementById(`${prefix}-relation`);
+    if (rEl && !rEl.value && relation) rEl.value = relation;
+  }
   if (type === 'bulk') {
     initBulkForm();
     const abNotes = getTaskNote('abonnemang');
@@ -1951,6 +2038,86 @@ function generateSkatteverket() {
 }
 
 
+// ─── T054: Försäkringskassan ───
+function generateFK() {
+  const sender   = document.getElementById('fk-sender').value.trim();
+  const relation = document.getElementById('fk-relation').value.trim();
+  const email    = document.getElementById('fk-email').value.trim();
+  clearFormError('err-fk');
+  if (!sender || !relation || !email) { showFormError('err-fk', 'Fyll i de obligatoriska fälten (märkta med *).'); return; }
+  saveSenderInfo(sender, email);
+  const { deceased, personnr, today } = getDocContext();
+
+  const body = `${sender}
+${email}
+
+${today}
+
+Till: Försäkringskassan
+Ärende: Dödsfallsanmälan — ${deceased} (${personnr})
+
+Hej,
+
+Jag kontaktar er för att anmäla att ${deceased} (personnr ${personnr}) har gått bort.
+
+Jag är ${relation} och företräder dödsboet. Jag ber er:
+
+1. Stoppa eventuella pågående utbetalningar (sjukpenning, sjukersättning, aktivitetsersättning, bostadsbidrag m.m.) från och med dödsdatum.
+2. Bekräfta om det finns fordringar eller återbetalningskrav som dödsboet behöver reglera.
+3. Informera om ansökan om efterlevandestöd till barn under 18 år, om detta är aktuellt.
+4. Skicka all fortsatt korrespondens till min adress enligt ovan.
+
+Dödsbevis/dödsfallsintyg kan skickas in på begäran. Vänligen kontakta mig på angiven e-postadress.
+
+Med vänliga hälsningar,
+
+${sender}
+${relation} till ${deceased}
+${email}`;
+
+  showDocResult('Brev till Försäkringskassan', body, 'Dödsfallsanmälan — Försäkringskassan');
+}
+
+// ─── T054: Pensionsmyndigheten ───
+function generatePension() {
+  const sender   = document.getElementById('pm-sender').value.trim();
+  const relation = document.getElementById('pm-relation').value.trim();
+  const email    = document.getElementById('pm-email').value.trim();
+  clearFormError('err-pm');
+  if (!sender || !relation || !email) { showFormError('err-pm', 'Fyll i de obligatoriska fälten (märkta med *).'); return; }
+  saveSenderInfo(sender, email);
+  const { deceased, personnr, today } = getDocContext();
+
+  const body = `${sender}
+${email}
+
+${today}
+
+Till: Pensionsmyndigheten
+Ärende: Dödsfallsanmälan och ansökan om efterlevandepension — ${deceased} (${personnr})
+
+Hej,
+
+Jag kontaktar er för att anmäla att ${deceased} (personnr ${personnr}) har gått bort.
+
+Jag är ${relation} och företräder dödsboet. Jag ber er:
+
+1. Stoppa löpande pensionsutbetalningar från och med dödsdatum.
+2. Bekräfta om det finns slutreglering eller kvarstående belopp som dödsboet ska ta emot eller återbetala.
+3. Skicka information om ansökan om efterlevandepension, omställningspension eller barnpension, om detta är aktuellt för mig som ${relation}.
+4. Bekräfta mottagande av denna anmälan och meddela handläggande enhet.
+
+Dödsbevis/dödsfallsintyg kan skickas in på begäran.
+
+Med vänliga hälsningar,
+
+${sender}
+${relation} till ${deceased}
+${email}`;
+
+  showDocResult('Brev till Pensionsmyndigheten', body, 'Dödsfallsanmälan — Pensionsmyndigheten');
+}
+
 function generateFullmakt() {
   const grantor1 = document.getElementById('fullmakt-grantor1').value.trim();
   const grantor2 = document.getElementById('fullmakt-grantor2').value.trim();
@@ -2073,6 +2240,7 @@ function saveState() {
   // Save locally with personnr (own device only — never shared)
   const toSave = { ...getShareableState(), personnr: state.personnr };
   try { localStorage.setItem('efterplan_state', JSON.stringify(toSave)); } catch(e) {}
+  document.dispatchEvent(new Event('efterplan:state-changed'));
 }
 
 // ─── INIT ─────────────────────────────────────
@@ -2133,8 +2301,256 @@ function handlePaywallCTA() {
   alert('Betalning är inte aktiverat ännu — kom tillbaka snart!');
 }
 
+// ─── T051/T053: Auth modal glue ───────────────
+function _authView(which) {
+  ['signin', 'account', 'sent'].forEach(v => {
+    document.getElementById(`auth-view-${v}`)?.classList.toggle('hidden', v !== which);
+  });
+}
+
+function openAuthModal() {
+  const modal = document.getElementById('auth-modal');
+  if (!modal) return;
+  _authView(window.EfterplanSupabase?.currentUser ? 'account' : 'signin');
+  if (window.EfterplanSupabase?.currentUser) renderAccountDetails();
+  modal.classList.remove('hidden');
+  setTimeout(() => document.getElementById('auth-email')?.focus(), 50);
+  track('Auth Modal Opened');
+}
+
+function openAccountModal() {
+  openAuthModal();
+}
+
+function closeAuthModal() {
+  document.getElementById('auth-modal')?.classList.add('hidden');
+  const err = document.getElementById('auth-error');
+  if (err) { err.classList.add('hidden'); err.textContent = ''; }
+}
+
+async function submitAuth() {
+  const sb = window.EfterplanSupabase;
+  const emailEl = document.getElementById('auth-email');
+  const errEl = document.getElementById('auth-error');
+  const email = (emailEl?.value || '').trim();
+  if (!email) return;
+  if (!sb?.isConfigured) {
+    if (errEl) { errEl.textContent = 'Inloggning är inte konfigurerad än.'; errEl.classList.remove('hidden'); }
+    return;
+  }
+  const { ok, error } = await sb.signInWithEmail(email);
+  if (ok) {
+    document.getElementById('auth-sent-email').textContent = email;
+    _authView('sent');
+    track('Magic Link Sent');
+  } else if (errEl) {
+    errEl.textContent = error || 'Kunde inte skicka länk. Försök igen.';
+    errEl.classList.remove('hidden');
+  }
+}
+
+async function signOutAndClose() {
+  await window.EfterplanSupabase?.signOut();
+  closeAuthModal();
+  track('Signed Out');
+}
+
+function renderAccountDetails() {
+  const user = window.EfterplanSupabase?.currentUser;
+  const emailEl = document.getElementById('auth-account-email');
+  const listEl = document.getElementById('auth-account-details');
+  if (!user || !listEl) return;
+  if (emailEl) emailEl.innerHTML = `Inloggad som <strong>${user.email}</strong>`;
+  const lastSync = localStorage.getItem('efterplan_last_sync') || '—';
+  const taskCount = (state.tasks || []).filter(t => t.done).length;
+  const total = (state.tasks || []).length;
+  listEl.innerHTML = `
+    <li><strong>Uppgifter klara:</strong> ${taskCount} av ${total}</li>
+    <li><strong>Senaste synk:</strong> ${lastSync}</li>
+  `;
+}
+
+// ─── T051: Plan sync (non-blocking, best-effort) ───
+let _remotePlanId = null;
+
+async function syncPlanNow() {
+  const sb = window.EfterplanSupabase;
+  if (!sb?.currentUser) return;
+  const saved = await sb.upsertPlan(state);
+  if (saved?.id) {
+    _remotePlanId = saved.id;
+    // Push all task completion rows
+    for (const t of state.tasks) {
+      await sb.saveTaskCompletion(saved.id, t.id, {
+        done: !!t.done,
+        started: !!t.started,
+        assignee: t.assignee || null,
+        notes: getTaskNote(t.id) || null,
+      });
+    }
+    localStorage.setItem('efterplan_last_sync', new Date().toLocaleString('sv-SE'));
+    renderAccountDetails();
+    track('Plan Synced');
+  }
+}
+
+async function _pullRemotePlan() {
+  const sb = window.EfterplanSupabase;
+  if (!sb?.currentUser) return;
+  const plan = await sb.loadPlan();
+  if (!plan) {
+    // No remote yet — push local state
+    await syncPlanNow();
+    return;
+  }
+  _remotePlanId = plan.id;
+  // Merge: remote state wins for onboarding answers; completions merged.
+  if (plan.state && Object.keys(plan.state).length) {
+    Object.assign(state, plan.state);
+  }
+  const completions = await sb.loadTaskCompletions(plan.id);
+  if (completions?.length) {
+    const byId = Object.fromEntries(completions.map(c => [c.task_id, c]));
+    state.tasks.forEach(t => {
+      const c = byId[t.id];
+      if (c) { t.done = !!c.done; t.started = !!c.started; t.assignee = c.assignee || null; }
+    });
+    // Merge notes into localStorage
+    const notes = _getNotes();
+    completions.forEach(c => { if (c.notes) notes[c.task_id] = c.notes; });
+    try { localStorage.setItem('efterplan_notes', JSON.stringify(notes)); } catch(e) {}
+  }
+  saveState();
+  saveTaskState();
+  renderPlan();
+  track('Plan Loaded From Remote');
+}
+
+document.addEventListener('supabase:ready', () => { if (window.EfterplanSupabase.currentUser) _pullRemotePlan(); });
+document.addEventListener('supabase:authchange', (e) => {
+  if (e.detail?.user) {
+    _pullRemotePlan();
+    closeAuthModal();
+  }
+});
+
+// Debounced background sync when state/tasks change
+const _bgSyncPlan = _debounce(() => {
+  if (window.EfterplanSupabase?.currentUser) syncPlanNow();
+}, 2000);
+document.addEventListener('efterplan:state-changed', _bgSyncPlan);
+
+// ─── T052: Sharing ────────────────────────────
+function _shareView(which) {
+  ['signedout', 'idle', 'active'].forEach(v => {
+    document.getElementById(`share-view-${v}`)?.classList.toggle('hidden', v !== which);
+  });
+}
+
+async function openShareModal() {
+  const modal = document.getElementById('share-modal');
+  if (!modal) return;
+  modal.classList.remove('hidden');
+
+  const sb = window.EfterplanSupabase;
+  if (!sb?.currentUser) { _shareView('signedout'); return; }
+
+  // Ensure plan exists remotely
+  let plan = await sb.loadPlan();
+  if (!plan) { await syncPlanNow(); plan = await sb.loadPlan(); }
+  if (plan?.share_token) {
+    _shareView('active');
+    const url = `${window.location.origin}/?share=${plan.share_token}`;
+    document.getElementById('share-url').value = url;
+  } else {
+    _shareView('idle');
+  }
+}
+
+function closeShareModal() {
+  document.getElementById('share-modal')?.classList.add('hidden');
+  document.getElementById('share-copied')?.classList.add('hidden');
+}
+
+async function generateShareLink() {
+  const sb = window.EfterplanSupabase;
+  if (!sb?.currentUser) { _shareView('signedout'); return; }
+  // Make sure remote plan is current
+  await syncPlanNow();
+  const token = await sb.createShareToken();
+  if (!token) { alert('Kunde inte skapa länk. Försök igen.'); return; }
+  const url = `${window.location.origin}/?share=${token}`;
+  document.getElementById('share-url').value = url;
+  _shareView('active');
+  track('Share Link Created');
+}
+
+async function copyShareUrl() {
+  const input = document.getElementById('share-url');
+  if (!input) return;
+  try {
+    await navigator.clipboard.writeText(input.value);
+  } catch (e) {
+    input.select();
+    document.execCommand('copy');
+  }
+  document.getElementById('share-copied')?.classList.remove('hidden');
+  track('Share Link Copied');
+}
+
+async function revokeShareLink() {
+  if (!confirm('Stäng av delningen? Länken slutar fungera direkt.')) return;
+  await window.EfterplanSupabase?.revokeShareToken();
+  _shareView('idle');
+  track('Share Link Revoked');
+}
+
+// ─── T052: Shared-view mode (read-only rendering) ───
+async function _tryLoadSharedView() {
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('share');
+  if (!token) return false;
+  const sb = window.EfterplanSupabase;
+  if (!sb?.isConfigured) return false;
+  const result = await sb.loadSharedPlan(token);
+  if (!result?.plan) return false;
+
+  document.body.classList.add('shared-view');
+  // Hydrate state from shared plan (personnr is never shared — schema strips it)
+  Object.assign(state, result.plan.state || {});
+  buildTasks();
+  const byId = Object.fromEntries(result.completions.map(c => [c.task_id, c]));
+  state.tasks.forEach(t => {
+    const c = byId[t.id];
+    if (c) { t.done = !!c.done; t.started = !!c.started; t.assignee = c.assignee || null; }
+  });
+  // Notes
+  const notes = {};
+  result.completions.forEach(c => { if (c.notes) notes[c.task_id] = c.notes; });
+  window._sharedNotes = notes;
+
+  document.getElementById('shared-view-banner')?.classList.remove('hidden');
+  renderPlan();
+  showScreen('screen-plan');
+  track('Shared Plan Viewed');
+  return true;
+}
+
+document.addEventListener('supabase:ready', async () => {
+  await _tryLoadSharedView();
+});
+
 // ─── INIT ─────────────────────────────────────
 (function init() {
+  if (!_getSpeechRecognition()) document.body.classList.add('no-voice-input');
+
+  // T052: Shared-view URLs skip the localStorage restore — we'll hydrate
+  // from Supabase once the client is ready (supabase:ready event).
+  if (new URLSearchParams(window.location.search).has('share')) {
+    showScreen('screen-landing');
+    return;
+  }
+
   // Restore own plan from localStorage
   try {
     const saved = localStorage.getItem('efterplan_state');

@@ -138,20 +138,22 @@
     <div class="nav-landing-links">
       <a href="/om.html" class="nav-text-link">Om</a>
       <a href="#section-integritet" class="nav-text-link">Integritet</a>
+      <a href="#" class="nav-text-link nav-auth-signin" onclick="openAuthModal(); return false;">Logga in</a>
+      <a href="#" class="nav-text-link nav-auth-account" onclick="openAccountModal(); return false;">Mitt konto</a>
     </div>
   </nav>
   <div class="landing-hero">
     <div class="landing-content">
       <p class="landing-brand">Efterplan</p>
-      <h1 class="landing-eyebrow">Du har precis förlorat någon.</h1>
-      <h2 class="landing-headline">Vi visar <em>exakt</em> vad du behöver göra — ett steg i taget.</h2>
+      <p class="landing-eyebrow">Du har precis förlorat någon.</p>
+      <h1 class="landing-headline">Vad gör man när någon dör? Vi visar <em>exakt</em> vad du behöver göra — ett steg i taget.</h1>
       <ul class="landing-payoff">
         <li>Tar 2 minuter att starta</li>
         <li>Gratis, ingen registrering</li>
         <li>Rätt ordning — vi bestämmer åt dig</li>
       </ul>
-      <button class="btn-primary btn-large" onclick="startOnboarding()">Kom igång — tar 2 minuter</button>
-      <p class="landing-note">Gratis att börja. Ingen registrering krävs.</p>
+      <button class="btn-primary btn-large" onclick="startOnboarding()">Starta min checklista — 2 minuter</button>
+      <p class="landing-note">Gratis. Ingen registrering. Inga mejlutskick.</p>
     </div>
   </div>
 
@@ -203,6 +205,13 @@
     <div class="faq-item">
       <h3>Vad gäller för digitala konton och sociala medier?</h3>
       <p>Digitala konton avslutas inte automatiskt. Facebook och Instagram kan antingen minnesmärkas eller raderas — båda kräver att du kontaktar plattformens support med dödsfallsintyg. Google har en funktion för "hantering av inaktiva konton" som den avlidne kan ha förinställt. Apple/iCloud kräver ofta domstolsbeslut utan förinställd digital arvskontakt. Säg alltid upp betaltjänster som Klarna och PayPal via de officiella vägarna.</p>
+    </div>
+
+    <div class="landing-cta-secondary">
+      <p class="landing-cta-secondary-lead">Redo att börja?</p>
+      <p class="landing-cta-secondary-sub">Svara på några snabba frågor — din checklista är klar på 2 minuter.</p>
+      <button class="btn-primary btn-large" onclick="startOnboarding()">Starta min checklista — gratis</button>
+      <p class="landing-note">Ingen registrering. Sparas lokalt i din webbläsare.</p>
     </div>
   </section>
 
@@ -430,6 +439,12 @@
 ════════════════════════════════════════════ -->
 <div id="screen-plan" class="screen" role="main" tabindex="-1">
 
+  <!-- T052: Read-only banner for shared view -->
+  <div id="shared-view-banner" class="shared-view-banner hidden">
+    <span>Du tittar på någon annans delade plan — alla ändringar är avstängda.</span>
+    <a href="/" class="shared-view-exit">Gå till Efterplan →</a>
+  </div>
+
   <!-- Nav -->
   <nav class="nav nav-light nav-plan">
     <div class="logo-wrap">
@@ -462,6 +477,37 @@
         </div>
         <div class="progress-summary" id="progress-summary" aria-live="polite"></div>
         <button class="btn-print-inline" onclick="printPlan()">Skriv ut / Spara som PDF</button>
+        <button class="btn-print-inline has-supabase-only" onclick="openShareModal()">Dela min plan</button>
+      </div>
+
+      <!-- T052: Share modal -->
+      <div id="share-modal" class="auth-modal hidden" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
+        <div class="auth-modal-backdrop" onclick="closeShareModal()"></div>
+        <div class="auth-modal-card">
+          <button class="auth-modal-close" onclick="closeShareModal()" aria-label="Stäng">×</button>
+          <h2 id="share-modal-title" class="auth-modal-title">Dela min plan</h2>
+          <p class="auth-modal-desc">Skapa en skrivskyddad länk så att någon annan — till exempel en syskon eller jurist — kan se din progress utan att logga in.</p>
+          <div id="share-view-signedout" class="hidden">
+            <p class="auth-modal-note">Du måste logga in först för att skapa en delbar länk. <button class="btn-ghost btn-sm" onclick="closeShareModal();openAuthModal()">Logga in →</button></p>
+          </div>
+          <div id="share-view-active" class="hidden">
+            <label class="ob-field-label" for="share-url">Din delbara länk</label>
+            <div class="share-url-row">
+              <input type="text" id="share-url" class="ob-text-input" readonly />
+              <button class="btn-primary" style="max-width:140px" onclick="copyShareUrl()">Kopiera</button>
+            </div>
+            <p id="share-copied" class="form-hint hidden">Länken är kopierad till urklipp.</p>
+            <p class="auth-modal-note">Vem som helst med länken kan se din plan — men inte ändra den. Personnummer delas aldrig.</p>
+            <div class="auth-modal-actions">
+              <button class="btn-ghost btn-sm" onclick="revokeShareLink()">Stäng av delning</button>
+            </div>
+          </div>
+          <div id="share-view-idle" class="hidden">
+            <div class="auth-modal-actions">
+              <button class="btn-primary" style="max-width:220px" onclick="generateShareLink()">Skapa delbar länk</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="completion-message" id="completion-message" role="status">
@@ -591,6 +637,16 @@
             <span class="doc-icon" aria-hidden="true">🏛</span>
             <span class="doc-type-title">Skatteverket</span>
             <span class="doc-type-sub">Avsluta F-skatt / enskild firma</span>
+          </button>
+          <button class="doc-type-btn" onclick="showDocForm('fk')">
+            <span class="doc-icon" aria-hidden="true">🏛</span>
+            <span class="doc-type-title">Försäkringskassan</span>
+            <span class="doc-type-sub">Dödsfallsanmälan &amp; efterlevandestöd</span>
+          </button>
+          <button class="doc-type-btn" onclick="showDocForm('pension')">
+            <span class="doc-icon" aria-hidden="true">🏛</span>
+            <span class="doc-type-title">Pensionsmyndigheten</span>
+            <span class="doc-type-sub">Efterlevandepension &amp; omställning</span>
           </button>
           <button class="doc-type-btn hidden" id="doc-btn-fullmakt" onclick="showDocForm('fullmakt')">
             <span class="doc-icon" aria-hidden="true">📋</span>
@@ -809,6 +865,48 @@
         <button class="btn-primary" style="max-width:240px" onclick="generateSkatteverket()">Skapa brev</button>
       </div>
 
+      <!-- T054: Försäkringskassan -->
+      <div id="doc-form-fk" class="doc-form hidden">
+        <button class="back-btn" onclick="backToDocChooser()">← Tillbaka</button>
+        <h2 class="plan-title" style="margin-bottom:6px">Brev till Försäkringskassan</h2>
+        <p class="plan-sub" style="margin-bottom:28px">Dödsfallsanmälan, stopp av löpande bidrag, ansökan om efterlevandestöd om minderåriga barn finns.</p>
+        <div class="form-group">
+          <label for="fk-sender">Ditt namn <span class="required">*</span></label>
+          <input type="text" id="fk-sender" class="text-input" placeholder="Ditt fullständiga namn" />
+        </div>
+        <div class="form-group">
+          <label for="fk-relation">Din relation till den avlidne <span class="required">*</span></label>
+          <input type="text" id="fk-relation" class="text-input" placeholder="t.ex. Make, Dotter, Son" />
+        </div>
+        <div class="form-group">
+          <label for="fk-email">Din e-post <span class="required">*</span></label>
+          <input type="email" id="fk-email" class="text-input" placeholder="din@epost.se" />
+        </div>
+        <p class="form-error hidden" id="err-fk" role="alert"></p>
+        <button class="btn-primary" style="max-width:260px" onclick="generateFK()">Skapa brev</button>
+      </div>
+
+      <!-- T054: Pensionsmyndigheten -->
+      <div id="doc-form-pension" class="doc-form hidden">
+        <button class="back-btn" onclick="backToDocChooser()">← Tillbaka</button>
+        <h2 class="plan-title" style="margin-bottom:6px">Brev till Pensionsmyndigheten</h2>
+        <p class="plan-sub" style="margin-bottom:28px">Anmäl dödsfallet och ansök om efterlevandepension eller omställningspension.</p>
+        <div class="form-group">
+          <label for="pm-sender">Ditt namn <span class="required">*</span></label>
+          <input type="text" id="pm-sender" class="text-input" placeholder="Ditt fullständiga namn" />
+        </div>
+        <div class="form-group">
+          <label for="pm-relation">Din relation till den avlidne <span class="required">*</span></label>
+          <input type="text" id="pm-relation" class="text-input" placeholder="t.ex. Make, Dotter, Son" />
+        </div>
+        <div class="form-group">
+          <label for="pm-email">Din e-post <span class="required">*</span></label>
+          <input type="email" id="pm-email" class="text-input" placeholder="din@epost.se" />
+        </div>
+        <p class="form-error hidden" id="err-pm" role="alert"></p>
+        <button class="btn-primary" style="max-width:260px" onclick="generatePension()">Skapa brev</button>
+      </div>
+
       <!-- Resultat -->
       <div id="doc-result" class="doc-form hidden">
         <button class="back-btn" onclick="backToDocChooser()">← Tillbaka</button>
@@ -883,7 +981,50 @@
   </div>
 </div>
 
-<script src="app.js?v=16" defer></script>
+<!-- ═══ AUTH MODAL (T051 / T053) ═══
+     Hidden by default — revealed by openAuthModal() / openAccountModal(). -->
+<div id="auth-modal" class="auth-modal hidden" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+  <div class="auth-modal-backdrop" onclick="closeAuthModal()"></div>
+  <div class="auth-modal-card">
+    <button class="auth-modal-close" onclick="closeAuthModal()" aria-label="Stäng">×</button>
+
+    <!-- Signed-out: magic-link form -->
+    <div id="auth-view-signin">
+      <h2 id="auth-modal-title" class="auth-modal-title">Logga in</h2>
+      <p class="auth-modal-desc">Skriv din e-post — vi skickar en inloggningslänk. Inga lösenord.</p>
+      <form id="auth-form" onsubmit="event.preventDefault(); submitAuth();">
+        <label class="ob-field-label" for="auth-email">E-post</label>
+        <input type="email" id="auth-email" class="ob-text-input" placeholder="din@epost.se" autocomplete="email" required />
+        <p id="auth-error" class="form-error hidden" role="alert"></p>
+        <button type="submit" class="btn-primary" style="margin-top:16px;max-width:260px">Skicka inloggningslänk</button>
+      </form>
+      <p class="auth-modal-note">Du behöver inte konto för att använda Efterplan — allt sparas lokalt. Skapa konto om du vill nå din plan från flera enheter.</p>
+    </div>
+
+    <!-- Signed-in confirmation / account details (T053) -->
+    <div id="auth-view-account" class="hidden">
+      <h2 class="auth-modal-title">Mitt konto</h2>
+      <p class="auth-modal-desc" id="auth-account-email"></p>
+      <ul class="auth-account-details" id="auth-account-details"></ul>
+      <div class="auth-modal-actions">
+        <button class="btn-ghost btn-sm" onclick="syncPlanNow()">Synka planen nu</button>
+        <button class="btn-ghost btn-sm" onclick="signOutAndClose()">Logga ut</button>
+      </div>
+    </div>
+
+    <!-- Email sent confirmation -->
+    <div id="auth-view-sent" class="hidden">
+      <h2 class="auth-modal-title">Kolla din inkorg</h2>
+      <p class="auth-modal-desc">Vi har skickat en länk till <strong id="auth-sent-email"></strong>. Klicka på länken för att logga in — den fungerar på den här enheten.</p>
+      <button class="btn-ghost btn-sm" onclick="closeAuthModal()">Stäng</button>
+    </div>
+  </div>
+</div>
+
+<!-- T051: Supabase (client loaded only when configured) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" defer></script>
+<script src="supabase-client.js" defer></script>
+<script src="app.js?v=17" defer></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
