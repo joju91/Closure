@@ -1,0 +1,43 @@
+name: Promotion Scanner
+on:
+  schedule:
+    - cron: '0 8 * * 3'  # Varje onsdag 08:00
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: pip install requests feedparser anthropic
+
+      - name: Run scanner
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+          REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+        run: python .github/scripts/promo_scan.py
+
+      - name: Post issue if leads found
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            if (!fs.existsSync('promo_leads.md')) {
+              console.log('No leads found, skipping issue.');
+              return;
+            }
+            const body = fs.readFileSync('promo_leads.md', 'utf8');
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '📣 Promotionmöjligheter — ' + new Date().toISOString().slice(0,10),
+              labels: ['promotion'],
+              body: body
+            })
