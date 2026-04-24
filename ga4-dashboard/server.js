@@ -1,5 +1,6 @@
 ﻿require("dotenv").config();
 const path = require("path");
+const crypto = require("crypto");
 const express = require("express");
 const { google } = require("googleapis");
 
@@ -9,6 +10,77 @@ const propertyId = process.env.GA4_PROPERTY_ID;
 
 if (!propertyId) {
   console.warn("Missing GA4_PROPERTY_ID in environment.");
+}
+
+// ─── SECURITY MIDDLEWARE ─────────────────────
+// Basic auth + CORS allowlist + tiny in-memory rate limiter.
+// Protect the /api/* surface — a bare dashboard would otherwise leak GA4
+// traffic/revenue data to anyone who discovers the URL.
+const BASIC_AUTH_USER = process.env.BASIC_AUTH_USER || "";
+const BASIC_AUTH_PASS = process.env.BASIC_AUTH_PASS || "";
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || "")
+  .split(",").map(s => s.trim()).filter(Boolean);
+
+function safeEqual(a, b) {
+  const ab = Buffer.from(a || "", "utf8");
+  const bb = Buffer.from(b || "", "utf8");
+  if (ab.length !== bb.length) return false;
+  return crypto.timingSafeEqual(ab, bb);
+}
+
+function requireBasicAuth(req, res, next) {
+  if (!BASIC_AUTH_USER || !BASIC_AUTH_PASS) {
+    // Fail-closed in production, pass-through in dev so local `node server.js`
+    // keeps working without setting creds.
+    if (process.env.NODE_ENV === "production") {
+      return res.status(503).json({ error: "Auth not configured" });
+    }
+    return next();
+  }
+  const header = req.headers.authorization || "";
+  if (!header.toLowerCase().startsWith("basic ")) {
+    res.set("WWW-Authenticate", 'Basic realm="ga4-dashboard"');
+    return res.status(401).json({ error: "Authentication required" });
+  }
+  const decoded = Buffer.from(header.slice(6), "base64").toString("utf8");
+  const idx = decoded.indexOf(":");
+  const user = idx >= 0 ? decoded.slice(0, idx) : decoded;
+  const pass = idx >= 0 ? decoded.slice(idx + 1) : "";
+  if (!safeEqual(user, BASIC_AUTH_USER) || !safeEqual(pass, BASIC_AUTH_PASS)) {
+    res.set("WWW-Authenticate", 'Basic realm="ga4-dashboard"');
+    return res.status(401).json({ error: "Invalid credentials" });
+  }
+  next();
+}
+
+function corsAllowlist(req, res, next) {
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    res.set("Access-Control-Allow-Origin", origin);
+    res.set("Vary", "Origin");
+    res.set("Access-Control-Allow-Credentials", "true");
+    res.set("Access-Control-Allow-Headers", "Authorization, Content-Type");
+    res.set("Access-Control-Allow-Methods", "GET, OPTIONS");
+  }
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+}
+
+// Minimal in-memory rate limit: 60 req/min per IP on /api/*.
+const _rateHits = new Map();
+function rateLimit(req, res, next) {
+  const ip = req.ip || req.socket.remoteAddress || "unknown";
+  const now = Date.now();
+  const windowMs = 60_000;
+  const limit = 60;
+  const entry = _rateHits.get(ip) || { count: 0, resetAt: now + windowMs };
+  if (now > entry.resetAt) { entry.count = 0; entry.resetAt = now + windowMs; }
+  entry.count += 1;
+  _rateHits.set(ip, entry);
+  if (entry.count > limit) {
+    return res.status(429).json({ error: "Too many requests" });
+  }
+  next();
 }
 
 function buildAnalyticsClient() {
@@ -70,6 +142,9 @@ async function runReport({ days, dimensions = [], metrics = [], orderBys = [], l
 }
 
 app.use(express.static(path.join(__dirname, "public")));
+
+// Everything under /api/* requires auth, CORS-check and rate-limit.
+app.use("/api", corsAllowlist, rateLimit, requireBasicAuth);
 
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true, propertyId: propertyId || null });
@@ -160,7 +235,7 @@ app.get("/api/pages", async (req, res) => {
     });
 
     const rows = (report.rows || []).map((row) => ({
-      pagePath: row.dimensionValues?.[0]?.value || "(okand)",
+      pagePath: row.dimensionValues?.[0]?.value || "(okänd)",
       pageViews: toNumber(row.metricValues?.[0]?.value),
       sessions: toNumber(row.metricValues?.[1]?.value)
     }));
@@ -192,7 +267,7 @@ app.get("/api/events", async (req, res) => {
     });
 
     const rows = (report.rows || []).map((row) => ({
-      eventName: row.dimensionValues?.[0]?.value || "(okand)",
+      eventName: row.dimensionValues?.[0]?.value || "(okänd)",
       eventCount: toNumber(row.metricValues?.[0]?.value),
       users: toNumber(row.metricValues?.[1]?.value)
     }));

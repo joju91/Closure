@@ -3,6 +3,16 @@
    MVP v1.0
 ════════════════════════════════════════════ */
 
+// ─── XSS-SKYDD: escapeHtml() ─────────────────
+// Används på ALL användarinmatning som stoppas in i innerHTML
+// (namn, personnummer, fakturabelopp, anteckningar, m.m.).
+// & < > " ' täcker både text- och attributkontext.
+const _HTML_ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+function escapeHtml(v) {
+  if (v == null) return '';
+  return String(v).replace(/[&<>"']/g, c => _HTML_ESCAPES[c]);
+}
+
 // ─── FEATURE FLAGS ───────────────────────────
 const PAYWALL_ENABLED = false; // set true when Stripe is wired up
 const PREVIEW_STEPS   = 5;     // T030: first N tasks free, rest locked when PAYWALL_ENABLED
@@ -257,9 +267,10 @@ function obRemoveParticipant(i) {
 function renderObParticipantList() {
   const list = document.getElementById('ob-participant-list');
   if (!list) return;
-  list.innerHTML = (state.participants || []).map((name, i) =>
-    `<span class="ob-participant-chip">${name} <button class="ob-participant-remove" type="button" onclick="obRemoveParticipant(${i})" aria-label="Ta bort ${name}">×</button></span>`
-  ).join('');
+  list.innerHTML = (state.participants || []).map((name, i) => {
+    const safe = escapeHtml(name);
+    return `<span class="ob-participant-chip">${safe} <button class="ob-participant-remove" type="button" onclick="obRemoveParticipant(${i})" aria-label="Ta bort ${safe}">×</button></span>`;
+  }).join('');
 }
 
 function updateCheckboxState(key) {
@@ -822,12 +833,12 @@ function renderParticipants() {
   // Deceased first (different style — primary chip)
   const deceasedChip = deceased
     ? `<span class="plan-participant-chip plan-participant-chip--deceased"
-         title="${deceased}">${deceased.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase()}</span>`
+         title="${escapeHtml(deceased)}">${escapeHtml(deceased.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase())}</span>`
     : '';
 
   const chips = participants.map(name => {
     const initials = name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
-    return `<span class="plan-participant-chip" title="${name}">${initials}</span>`;
+    return `<span class="plan-participant-chip" title="${escapeHtml(name)}">${escapeHtml(initials)}</span>`;
   }).join('');
 
   container.innerHTML = deceasedChip + chips +
@@ -861,7 +872,7 @@ function renderPlan() {
       startEl.innerHTML = `
         <div>
           <div class="start-here-label">Börja här</div>
-          <div class="start-here-title">${firstTask.title}</div>
+          <div class="start-here-title">${escapeHtml(firstTask.title)}</div>
         </div>
         <div class="start-here-arrow">›</div>`;
       startEl.classList.remove('hidden');
@@ -936,11 +947,11 @@ function renderTaskList(containerId, tasks, nextTaskId, globalOffset = 0) {
 
     if (isLocked) {
       wrap.innerHTML = `
-        <div class="task-card task-card--locked" id="task-card-${task.id}" aria-disabled="true">
+        <div class="task-card task-card--locked" id="task-card-${escapeHtml(task.id)}" aria-disabled="true">
           <div class="task-check" aria-hidden="true"></div>
           <div class="task-body">
-            <div class="task-title">${task.title}</div>
-            <div class="task-time">${task.time}</div>
+            <div class="task-title">${escapeHtml(task.title)}</div>
+            <div class="task-time">${escapeHtml(task.time)}</div>
           </div>
           <div class="task-lock" aria-hidden="true">🔒</div>
         </div>`;
@@ -969,8 +980,8 @@ function renderTaskList(containerId, tasks, nextTaskId, globalOffset = 0) {
       : '';
 
     const notesHtml = task.notesPlaceholder && !task.done
-      ? `<textarea class="task-notes" id="notes-${task.id}" placeholder="${task.notesPlaceholder}" rows="2"
-           oninput="autoStartOnNote('${task.id}'); saveTaskNote('${task.id}', this.value)">${getTaskNote(task.id)}</textarea>`
+      ? `<textarea class="task-notes" id="notes-${escapeHtml(task.id)}" placeholder="${escapeHtml(task.notesPlaceholder)}" rows="2"
+           oninput="autoStartOnNote('${escapeHtml(task.id)}'); saveTaskNote('${escapeHtml(task.id)}', this.value)">${escapeHtml(getTaskNote(task.id))}</textarea>`
       : '';
 
     const checklistHtml = task.checklist?.length ? renderTaskChecklist(task) : '';
@@ -997,20 +1008,21 @@ function renderTaskList(containerId, tasks, nextTaskId, globalOffset = 0) {
       ? `<span class="task-started-badge">Påbörjad</span>`
       : '';
     const assigneeBadge = task.assignee
-      ? `<span class="task-assignee-badge" id="assignee-badge-${task.id}">${task.assignee}</span>`
-      : `<span class="task-assignee-badge hidden" id="assignee-badge-${task.id}"></span>`;
+      ? `<span class="task-assignee-badge" id="assignee-badge-${escapeHtml(task.id)}">${escapeHtml(task.assignee)}</span>`
+      : `<span class="task-assignee-badge hidden" id="assignee-badge-${escapeHtml(task.id)}"></span>`;
 
     wrap.innerHTML = `
-      <div class="task-card${cardClass}" id="task-card-${task.id}">
-        <div class="task-check${checkClass}" id="check-${task.id}"></div>
+      <div class="task-card${cardClass}" id="task-card-${escapeHtml(task.id)}">
+        <div class="task-check${checkClass}" id="check-${escapeHtml(task.id)}"></div>
         <div class="task-body">
-          <div class="task-title">${task.title}${nextBadge}</div>
-          <div class="task-time">${task.time}${startedBadge}${assigneeBadge}</div>
+          <div class="task-title">${escapeHtml(task.title)}${nextBadge}</div>
+          <div class="task-time">${escapeHtml(task.time)}${startedBadge}${assigneeBadge}</div>
         </div>
-        <div class="task-chevron" id="chevron-${task.id}" aria-hidden="true">›</div>
+        <div class="task-chevron" id="chevron-${escapeHtml(task.id)}" aria-hidden="true">›</div>
       </div>
-      <div class="task-expand hidden" id="expand-${task.id}">
+      <div class="task-expand hidden" id="expand-${escapeHtml(task.id)}">
         <div class="task-expand-desc">${task.desc}</div>
+
         ${linkHtml}
         ${phoneHtml}
         ${phone2Html}
@@ -1126,12 +1138,14 @@ function updateProgress() {
 // ─── TASK CHECKLIST ────────────────────────────
 function renderTaskChecklist(task) {
   const saved = (state.taskChecklists || {})[task.id] || {};
+  const sTid = escapeHtml(task.id);
   const items = task.checklist.map(item => {
     const checked = !!saved[item.key];
+    const sKey = escapeHtml(item.key);
     return `<label class="task-checklist-item${checked ? ' done' : ''}">
-      <input type="checkbox" id="checklist-${task.id}-${item.key}" ${checked ? 'checked' : ''}
-             onchange="toggleChecklistItem('${task.id}', '${item.key}')">
-      <span>${item.label}</span>
+      <input type="checkbox" id="checklist-${sTid}-${sKey}" ${checked ? 'checked' : ''}
+             onchange="toggleChecklistItem('${sTid}', '${sKey}')">
+      <span>${escapeHtml(item.label)}</span>
     </label>`;
   }).join('');
   return `<div class="task-checklist">
@@ -1176,15 +1190,18 @@ function renderBills() {
     return;
   }
   empty && empty.classList.add('hidden');
-  list.innerHTML = state.bills.map(b => `
-    <li class="bill-item${b.paid ? ' paid' : ''}" id="bill-${b.id}">
-      <button class="bill-check" onclick="toggleBillPaid('${b.id}')" aria-label="${b.paid ? 'Markera som obetald' : 'Markera som betald'}"></button>
+  list.innerHTML = state.bills.map(b => {
+    const sid = escapeHtml(b.id);
+    return `
+    <li class="bill-item${b.paid ? ' paid' : ''}" id="bill-${sid}">
+      <button class="bill-check" onclick="toggleBillPaid('${sid}')" aria-label="${b.paid ? 'Markera som obetald' : 'Markera som betald'}"></button>
       <div class="bill-info">
-        <span class="bill-desc">${b.desc}</span>
-        ${b.amount ? `<span class="bill-amount">${b.amount} kr</span>` : ''}
+        <span class="bill-desc">${escapeHtml(b.desc)}</span>
+        ${b.amount ? `<span class="bill-amount">${escapeHtml(b.amount)} kr</span>` : ''}
       </div>
-      <button class="bill-delete" onclick="deleteBill('${b.id}')" aria-label="Ta bort">×</button>
-    </li>`).join('');
+      <button class="bill-delete" onclick="deleteBill('${sid}')" aria-label="Ta bort">×</button>
+    </li>`;
+  }).join('');
 }
 function showBillForm() {
   document.getElementById('bill-form').classList.remove('hidden');
@@ -1249,7 +1266,7 @@ function markTaskStarted(taskId) {
   const actionsEl = document.querySelector(`#expand-${taskId} .task-expand-actions`);
   if (actionsEl) {
     const docBtn = actionsEl.querySelector('.task-expand-doc');
-    actionsEl.innerHTML = `<button class="task-expand-btn" onclick="event.stopPropagation();markTaskDone('${taskId}')">Markera som klar</button>`;
+    actionsEl.innerHTML = `<button class="task-expand-btn" onclick="event.stopPropagation();markTaskDone('${escapeHtml(taskId)}')">Markera som klar</button>`;
     if (docBtn) actionsEl.appendChild(docBtn);
   }
 }
@@ -1326,28 +1343,42 @@ function _refreshAssigneeBadge(taskId) {
 function _buildAssigneePickerInner(taskId) {
   const assignees = _getAssignees();
   const current = getTaskAssignee(taskId);
+  const sTid = escapeHtml(taskId);
   if (!assignees.length) {
     return `<button class="assignee-add-hint"
               onclick="event.stopPropagation();openModal('modal-participants')"
               title="Lägg till deltagare">+ Lägg till deltagare</button>`;
   }
   return assignees.map(n =>
-    `<button class="assignee-chip${n === current ? ' selected' : ''}"
-             onclick="event.stopPropagation();setTaskAssignee('${taskId}','${n.replace(/'/g,"\\'")}')">
-       ${n}
+    `<button type="button" class="assignee-chip${n === current ? ' selected' : ''}"
+             data-assign-task="${sTid}" data-assign-name="${escapeHtml(n)}">
+       ${escapeHtml(n)}
      </button>`
   ).join('');
 }
 function renderAssigneePicker(taskId) {
   const taskDef = TASK_LIBRARY.find(t => t.id === taskId);
   const label = (taskDef && taskDef.assigneeLabel) || 'Ansvarig';
+  const sTid = escapeHtml(taskId);
   return `<div class="task-assignee-section">
-    <span class="task-assignee-label">${label}</span>
-    <div class="assignee-picker" id="assignee-picker-${taskId}">
+    <span class="task-assignee-label">${escapeHtml(label)}</span>
+    <div class="assignee-picker" id="assignee-picker-${sTid}">
       ${_buildAssigneePickerInner(taskId)}
     </div>
   </div>`;
 }
+
+// Event delegation for assignee chips — data-* safe against name injection.
+document.addEventListener('click', function (e) {
+  const chip = e.target.closest('[data-assign-task][data-assign-name]');
+  if (chip) {
+    e.stopPropagation();
+    setTaskAssignee(
+      chip.getAttribute('data-assign-task'),
+      chip.getAttribute('data-assign-name')
+    );
+  }
+});
 
 // ─── PARTICIPANTS ──────────────────────────────
 function _getParticipants() {
@@ -1383,12 +1414,13 @@ function _refreshParticipantList() {
   // Onboarding list — simple chips
   const obList = document.getElementById('ob-participant-list');
   if (obList) {
-    obList.innerHTML = (state.participants || []).map(name =>
-      `<div class="ob-participant-chip">
-        <span>${name}</span>
-        <button onclick="removeParticipant('${name.replace(/'/g, "\\'")}')" aria-label="Ta bort ${name}">×</button>
-      </div>`
-    ).join('');
+    obList.innerHTML = (state.participants || []).map(name => {
+      const safe = escapeHtml(name);
+      return `<div class="ob-participant-chip">
+        <span>${safe}</span>
+        <button type="button" data-remove-participant="${safe}" aria-label="Ta bort ${safe}">×</button>
+      </div>`;
+    }).join('');
   }
   // Modal list — with optional personnr input
   const modalList = document.getElementById('modal-participant-list');
@@ -1398,21 +1430,36 @@ function _refreshParticipantList() {
       return;
     }
     modalList.innerHTML = (state.participants || []).map(name => {
-      const safeN = name.replace(/'/g, "\\'");
+      const safeN = escapeHtml(name);
       const personnr = (state.participantPersonnr || {})[name] || '';
       return `<div class="modal-participant-item">
         <div class="modal-participant-row">
-          <span class="modal-participant-name">${name}</span>
-          <button class="modal-participant-remove" onclick="removeParticipant('${safeN}')" aria-label="Ta bort ${name}">×</button>
+          <span class="modal-participant-name">${safeN}</span>
+          <button class="modal-participant-remove" type="button" data-remove-participant="${safeN}" aria-label="Ta bort ${safeN}">×</button>
         </div>
         <input type="text" class="participant-personnr-input"
                placeholder="Personnummer (valfritt — för fullmakter)"
-               value="${personnr}"
-               onchange="saveParticipantPersonnr('${safeN}', this.value)" />
+               value="${escapeHtml(personnr)}"
+               data-participant-personnr="${safeN}" />
       </div>`;
     }).join('');
   }
 }
+
+// Event delegation for participant-list controls — avoids inline onclick with
+// user-controlled strings (XSS-safe even if names contain quotes/markup).
+document.addEventListener('click', function (e) {
+  const btn = e.target.closest('[data-remove-participant]');
+  if (btn) {
+    removeParticipant(btn.getAttribute('data-remove-participant'));
+  }
+});
+document.addEventListener('change', function (e) {
+  const input = e.target.closest('[data-participant-personnr]');
+  if (input) {
+    saveParticipantPersonnr(input.getAttribute('data-participant-personnr'), input.value);
+  }
+});
 
 function saveParticipantPersonnr(name, val) {
   if (!isOwnerMode()) return;
@@ -1480,24 +1527,25 @@ function _buildNotifyListInner() {
   const participants = _getParticipants();
   if (!list.length) return '<p class="notify-empty">Inga tillagda än</p>';
   return list.map(p => {
-    const safeId = p.id;
+    const safeId = escapeHtml(p.id);
+    const safeName = escapeHtml(p.name);
     const notifierSelect = participants.length > 0
       ? `<select class="notify-notifier-select" onclick="event.stopPropagation()"
            onchange="event.stopPropagation();setNotifyNotifier('${safeId}',this.value)">
            <option value="">Vem ringer?</option>
-           ${participants.map(n => `<option value="${n}"${p.notifier === n ? ' selected' : ''}>${n}</option>`).join('')}
+           ${participants.map(n => `<option value="${escapeHtml(n)}"${p.notifier === n ? ' selected' : ''}>${escapeHtml(n)}</option>`).join('')}
          </select>`
       : '';
     return `
       <div class="notify-person${p.notified ? ' notified' : ''}">
         <button class="notify-check${p.notified ? ' checked' : ''}"
           onclick="event.stopPropagation();toggleNotified('${safeId}')"
-          aria-label="Markera ${p.name} som meddelad">${p.notified ? '✓' : ''}</button>
-        <span class="notify-name">${p.name}</span>
+          aria-label="Markera ${safeName} som meddelad">${p.notified ? '✓' : ''}</button>
+        <span class="notify-name">${safeName}</span>
         ${notifierSelect}
         <button class="notify-remove"
           onclick="event.stopPropagation();removeNotifyPerson('${safeId}')"
-          aria-label="Ta bort ${p.name}">×</button>
+          aria-label="Ta bort ${safeName}">×</button>
       </div>`;
   }).join('');
 }
@@ -1811,10 +1859,10 @@ function _doGenerateBulk(sender, email, genBtn) {
     div.className = 'bulk-letter';
     div.innerHTML = `
       <div class="bulk-letter-head">
-        <span class="bulk-letter-name">${letter.service}</span>
+        <span class="bulk-letter-name">${escapeHtml(letter.service)}</span>
         <button class="btn-primary btn-sm" onclick="copyBulkLetter(${i})">Kopiera</button>
       </div>
-      <div class="doc-output" id="bletter-${i}">${letter.text}</div>
+      <div class="doc-output" id="bletter-${i}">${escapeHtml(letter.text)}</div>
       <p class="copied-msg hidden" id="bcopied-${i}">Kopierat!</p>`;
     container.appendChild(div);
   });
@@ -2220,8 +2268,11 @@ function applySharedSnapshot(detail) {
   const notifyList = parseMaybe(snap.efterplan_notify_list, []);
 
   if (stateJson) {
-    // Never trust a remote personnr — strip it even if included.
+    // Never trust a remote snapshot's sensitive fields — strip them even if
+    // the server misbehaves or an old client wrote them. Mirrors the strip
+    // in the get_shared_plan RPC (supabase/schema.sql).
     delete stateJson.personnr;
+    delete stateJson.participantPersonnr;
     Object.assign(state, stateJson);
   }
   SHARED.taskMap    = taskMap || {};

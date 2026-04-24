@@ -207,24 +207,58 @@ create policy share_tokens_delete_own on public.share_tokens
 -- ───────────────────────────────────────────────
 -- Anonymous shared-plan read (bypasses RLS on plans)
 -- Returns the plan's state_json and the token kind when active.
+--
+-- SECURITY: Sensitive keys (personnr, participantPersonnr) are stripped
+-- from the returned state_json before it leaves the database. The owner
+-- keeps full data locally; share-token holders never see personnummer.
+-- Both are nested inside the JSON-stringified `efterplan_state` sub-key,
+-- so we parse → strip → re-serialize.
 -- ───────────────────────────────────────────────
 
 create or replace function public.get_shared_plan(token_in text)
 returns jsonb
-language sql
+language plpgsql
 security definer
 set search_path = public
 as $$
-  select jsonb_build_object(
-    'state_json', p.state_json::jsonb,
-    'kind',       st.kind,
-    'plan_id',    p.id
-  )
+declare
+  v_state   jsonb;
+  v_inner   jsonb;
+  v_kind    text;
+  v_plan_id uuid;
+begin
+  select p.state_json::jsonb, st.kind, p.id
+    into v_state, v_kind, v_plan_id
   from public.share_tokens st
   join public.plans p on p.id = st.plan_id
   where st.token = token_in
     and st.active = true
   limit 1;
+
+  if v_state is null then
+    return null;
+  end if;
+
+  -- Defence-in-depth: strip sensitive keys at every nesting we know about.
+  v_state := v_state - 'personnr' - 'participantPersonnr';
+
+  begin
+    v_inner := (v_state->>'efterplan_state')::jsonb;
+    if v_inner is not null then
+      v_inner := v_inner - 'personnr' - 'participantPersonnr';
+      v_state := v_state || jsonb_build_object('efterplan_state', v_inner::text);
+    end if;
+  exception when others then
+    -- Malformed inner JSON — drop the whole key rather than leak anything.
+    v_state := v_state - 'efterplan_state';
+  end;
+
+  return jsonb_build_object(
+    'state_json', v_state,
+    'kind',       v_kind,
+    'plan_id',    v_plan_id
+  );
+end;
 $$;
 
 grant execute on function public.get_shared_plan(text) to anon, authenticated;
