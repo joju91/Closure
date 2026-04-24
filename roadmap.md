@@ -27,6 +27,7 @@ Each step improves the product or the company in a meaningful way.
 - **Stack:** repot är statiskt HTML + vanilla JS, inte Next.js. Alla Code-ändringar gjorda i rätt stack.
 - **T082 + T098 (meta)** — körs i Claude Code.
 - **T093** CTA/funnel — körs i Claude Code.
+- **T100–T108 (Security audit 2026-04-24)** — alla kritiska + höga fynd åtgärdade. SQL-migration `supabase/migrations/2026-04-24-strip-personnr.sql` körd i Supabase. schema.sql uppdaterad — kör om för att få ny `get_shared_plan`-RPC.
 
 ---
 
@@ -248,3 +249,20 @@ Each step improves the product or the company in a meaningful way.
 | T097 | Centrera layout i browser | Fas 12 | Sprint 3 | 🔴 | Dev | ✔ |
 | T098 | Meta title/description: /checklista-dodsbo (174 visningar, 0 klick) | Fas 12 | SEO Sprint | 🔴 | SEO | ✔ |
 | T099 | Delning till anhöriga: två länktyper (läs + redigerbar). Redigerbar länk låter anhöriga bocka av uppgifter utan inloggning, via security-definer RPC som bara rör efterplan_tasks. Ägarspecifik UI döljs för delade besökare. | Fas 12 | Sprint 3 | 🟠 | Dev | ✔ |
+
+---
+
+# 🛡️ FAS 13 — SECURITY & HARDENING (Audit 2026-04-24)
+💡 Full genomgång av frontend + backend: XSS, personnummer-läckage, CSP, a11y, backend-auth. Alla kritiska + höga fynd åtgärdade.
+
+| ID | Task | Phase | Source | Priority | Type | Status |
+|----|------|--------|---------|----------|--------|---------|
+| T100 | Audit: frontend + backend — a11y, prestanda, theming, responsivitet, anti-patterns, RLS, säkerhetsheaders | Fas 13 | /audit | 🔴 | QA | ✔ |
+| T101 | XSS-fix (C1): escapeHtml()-helper appliceras på alla 24+ innerHTML-ställen med användardata. Inline onclick med deltagarnamn ersatta med data-*-attribut + event delegation | Fas 13 | Audit C1 | 🔴 | Dev | ✔ |
+| T102 | Personnummer-strip (C2): get_shared_plan RPC parsar nested efterplan_state, strippar personnr + participantPersonnr, re-serialiserar. Klient-sidan strippar också vid applySharedSnapshot (defense in depth) | Fas 13 | Audit C2 | 🔴 | Dev | ✔ |
+| T103 | SQL-migration: supabase/migrations/2026-04-24-strip-personnr.sql rensar personnr + participantPersonnr från existerande plans.state_json-rader. Idempotent, kör engångs i Supabase SQL editor | Fas 13 | Audit C2 | 🔴 | Infra | ✔ |
+| T104 | CSP + säkerhetsheaders (H4): Content-Security-Policy, X-Frame-Options: DENY, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, HSTS i vercel.json | Fas 13 | Audit H4 | 🔴 | Infra | ✔ |
+| T105 | Touch targets ≥44px (H2, WCAG 2.2 SC 2.5.8): notify-check, *-remove, bulk-remove får osynligt 44x44-hit-area via pseudo-element. Assignee chips min-height 32px | Fas 13 | Audit H2 | 🟠 | A11y | ✔ |
+| T106 | Dark mode (H1): @media (prefers-color-scheme: dark) överskriver design tokens — alla komponenter följer automatiskt. Varm paperwhite inverteras till deep blue-black med bevarad kontrast AAA | Fas 13 | Audit H1 | 🟠 | Design | ✔ |
+| T107 | GA4-server hardening (M3): /api/* kräver basic auth, CORS-allowlist via ALLOWED_ORIGINS, 60 req/min rate-limit. Fail-closed i produktion om BASIC_AUTH_USER/PASS saknas | Fas 13 | Audit M3 | 🟡 | Infra | ✔ |
+| T108 | Stavfel (L3): "okand" → "okänd" i GA4 API-fallback-strängar | Fas 13 | Audit L3 | 🟢 | Content | ✔ |
