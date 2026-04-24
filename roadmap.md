@@ -474,3 +474,11 @@ Säkerställ att sidans innehåll centreras korrekt i bredare webbläsarfönster
 Kontrollera max-width och margin: auto på root-containern.
 Testa i Chrome, Firefox, Safari vid 1440px+ bredd.
 
+---
+
+### T098 — Ikon- & OG-varianter + bildkomprimering ✔
+Wire up nya ikoner och OG-varianter från källbild `ep-ikon.png` (1254×1254).
+Regenerera `icon-192.png`, `icon-512.png`, `favicon.png` (64×64) och lägg till `apple-touch-icon.png` (180×180) i `index.html`.
+OG-bilder komprimerade från PNG → JPG: `og.png` (1.1 MB) → `og.jpg` (89 KB, 1200×630), samma för variant 2 (`og-2.jpg`, 61 KB).
+Uppdatera `<meta og:image>` + `<meta twitter:image>` i alla 33 HTML-sidor. Tog bort oanvänd `og.svg`.
+
