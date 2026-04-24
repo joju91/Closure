@@ -157,7 +157,10 @@ create policy task_completions_delete_own on public.task_completions
       and p.user_id = auth.uid()
   ));
 
--- share_tokens: owner full control; anon can SELECT active tokens only
+-- share_tokens: owner full control. Anonymous clients MUST NOT read this
+-- table directly — it would let them enumerate every active token. All
+-- anonymous access goes through get_shared_plan(token)/toggle_shared_task(),
+-- which require the caller to already possess a specific token.
 drop policy if exists share_tokens_select_own on public.share_tokens;
 create policy share_tokens_select_own on public.share_tokens
   for select to authenticated
@@ -168,9 +171,6 @@ create policy share_tokens_select_own on public.share_tokens
   ));
 
 drop policy if exists share_tokens_select_active_anon on public.share_tokens;
-create policy share_tokens_select_active_anon on public.share_tokens
-  for select to anon
-  using (active = true);
 
 drop policy if exists share_tokens_insert_own on public.share_tokens;
 create policy share_tokens_insert_own on public.share_tokens

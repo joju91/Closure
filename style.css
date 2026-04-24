@@ -1611,6 +1611,9 @@ body {
 .shared-banner[data-mode="edit"] {
   background: #1f6f3a;
 }
+/* Reserve space so the fixed banner doesn't cover the last task / footer. */
+body.shared-read,
+body.shared-edit { padding-bottom: 56px; }
 
 /* Hide owner-only UI for read-only and edit visitors */
 body.shared-read .owner-only,
@@ -2873,13 +2876,72 @@ body.shared-edit #paywall-card { display: none !important; }
 }
 .landing-footer-links a { color: inherit; }
 
-/* ─── FOCUS: AAA visibility on both paper and dark surfaces ── */
-:focus-visible {
-  outline: 2px solid var(--ember);
-  outline-offset: 3px;
-  border-radius: 3px;
-  transition: none;
+/* ─── SHARE & AUTH MODALS ─────────────────────── */
+.share-section + .share-section,
+.share-section--divided {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
 }
+.share-section-title {
+  font-family: var(--font-display, inherit);
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: var(--ink, inherit);
+}
+.share-section-sub {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0 0 12px;
+  line-height: 1.45;
+}
+.share-url-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.share-url-input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  background: var(--grey-bg, #f5f5f5);
+  font-family: inherit;
+}
+.share-url-input:focus { background: #fff; }
+.share-btn-block,
+.auth-btn-block { width: 100%; }
+.auth-btn-block + .auth-btn-block { margin-top: 8px; }
+.auth-email-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 1rem;
+  margin-bottom: 12px;
+  font-family: inherit;
+}
+.auth-progress-card {
+  padding: 14px;
+  background: var(--grey-bg, #f5f5f5);
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+.auth-progress-line { font-weight: 600; }
+.auth-last-sync { margin: 4px 0 0; }
+
+/* Status lines: aria-live regions with success/error variants. */
+.share-status,
+.auth-status {
+  min-height: 1.2em;
+  margin-top: 8px;
+}
+.share-status.is-success,
+.auth-status.is-success { color: var(--ink-teal, #1f6f3a); font-weight: 500; }
+.share-status.is-error,
+.auth-status.is-error   { color: #a02222; font-weight: 500; }
 
 /* ─── REDUCED MOTION ─────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
@@ -2891,5 +2953,3 @@ body.shared-edit #paywall-card { display: none !important; }
   }
   .btn-primary:hover { transform: none; }
 }
-.landing-footer-links { font-size: 0.8rem; margin-top: 6px; opacity: 0.7; }
-.landing-footer-links a { color: inherit; }

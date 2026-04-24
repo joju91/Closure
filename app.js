@@ -21,6 +21,34 @@ function isOwnerMode()  { return SHARED.mode === 'owner'; }
 function isReadOnly()   { return SHARED.mode === 'read'; }
 function isSharedEdit() { return SHARED.mode === 'edit'; }
 
+// ─── HTML ESCAPING ───────────────────────────
+// All owner-controlled strings (state.name, participant names, bill
+// descriptions, notes, notify-list entries) flow through these before
+// reaching innerHTML. In shared mode, strings from Supabase are untrusted.
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+// Produces a valid JS string literal (quotes included) safe for inline
+// event handlers: onclick="fn(${escJs(name)})".
+function escJs(s) {
+  return escapeHtml(JSON.stringify(s == null ? '' : String(s)));
+}
+
+// ─── PERSIST ─────────────────────────────────
+// Single chokepoint: writes localStorage and nudges supabase-client.js
+// (which debounces the actual network call by 2s).
+function persistLocal(key, value) {
+  if (!isOwnerMode()) return; // shared viewers never touch localStorage
+  try { localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value)); } catch (e) {}
+  try { window.dispatchEvent(new Event('efterplan:state-changed')); } catch (e) {}
+}
+
 // ─── STATE ───────────────────────────────────
 const state = {
   relation:            null,
@@ -258,7 +286,7 @@ function renderObParticipantList() {
   const list = document.getElementById('ob-participant-list');
   if (!list) return;
   list.innerHTML = (state.participants || []).map((name, i) =>
-    `<span class="ob-participant-chip">${name} <button class="ob-participant-remove" type="button" onclick="obRemoveParticipant(${i})" aria-label="Ta bort ${name}">×</button></span>`
+    `<span class="ob-participant-chip">${escapeHtml(name)} <button class="ob-participant-remove" type="button" onclick="obRemoveParticipant(${i})" aria-label="Ta bort ${escapeHtml(name)}">×</button></span>`
   ).join('');
 }
 
@@ -777,11 +805,9 @@ function _debounce(fn, ms) {
 }
 
 const saveTaskNote = _debounce(function(taskId, value) {
-  if (!isOwnerMode()) return;
   const notes = _getNotes();
   notes[taskId] = value;
-  try { localStorage.setItem('efterplan_notes', JSON.stringify(notes)); } catch(e) {}
-  try { window.dispatchEvent(new Event('efterplan:state-changed')); } catch(e) {}
+  persistLocal('efterplan_notes', notes);
   if (value.length > 0) track('Note Saved', { task: taskId });
 }, 400);
 
@@ -790,11 +816,9 @@ function getTaskNote(taskId) {
 }
 
 function saveTaskState() {
-  if (!isOwnerMode()) return; // shared viewers never touch localStorage
   const saved = {};
   state.tasks.forEach(t => { saved[t.id] = { done: t.done, started: t.started, assignee: t.assignee || null }; });
-  try { localStorage.setItem('efterplan_tasks', JSON.stringify(saved)); } catch(e) {}
-  try { window.dispatchEvent(new Event('efterplan:state-changed')); } catch(e) {}
+  persistLocal('efterplan_tasks', saved);
 }
 
 function loadTaskState() {
@@ -822,12 +846,12 @@ function renderParticipants() {
   // Deceased first (different style — primary chip)
   const deceasedChip = deceased
     ? `<span class="plan-participant-chip plan-participant-chip--deceased"
-         title="${deceased}">${deceased.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase()}</span>`
+         title="${escapeHtml(deceased)}">${escapeHtml(deceased.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase())}</span>`
     : '';
 
   const chips = participants.map(name => {
     const initials = name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
-    return `<span class="plan-participant-chip" title="${name}">${initials}</span>`;
+    return `<span class="plan-participant-chip" title="${escapeHtml(name)}">${escapeHtml(initials)}</span>`;
   }).join('');
 
   container.innerHTML = deceasedChip + chips +
@@ -861,7 +885,7 @@ function renderPlan() {
       startEl.innerHTML = `
         <div>
           <div class="start-here-label">Börja här</div>
-          <div class="start-here-title">${firstTask.title}</div>
+          <div class="start-here-title">${escapeHtml(firstTask.title)}</div>
         </div>
         <div class="start-here-arrow">›</div>`;
       startEl.classList.remove('hidden');
@@ -939,8 +963,8 @@ function renderTaskList(containerId, tasks, nextTaskId, globalOffset = 0) {
         <div class="task-card task-card--locked" id="task-card-${task.id}" aria-disabled="true">
           <div class="task-check" aria-hidden="true"></div>
           <div class="task-body">
-            <div class="task-title">${task.title}</div>
-            <div class="task-time">${task.time}</div>
+            <div class="task-title">${escapeHtml(task.title)}</div>
+            <div class="task-time">${escapeHtml(task.time)}</div>
           </div>
           <div class="task-lock" aria-hidden="true">🔒</div>
         </div>`;
@@ -969,8 +993,8 @@ function renderTaskList(containerId, tasks, nextTaskId, globalOffset = 0) {
       : '';
 
     const notesHtml = task.notesPlaceholder && !task.done
-      ? `<textarea class="task-notes" id="notes-${task.id}" placeholder="${task.notesPlaceholder}" rows="2"
-           oninput="autoStartOnNote('${task.id}'); saveTaskNote('${task.id}', this.value)">${getTaskNote(task.id)}</textarea>`
+      ? `<textarea class="task-notes" id="notes-${task.id}" placeholder="${escapeHtml(task.notesPlaceholder)}" rows="2"
+           oninput="autoStartOnNote('${task.id}'); saveTaskNote('${task.id}', this.value)">${escapeHtml(getTaskNote(task.id))}</textarea>`
       : '';
 
     const checklistHtml = task.checklist?.length ? renderTaskChecklist(task) : '';
@@ -997,15 +1021,15 @@ function renderTaskList(containerId, tasks, nextTaskId, globalOffset = 0) {
       ? `<span class="task-started-badge">Påbörjad</span>`
       : '';
     const assigneeBadge = task.assignee
-      ? `<span class="task-assignee-badge" id="assignee-badge-${task.id}">${task.assignee}</span>`
+      ? `<span class="task-assignee-badge" id="assignee-badge-${task.id}">${escapeHtml(task.assignee)}</span>`
       : `<span class="task-assignee-badge hidden" id="assignee-badge-${task.id}"></span>`;
 
     wrap.innerHTML = `
       <div class="task-card${cardClass}" id="task-card-${task.id}">
         <div class="task-check${checkClass}" id="check-${task.id}"></div>
         <div class="task-body">
-          <div class="task-title">${task.title}${nextBadge}</div>
-          <div class="task-time">${task.time}${startedBadge}${assigneeBadge}</div>
+          <div class="task-title">${escapeHtml(task.title)}${nextBadge}</div>
+          <div class="task-time">${escapeHtml(task.time)}${startedBadge}${assigneeBadge}</div>
         </div>
         <div class="task-chevron" id="chevron-${task.id}" aria-hidden="true">›</div>
       </div>
@@ -1131,7 +1155,7 @@ function renderTaskChecklist(task) {
     return `<label class="task-checklist-item${checked ? ' done' : ''}">
       <input type="checkbox" id="checklist-${task.id}-${item.key}" ${checked ? 'checked' : ''}
              onchange="toggleChecklistItem('${task.id}', '${item.key}')">
-      <span>${item.label}</span>
+      <span>${escapeHtml(item.label)}</span>
     </label>`;
   }).join('');
   return `<div class="task-checklist">
@@ -1162,9 +1186,7 @@ function loadBills() {
   try { state.bills = JSON.parse(localStorage.getItem('efterplan_bills')) || []; } catch(e) { state.bills = []; }
 }
 function saveBills() {
-  if (!isOwnerMode()) return;
-  try { localStorage.setItem('efterplan_bills', JSON.stringify(state.bills)); } catch(e) {}
-  try { window.dispatchEvent(new Event('efterplan:state-changed')); } catch(e) {}
+  persistLocal('efterplan_bills', state.bills);
 }
 function renderBills() {
   const list = document.getElementById('bills-list');
@@ -1177,13 +1199,13 @@ function renderBills() {
   }
   empty && empty.classList.add('hidden');
   list.innerHTML = state.bills.map(b => `
-    <li class="bill-item${b.paid ? ' paid' : ''}" id="bill-${b.id}">
-      <button class="bill-check" onclick="toggleBillPaid('${b.id}')" aria-label="${b.paid ? 'Markera som obetald' : 'Markera som betald'}"></button>
+    <li class="bill-item${b.paid ? ' paid' : ''}" id="bill-${escapeHtml(b.id)}">
+      <button class="bill-check" onclick="toggleBillPaid(${escJs(b.id)})" aria-label="${b.paid ? 'Markera som obetald' : 'Markera som betald'}"></button>
       <div class="bill-info">
-        <span class="bill-desc">${b.desc}</span>
-        ${b.amount ? `<span class="bill-amount">${b.amount} kr</span>` : ''}
+        <span class="bill-desc">${escapeHtml(b.desc)}</span>
+        ${b.amount ? `<span class="bill-amount">${escapeHtml(b.amount)} kr</span>` : ''}
       </div>
-      <button class="bill-delete" onclick="deleteBill('${b.id}')" aria-label="Ta bort">×</button>
+      <button class="bill-delete" onclick="deleteBill(${escJs(b.id)})" aria-label="Ta bort">×</button>
     </li>`).join('');
 }
 function showBillForm() {
@@ -1333,8 +1355,8 @@ function _buildAssigneePickerInner(taskId) {
   }
   return assignees.map(n =>
     `<button class="assignee-chip${n === current ? ' selected' : ''}"
-             onclick="event.stopPropagation();setTaskAssignee('${taskId}','${n.replace(/'/g,"\\'")}')">
-       ${n}
+             onclick="event.stopPropagation();setTaskAssignee('${taskId}',${escJs(n)})">
+       ${escapeHtml(n)}
      </button>`
   ).join('');
 }
@@ -1342,7 +1364,7 @@ function renderAssigneePicker(taskId) {
   const taskDef = TASK_LIBRARY.find(t => t.id === taskId);
   const label = (taskDef && taskDef.assigneeLabel) || 'Ansvarig';
   return `<div class="task-assignee-section">
-    <span class="task-assignee-label">${label}</span>
+    <span class="task-assignee-label">${escapeHtml(label)}</span>
     <div class="assignee-picker" id="assignee-picker-${taskId}">
       ${_buildAssigneePickerInner(taskId)}
     </div>
@@ -1385,8 +1407,8 @@ function _refreshParticipantList() {
   if (obList) {
     obList.innerHTML = (state.participants || []).map(name =>
       `<div class="ob-participant-chip">
-        <span>${name}</span>
-        <button onclick="removeParticipant('${name.replace(/'/g, "\\'")}')" aria-label="Ta bort ${name}">×</button>
+        <span>${escapeHtml(name)}</span>
+        <button onclick="removeParticipant(${escJs(name)})" aria-label="Ta bort ${escapeHtml(name)}">×</button>
       </div>`
     ).join('');
   }
@@ -1398,17 +1420,16 @@ function _refreshParticipantList() {
       return;
     }
     modalList.innerHTML = (state.participants || []).map(name => {
-      const safeN = name.replace(/'/g, "\\'");
       const personnr = (state.participantPersonnr || {})[name] || '';
       return `<div class="modal-participant-item">
         <div class="modal-participant-row">
-          <span class="modal-participant-name">${name}</span>
-          <button class="modal-participant-remove" onclick="removeParticipant('${safeN}')" aria-label="Ta bort ${name}">×</button>
+          <span class="modal-participant-name">${escapeHtml(name)}</span>
+          <button class="modal-participant-remove" onclick="removeParticipant(${escJs(name)})" aria-label="Ta bort ${escapeHtml(name)}">×</button>
         </div>
         <input type="text" class="participant-personnr-input"
                placeholder="Personnummer (valfritt — för fullmakter)"
-               value="${personnr}"
-               onchange="saveParticipantPersonnr('${safeN}', this.value)" />
+               value="${escapeHtml(personnr)}"
+               onchange="saveParticipantPersonnr(${escJs(name)}, this.value)" />
       </div>`;
     }).join('');
   }
@@ -1427,9 +1448,7 @@ function _getNotifyList() {
   try { return JSON.parse(localStorage.getItem('efterplan_notify_list') || '[]'); } catch(e) { return []; }
 }
 function _saveNotifyList(list) {
-  if (!isOwnerMode()) return;
-  try { localStorage.setItem('efterplan_notify_list', JSON.stringify(list)); } catch(e) {}
-  try { window.dispatchEvent(new Event('efterplan:state-changed')); } catch(e) {}
+  persistLocal('efterplan_notify_list', list);
 }
 function _genNotifyId() {
   return Math.random().toString(36).slice(2, 10);
@@ -1480,24 +1499,24 @@ function _buildNotifyListInner() {
   const participants = _getParticipants();
   if (!list.length) return '<p class="notify-empty">Inga tillagda än</p>';
   return list.map(p => {
-    const safeId = p.id;
+    const safeId = p.id; // generated by _genNotifyId() — trusted
     const notifierSelect = participants.length > 0
       ? `<select class="notify-notifier-select" onclick="event.stopPropagation()"
            onchange="event.stopPropagation();setNotifyNotifier('${safeId}',this.value)">
            <option value="">Vem ringer?</option>
-           ${participants.map(n => `<option value="${n}"${p.notifier === n ? ' selected' : ''}>${n}</option>`).join('')}
+           ${participants.map(n => `<option value="${escapeHtml(n)}"${p.notifier === n ? ' selected' : ''}>${escapeHtml(n)}</option>`).join('')}
          </select>`
       : '';
     return `
       <div class="notify-person${p.notified ? ' notified' : ''}">
         <button class="notify-check${p.notified ? ' checked' : ''}"
           onclick="event.stopPropagation();toggleNotified('${safeId}')"
-          aria-label="Markera ${p.name} som meddelad">${p.notified ? '✓' : ''}</button>
-        <span class="notify-name">${p.name}</span>
+          aria-label="Markera ${escapeHtml(p.name)} som meddelad">${p.notified ? '✓' : ''}</button>
+        <span class="notify-name">${escapeHtml(p.name)}</span>
         ${notifierSelect}
         <button class="notify-remove"
           onclick="event.stopPropagation();removeNotifyPerson('${safeId}')"
-          aria-label="Ta bort ${p.name}">×</button>
+          aria-label="Ta bort ${escapeHtml(p.name)}">×</button>
       </div>`;
   }).join('');
 }
@@ -1811,10 +1830,10 @@ function _doGenerateBulk(sender, email, genBtn) {
     div.className = 'bulk-letter';
     div.innerHTML = `
       <div class="bulk-letter-head">
-        <span class="bulk-letter-name">${letter.service}</span>
+        <span class="bulk-letter-name">${escapeHtml(letter.service)}</span>
         <button class="btn-primary btn-sm" onclick="copyBulkLetter(${i})">Kopiera</button>
       </div>
-      <div class="doc-output" id="bletter-${i}">${letter.text}</div>
+      <div class="doc-output" id="bletter-${i}">${escapeHtml(letter.text)}</div>
       <p class="copied-msg hidden" id="bcopied-${i}">Kopierat!</p>`;
     container.appendChild(div);
   });
@@ -2131,13 +2150,10 @@ function copyToClipboard(text, onDone) {
   });
 }
 
-// ─── PERSIST ─────────────────────────────────
 function saveState() {
-  if (!isOwnerMode()) return;
   // Save locally with personnr (own device only — never shared)
   const toSave = { ...getShareableState(), personnr: state.personnr };
-  try { localStorage.setItem('efterplan_state', JSON.stringify(toSave)); } catch(e) {}
-  try { window.dispatchEvent(new Event('efterplan:state-changed')); } catch(e) {}
+  persistLocal('efterplan_state', toSave);
 }
 
 // ─── INIT ─────────────────────────────────────
@@ -2253,6 +2269,25 @@ function applySharedSnapshot(detail) {
 
 window.addEventListener('efterplan:shared-loaded', (e) => {
   applySharedSnapshot(e.detail);
+});
+
+// supabase-client.js fires this after it overwrites localStorage with a newer
+// remote snapshot (different device wrote more recently). Re-read state and
+// re-render, but only in owner mode and only when the plan view is visible —
+// never clobber an active onboarding or shared-mode view.
+window.addEventListener('efterplan:remote-hydrated', () => {
+  if (!isOwnerMode()) return;
+  const planScreen = document.getElementById('screen-plan');
+  if (!planScreen || !planScreen.classList.contains('active')) return;
+  try {
+    const saved = localStorage.getItem('efterplan_state');
+    if (!saved) return;
+    Object.assign(state, JSON.parse(saved));
+  } catch (_) { return; }
+  buildTasks();
+  loadTaskState();
+  loadBills();
+  renderPlan();
 });
 
 // ─── INIT ─────────────────────────────────────

@@ -286,6 +286,16 @@ const SUPABASE_CONFIG = {
     }, 2000);
   }
 
+  // Same write path as the debounced sync, but awaitable. Used by the
+  // share/sync UI so buttons can show real success/error instead of
+  // guessing with setTimeout.
+  async function syncNow() {
+    await initSupabase();
+    if (!client || !currentUser) return null;
+    if (syncTimer) { clearTimeout(syncTimer); syncTimer = null; }
+    return await savePlan(readLocalSnapshot());
+  }
+
   function detectSharedFromUrl() {
     const params = new URLSearchParams(window.location.search);
     const token = params.get('share');
@@ -319,6 +329,7 @@ const SUPABASE_CONFIG = {
     getSharedPlan,
     toggleSharedTask,
     syncToSupabase,
+    syncNow,
     isConfigured,
   };
 

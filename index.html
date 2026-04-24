@@ -102,7 +102,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Efterplan" />
-  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -110,7 +110,7 @@
         href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..600,30..80;1,9..144,400..600,30..80&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap"
         onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..600,30..80;1,9..144,400..600,30..80&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" /></noscript>
-  <link rel="stylesheet" href="style.css?v=3" />
+  <link rel="stylesheet" href="style.css?v=4" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -125,7 +125,7 @@
 
 <a href="#screen-landing" class="skip-link">Hoppa till innehållet</a>
 
-<div id="shared-banner" class="shared-banner hidden" role="status" data-mode="read">
+<div id="shared-banner" class="shared-banner hidden" role="status" aria-live="polite" data-mode="read">
   <span class="shared-banner-text">Du ser en delad plan (skrivskyddad).</span>
 </div>
 
@@ -142,7 +142,7 @@
     <div class="nav-landing-links">
       <a href="/om.html" class="nav-text-link">Om</a>
       <a href="#section-integritet" class="nav-text-link">Integritet</a>
-      <a href="#" class="nav-text-link" onclick="event.preventDefault();document.getElementById('auth-modal').classList.remove('hidden');">Mitt konto</a>
+      <a href="#" class="nav-text-link" onclick="event.preventDefault();openModal('auth-modal');">Mitt konto</a>
     </div>
   </nav>
   <div class="landing-hero">
@@ -443,8 +443,8 @@
     </div>
     <div class="nav-plan-actions">
       <div id="plan-participants" class="plan-participants owner-only"></div>
-      <button class="btn-ghost btn-sm owner-only" id="open-share" onclick="document.getElementById('share-modal').classList.remove('hidden')">Dela min plan</button>
-      <button class="btn-ghost btn-sm owner-only" id="open-auth" onclick="document.getElementById('auth-modal').classList.remove('hidden')">Mitt konto</button>
+      <button class="btn-ghost btn-sm owner-only" id="open-share" onclick="openModal('share-modal')">Dela min plan</button>
+      <button class="btn-ghost btn-sm owner-only" id="open-auth" onclick="openModal('auth-modal')">Mitt konto</button>
       <button class="btn-ghost btn-sm owner-only" onclick="editAnswers()">Ändra svar</button>
     </div>
   </nav>
@@ -890,8 +890,8 @@
   </div>
 </div>
 
-<script src="supabase-client.js?v=2" defer></script>
-<script src="app.js?v=17" defer></script>
+<script src="supabase-client.js?v=3" defer></script>
+<script src="app.js?v=18" defer></script>
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
@@ -903,31 +903,33 @@
 <!-- ═══════════════════════════════════════════
      AUTH MODAL (source: auth-modal.html)
 ════════════════════════════════════════════ -->
-<div id="auth-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+<div id="auth-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title"
+     onclick="closeModalIfOutside(event, 'auth-modal')">
   <div class="modal modal-sm">
     <div class="modal-header">
       <h2 class="modal-title" id="auth-modal-title">Mitt konto</h2>
-      <button class="modal-close" type="button" aria-label="Stäng" onclick="document.getElementById('auth-modal').classList.add('hidden')">✕</button>
+      <button class="modal-close" type="button" aria-label="Stäng" onclick="closeModal('auth-modal')">✕</button>
     </div>
 
     <div id="auth-view-out">
       <p class="modal-sub">Logga in för att synka din plan mellan enheter. Vi skickar en engångslänk till din e-post — inget lösenord behövs.</p>
       <form id="auth-magic-form" autocomplete="on">
         <label for="auth-email" class="sr-only">E-postadress</label>
-        <input type="email" id="auth-email" name="email" required autocomplete="email" placeholder="din@epost.se" style="width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:1rem;margin-bottom:12px;">
-        <button type="submit" class="btn-primary" style="width:100%;">Skicka inloggningslänk</button>
+        <input type="email" id="auth-email" name="email" required autocomplete="email" placeholder="din@epost.se" class="auth-email-input">
+        <button type="submit" class="btn-primary auth-btn-block">Skicka inloggningslänk</button>
       </form>
-      <p id="auth-status" class="modal-sub" style="margin-top:12px;min-height:1.2em;"></p>
+      <p id="auth-status" class="modal-sub auth-status" aria-live="polite"></p>
     </div>
 
     <div id="auth-view-in" class="hidden">
       <p class="modal-sub">Inloggad som <strong id="auth-email-display"></strong>.</p>
-      <div style="padding:14px;background:var(--grey-bg,#f5f5f5);border-radius:12px;margin-bottom:16px;">
-        <div id="auth-progress" style="font-weight:600;">— av — steg klara</div>
-        <div id="auth-last-sync" class="modal-sub" style="margin:4px 0 0;">Senaste synk: —</div>
+      <div class="auth-progress-card">
+        <div id="auth-progress" class="auth-progress-line">— av — steg klara</div>
+        <div id="auth-last-sync" class="modal-sub auth-last-sync">Senaste synk: —</div>
       </div>
-      <button type="button" id="auth-sync-btn" class="btn-ghost btn-sm" style="width:100%;margin-bottom:8px;">Synka nu</button>
-      <button type="button" id="auth-signout-btn" class="btn-ghost btn-sm" style="width:100%;">Logga ut</button>
+      <button type="button" id="auth-sync-btn" class="btn-ghost btn-sm auth-btn-block">Synka nu</button>
+      <button type="button" id="auth-signout-btn" class="btn-ghost btn-sm auth-btn-block">Logga ut</button>
+      <p id="auth-sync-status" class="modal-sub auth-status" aria-live="polite"></p>
     </div>
   </div>
 </div>
@@ -939,12 +941,21 @@
   const viewIn      = document.getElementById('auth-view-in');
   const form        = document.getElementById('auth-magic-form');
   const status      = document.getElementById('auth-status');
+  const syncStatus  = document.getElementById('auth-sync-status');
   const emailIn     = document.getElementById('auth-email');
   const emailDisp   = document.getElementById('auth-email-display');
   const progressEl  = document.getElementById('auth-progress');
   const lastSyncEl  = document.getElementById('auth-last-sync');
   const syncBtn     = document.getElementById('auth-sync-btn');
   const signoutBtn  = document.getElementById('auth-signout-btn');
+
+  function setStatusEl(el, text, variant) {
+    if (!el) return;
+    el.textContent = text || '';
+    el.classList.remove('is-success', 'is-error');
+    if (variant === 'success') el.classList.add('is-success');
+    else if (variant === 'error') el.classList.add('is-error');
+  }
 
   function render(user) {
     if (user) {
@@ -983,28 +994,41 @@
     e.preventDefault();
     const email = emailIn.value.trim();
     if (!email) return;
-    status.textContent = 'Skickar länk…';
+    setStatusEl(status, 'Skickar länk…');
     try {
       if (!window.efterplanAuth || !window.efterplanAuth.isConfigured()) {
-        status.textContent = 'Inloggning är inte aktiverad ännu.';
+        setStatusEl(status, 'Inloggning är inte aktiverad ännu.', 'error');
         return;
       }
       const res = await window.efterplanAuth.signInWithMagicLink(email);
       if (res && res.error) throw res.error;
-      status.textContent = 'Länk skickad — kolla din e-post.';
+      setStatusEl(status, 'Länk skickad — kolla din e-post.', 'success');
     } catch (err) {
-      status.textContent = 'Kunde inte skicka länk: ' + (err && err.message || err);
+      setStatusEl(status, 'Kunde inte skicka länk: ' + (err && err.message || err), 'error');
     }
   });
 
-  syncBtn.addEventListener('click', function () {
+  syncBtn.addEventListener('click', async function () {
     if (!window.efterplanAuth) return;
-    window.dispatchEvent(new Event('efterplan:state-changed'));
+    const original = syncBtn.textContent;
     syncBtn.textContent = 'Synkar…';
-    setTimeout(() => {
-      syncBtn.textContent = 'Synka nu';
+    syncBtn.disabled = true;
+    setStatusEl(syncStatus, '');
+    try {
+      const res = await window.efterplanAuth.syncNow();
+      if (res === null) {
+        setStatusEl(syncStatus, 'Inte inloggad — synk hoppades över.', 'error');
+      } else {
+        setStatusEl(syncStatus, 'Synkat.', 'success');
+        setTimeout(() => setStatusEl(syncStatus, ''), 2500);
+      }
       refreshLastSync();
-    }, 2300);
+    } catch (err) {
+      setStatusEl(syncStatus, 'Synk misslyckades: ' + (err && err.message || err), 'error');
+    } finally {
+      syncBtn.textContent = original;
+      syncBtn.disabled = false;
+    }
   });
 
   signoutBtn.addEventListener('click', async function () {
@@ -1025,11 +1049,12 @@
 <!-- ═══════════════════════════════════════════
      SHARE MODAL (source: share-modal.html)
 ════════════════════════════════════════════ -->
-<div id="share-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
+<div id="share-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="share-modal-title"
+     onclick="closeModalIfOutside(event, 'share-modal')">
   <div class="modal modal-sm">
     <div class="modal-header">
       <h2 class="modal-title" id="share-modal-title">Dela min plan</h2>
-      <button class="modal-close" type="button" aria-label="Stäng" onclick="document.getElementById('share-modal').classList.add('hidden')">✕</button>
+      <button class="modal-close" type="button" aria-label="Stäng" onclick="closeModal('share-modal')">✕</button>
     </div>
 
     <p class="modal-sub">Skicka en länk till en anhörig. Välj om de ska kunna se planen eller också bocka av uppgifter.</p>
@@ -1046,40 +1071,40 @@
         <p class="share-section-sub">Mottagaren ser planen men kan inte ändra något.</p>
 
         <div class="share-none" data-kind="read">
-          <button type="button" class="btn-ghost btn-sm share-create-btn" data-kind="read" style="width:100%;">Skapa läs-länk</button>
+          <button type="button" class="btn-ghost btn-sm share-btn-block" data-action="create" data-kind="read">Skapa läs-länk</button>
         </div>
 
         <div class="share-active hidden" data-kind="read">
           <label class="sr-only" for="share-url-read">Läslänk</label>
-          <div style="display:flex;gap:8px;margin-bottom:8px;">
-            <input type="text" id="share-url-read" class="share-url-input" data-kind="read" readonly style="flex:1;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:0.9rem;background:var(--grey-bg,#f5f5f5);">
-            <button type="button" class="btn-ghost btn-sm share-copy-btn" data-kind="read">Kopiera</button>
+          <div class="share-url-row">
+            <input type="text" id="share-url-read" class="share-url-input" data-kind="read" readonly>
+            <button type="button" class="btn-ghost btn-sm" data-action="copy" data-kind="read">Kopiera</button>
           </div>
-          <button type="button" class="btn-ghost btn-sm share-revoke-btn" data-kind="read" style="width:100%;">Sluta dela läs-länken</button>
+          <button type="button" class="btn-ghost btn-sm share-btn-block" data-action="revoke" data-kind="read">Sluta dela läs-länken</button>
         </div>
 
-        <p class="share-status modal-sub" data-kind="read" style="min-height:1.2em;margin-top:8px;"></p>
+        <p class="share-status modal-sub" data-kind="read" aria-live="polite"></p>
       </section>
 
       <!-- Edit section -->
-      <section class="share-section" data-kind="edit" style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);">
+      <section class="share-section share-section--divided" data-kind="edit">
         <h3 class="share-section-title">Redigerbar länk</h3>
         <p class="share-section-sub">Mottagaren kan <strong>bocka av uppgifter</strong> — inget annat. Ingen inloggning krävs, så dela bara med personer du litar på.</p>
 
         <div class="share-none" data-kind="edit">
-          <button type="button" class="btn-ghost btn-sm share-create-btn" data-kind="edit" style="width:100%;">Skapa redigeringslänk</button>
+          <button type="button" class="btn-ghost btn-sm share-btn-block" data-action="create" data-kind="edit">Skapa redigeringslänk</button>
         </div>
 
         <div class="share-active hidden" data-kind="edit">
           <label class="sr-only" for="share-url-edit">Redigeringslänk</label>
-          <div style="display:flex;gap:8px;margin-bottom:8px;">
-            <input type="text" id="share-url-edit" class="share-url-input" data-kind="edit" readonly style="flex:1;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-size:0.9rem;background:var(--grey-bg,#f5f5f5);">
-            <button type="button" class="btn-ghost btn-sm share-copy-btn" data-kind="edit">Kopiera</button>
+          <div class="share-url-row">
+            <input type="text" id="share-url-edit" class="share-url-input" data-kind="edit" readonly>
+            <button type="button" class="btn-ghost btn-sm" data-action="copy" data-kind="edit">Kopiera</button>
           </div>
-          <button type="button" class="btn-ghost btn-sm share-revoke-btn" data-kind="edit" style="width:100%;">Sluta dela redigeringslänken</button>
+          <button type="button" class="btn-ghost btn-sm share-btn-block" data-action="revoke" data-kind="edit">Sluta dela redigeringslänken</button>
         </div>
 
-        <p class="share-status modal-sub" data-kind="edit" style="min-height:1.2em;margin-top:8px;"></p>
+        <p class="share-status modal-sub" data-kind="edit" aria-live="polite"></p>
       </section>
     </div>
   </div>
@@ -1106,11 +1131,19 @@
     viewSignout.classList.add('hidden');
     viewMain.classList.remove('hidden');
   }
+  function setStatus(kind, text, variant) {
+    const el = $kind('.share-status', kind);
+    if (!el) return;
+    el.textContent = text || '';
+    el.classList.remove('is-success', 'is-error');
+    if (variant === 'success') el.classList.add('is-success');
+    else if (variant === 'error') el.classList.add('is-error');
+  }
+
   function renderKind(kind, token) {
     const none   = $kind('.share-none', kind);
     const active = $kind('.share-active', kind);
     const input  = $kind('.share-url-input', kind);
-    const status = $kind('.share-status', kind);
     if (token) {
       none.classList.add('hidden');
       active.classList.remove('hidden');
@@ -1120,7 +1153,7 @@
       none.classList.remove('hidden');
       input.value = '';
     }
-    status.textContent = '';
+    setStatus(kind, '');
   }
 
   async function refresh() {
@@ -1136,63 +1169,63 @@
     renderKind('edit', tokens.edit);
   }
 
-  modal.querySelectorAll('.share-create-btn').forEach(btn => {
-    btn.addEventListener('click', async function () {
-      const kind   = btn.getAttribute('data-kind');
-      const status = $kind('.share-status', kind);
-      status.textContent = 'Skapar länk…';
-      try {
-        // Ensure the plan exists remotely before creating a token.
-        window.dispatchEvent(new Event('efterplan:state-changed'));
-        await new Promise(r => setTimeout(r, 2200));
-        const token = await window.efterplanAuth.createShareToken(kind);
-        renderKind(kind, token);
-      } catch (err) {
-        status.textContent = 'Kunde inte skapa länk: ' + (err && err.message || err);
-      }
-    });
-  });
+  async function handleCreate(kind) {
+    setStatus(kind, 'Skapar länk…');
+    try {
+      // Plan must exist remotely before the token; await the real sync.
+      await window.efterplanAuth.syncNow();
+      const token = await window.efterplanAuth.createShareToken(kind);
+      renderKind(kind, token);
+    } catch (err) {
+      setStatus(kind, 'Kunde inte skapa länk: ' + (err && err.message || err), 'error');
+    }
+  }
 
-  modal.querySelectorAll('.share-copy-btn').forEach(btn => {
-    btn.addEventListener('click', function () {
-      const kind   = btn.getAttribute('data-kind');
-      const input  = $kind('.share-url-input', kind);
-      const status = $kind('.share-status', kind);
-      input.select();
-      const done = () => {
-        status.textContent = 'Kopierat!';
-        setTimeout(() => { status.textContent = ''; }, 2000);
-      };
+  async function handleCopy(kind) {
+    const input = $kind('.share-url-input', kind);
+    input.select();
+    try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(input.value).then(done).catch(() => {
-          document.execCommand('copy'); done();
-        });
+        await navigator.clipboard.writeText(input.value);
       } else {
-        document.execCommand('copy'); done();
+        document.execCommand('copy');
       }
-    });
-  });
+      setStatus(kind, 'Kopierat!', 'success');
+      setTimeout(() => setStatus(kind, ''), 2000);
+    } catch (_) {
+      setStatus(kind, 'Kunde inte kopiera — markera manuellt och tryck Ctrl+C.', 'error');
+    }
+  }
 
-  modal.querySelectorAll('.share-revoke-btn').forEach(btn => {
-    btn.addEventListener('click', async function () {
-      const kind   = btn.getAttribute('data-kind');
-      const input  = $kind('.share-url-input', kind);
-      const status = $kind('.share-status', kind);
-      const url    = input.value;
-      if (!url) return;
-      const token  = decodeURIComponent(url.split('share=')[1] || '');
-      if (!token) return;
-      const original = btn.textContent;
-      btn.textContent = 'Avaktiverar…';
-      try {
-        await window.efterplanAuth.revokeShareToken(token);
-        renderKind(kind, null);
-      } catch (err) {
-        status.textContent = 'Kunde inte avaktivera: ' + (err && err.message || err);
-      } finally {
-        btn.textContent = original;
-      }
-    });
+  async function handleRevoke(kind, btn) {
+    const input = $kind('.share-url-input', kind);
+    const url   = input.value;
+    if (!url) return;
+    const token = decodeURIComponent(url.split('share=')[1] || '');
+    if (!token) return;
+    const original = btn.textContent;
+    btn.textContent = 'Avaktiverar…';
+    btn.disabled = true;
+    try {
+      await window.efterplanAuth.revokeShareToken(token);
+      renderKind(kind, null);
+    } catch (err) {
+      setStatus(kind, 'Kunde inte avaktivera: ' + (err && err.message || err), 'error');
+    } finally {
+      btn.textContent = original;
+      btn.disabled = false;
+    }
+  }
+
+  modal.addEventListener('click', function (e) {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const kind = btn.dataset.kind;
+    switch (btn.dataset.action) {
+      case 'create': handleCreate(kind); break;
+      case 'copy':   handleCopy(kind); break;
+      case 'revoke': handleRevoke(kind, btn); break;
+    }
   });
 
   window.addEventListener('efterplan:auth-changed', refresh);
