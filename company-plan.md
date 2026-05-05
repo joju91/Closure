@@ -20,7 +20,7 @@ Strategic foundation for how the company operates, earns revenue, builds trust, 
 |---------|---------------------|
 | Revenue | One‑time payment (149–299 SEK) |
 | Revenue | Lead generation (lawyers, agencies, service providers) |
-| Funnel | Free preview → pay for full access |
+| Funnel | Hela checklistan är gratis → betala för Dokument-fliken (brev, formulär, textfält) |
 
 ---
 
@@ -62,7 +62,7 @@ Strategic foundation for how the company operates, earns revenue, builds trust, 
 
 | Category | Action / Principle |
 |---------|---------------------|
-| KPI | Conversion rate (free → paid) |
+| KPI | Conversion rate (gratis checklista → betald Dokument-flik) |
 | KPI | Organic traffic (SEO) |
 | KPI | Monthly revenue (MRR / one‑time purchases) |
 | KPI | Number of leads generated |

@@ -88,9 +88,9 @@ Core structure, logic, content model, monetization, UX principles, trust require
 
 |---------|------------------------|
 
-| Monetization | Free preview (first X steps) |
+| Monetization | Hela checklistan är gratis (alla steg) |
 
-| Monetization | Paywall at key steps |
+| Monetization | Paywall låser Dokument-fliken (brevgeneratorer + textfält) |
 
 | Monetization | Stripe integration for payment |
 

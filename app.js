@@ -5,7 +5,7 @@
 
 // ─── FEATURE FLAGS ───────────────────────────
 const PAYWALL_ENABLED = true;  // Stripe is wired (api/create-checkout + webhook)
-const PREVIEW_STEPS   = 5;     // T030: first N tasks free, rest locked when PAYWALL_ENABLED
+// Hela checklistan är gratis. Paywall låser Dokument-fliken (brevgeneratorer).
 
 // ─── PREMIUM ENTITLEMENT ─────────────────────
 // localStorage is the fast path. Server-side source of truth is Supabase
@@ -32,17 +32,14 @@ function clearPremium() {
 
 function applyPremiumState() {
   const premium = isPremium();
+  const locked  = PAYWALL_ENABLED && !premium;
   document.body.classList.toggle('is-premium', premium);
   const card = document.getElementById('paywall-card');
-  if (card) card.classList.toggle('hidden', !PAYWALL_ENABLED || premium);
-  ['doc-btn-skatteverket', 'doc-btn-fullmakt'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.toggle('hidden', PAYWALL_ENABLED && !premium);
+  if (card) card.classList.toggle('hidden', !locked);
+  // Lås hela Dokument-fliken (bulk-CTA + alla doc-type-btn) när paywall är aktiv.
+  document.querySelectorAll('#doc-chooser .doc-bulk-cta, #doc-chooser .doc-type-btn').forEach(el => {
+    el.classList.toggle('hidden', locked);
   });
-  // Re-render the plan so locked-task cards reflect the new state.
-  if (typeof renderPlan === 'function' && state && Array.isArray(state.tasks) && state.tasks.length) {
-    try { renderPlan(); } catch (_) { /* renderPlan is fine to skip on landing */ }
-  }
 }
 
 async function checkPremiumServerSide() {
@@ -963,9 +960,9 @@ function renderPlan() {
   }
 
   const nextTaskId = firstTask?.id;
-  renderTaskList('tasks-today', today, nextTaskId, 0);
-  renderTaskList('tasks-week',  week,  nextTaskId, today.length);
-  renderTaskList('tasks-later', later, nextTaskId, today.length + week.length);
+  renderTaskList('tasks-today', today, nextTaskId);
+  renderTaskList('tasks-week',  week,  nextTaskId);
+  renderTaskList('tasks-later', later, nextTaskId);
 
   // Show Skatteverket doc button only if deceased had a company (F-skatt relevant)
   const skvBtn = document.getElementById('doc-btn-skatteverket');
@@ -983,55 +980,14 @@ function renderPlan() {
 
 let expandedTaskId = null;
 
-function buildPreviewCTACard() {
-  const cta = document.createElement('div');
-  cta.className = 'preview-cta-card';
-  cta.innerHTML = `
-    <div class="preview-cta-lock" aria-hidden="true">🔒</div>
-    <h3 class="preview-cta-title">Lås upp hela planen</h3>
-    <p class="preview-cta-desc">Du har sett de första ${PREVIEW_STEPS} stegen. Lås upp alla återstående uppgifter — engångsbetalning, ingen prenumeration.</p>
-    <button class="btn-primary preview-cta-btn" onclick="handlePreviewCTA()">Lås upp — 149 kr</button>
-  `;
-  return cta;
-}
-
-function handlePreviewCTA() {
-  track('Preview CTA Clicked');
-  handlePaywallCTA();
-}
-
-function renderTaskList(containerId, tasks, nextTaskId, globalOffset = 0) {
+function renderTaskList(containerId, tasks, nextTaskId) {
   const container = document.getElementById(containerId);
   container.innerHTML = '';
 
   tasks.forEach((task, i) => {
-    const globalIdx = globalOffset + i;
-    const isLocked  = PAYWALL_ENABLED && !isPremium() && globalIdx >= PREVIEW_STEPS;
-
-    // T030: insert preview CTA once, right before the first locked task
-    if (PAYWALL_ENABLED && !isPremium() && globalIdx === PREVIEW_STEPS) {
-      container.appendChild(buildPreviewCTACard());
-    }
-
     const wrap = document.createElement('div');
     wrap.className = 'task-wrap';
     wrap.id = `task-wrap-${task.id}`;
-
-    if (isLocked) {
-      wrap.innerHTML = `
-        <div class="task-card task-card--locked" id="task-card-${task.id}" aria-disabled="true">
-          <div class="task-check" aria-hidden="true"></div>
-          <div class="task-body">
-            <div class="task-title">${task.title}</div>
-            <div class="task-time">${task.time}</div>
-          </div>
-          <div class="task-lock" aria-hidden="true">🔒</div>
-        </div>`;
-      wrap.style.animationDelay = `${i * 35}ms`;
-      wrap.classList.add('task-anim-in');
-      container.appendChild(wrap);
-      return;
-    }
 
     const linkHtml = task.link
       ? `<a class="task-expand-link" href="${task.link}" target="_blank" rel="noopener">Öppna ${task.link.replace('https://www.', '')} ↗</a>`
@@ -1901,6 +1857,12 @@ function getDocContext() {
 }
 
 function showDocForm(type) {
+  // Paywall: alla brevgeneratorer kräver premium. Plan-kort med "Generera dokument →"
+  // landar här direkt — säkerställ att paywallen blockerar även den vägen.
+  if (PAYWALL_ENABLED && !isPremium()) {
+    handlePaywallCTA();
+    return;
+  }
   document.getElementById('doc-chooser').classList.add('hidden');
   document.querySelectorAll('.doc-form').forEach(f => f.classList.add('hidden'));
 

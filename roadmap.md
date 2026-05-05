@@ -117,7 +117,7 @@ Each step improves the product or the company in a meaningful way.
 |----|------|--------|---------|----------|--------|---------|
 | T028 | Set up Stripe account | Fas 6 | 🏢 Company Plan | 🔴 | Bolag | x |
 | T029 | Decide paywall point | Fas 6 | 📱 App Plan | 🔴 | Decision | x |
-| T030 | Build free preview (steps 1–5 open) | Fas 6 | 📱 App Plan | 🔴 | Dev | ✔ |
+| T030 | Paywall flyttad: hela checklistan gratis, Dokument-fliken (brevgeneratorer + textfält) bakom paywall | Fas 6 | 📱 App Plan | 🔴 | Dev | ✔ |
 | T031 | Build payment flow: Stripe Checkout → unlock | Fas 6 | 📱 App Plan | 🔴 | Dev | x |
 | T032 | Test full purchase flow | Fas 6 | 📱 App Plan | 🔴 | QA | ⧖ |
 | T033 | Final pricing model decided — 49 kr engång (testnivå) | Fas 6 | 🏢 Company Plan | 🔴 | Decision | ✔ |

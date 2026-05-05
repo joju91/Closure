@@ -590,7 +590,7 @@
           <h1 class="plan-title">Brev & dokument</h1>
           <p class="plan-sub">Välj vad du behöver — vi skriver det åt dig.</p>
         </div>
-        <button class="doc-bulk-cta" onclick="showDocForm('bulk')">
+        <button class="doc-bulk-cta hidden" onclick="showDocForm('bulk')">
           <span class="doc-bulk-icon" aria-hidden="true">⚡</span>
           <div class="doc-bulk-text">
             <span class="doc-bulk-title">Avsluta flera tjänster på en gång</span>
@@ -599,22 +599,22 @@
           <span class="doc-bulk-arrow">→</span>
         </button>
         <div class="doc-type-grid">
-          <button class="doc-type-btn" onclick="showDocForm('letter')">
+          <button class="doc-type-btn hidden" onclick="showDocForm('letter')">
             <span class="doc-icon" aria-hidden="true">✉</span>
             <span class="doc-type-title">Uppsägningsbrev</span>
             <span class="doc-type-sub">Avsluta ett abonnemang</span>
           </button>
-          <button class="doc-type-btn" onclick="showDocForm('bank')">
+          <button class="doc-type-btn hidden" onclick="showDocForm('bank')">
             <span class="doc-icon" aria-hidden="true">🏦</span>
             <span class="doc-type-title">Till banken</span>
             <span class="doc-type-sub">Meddela banken om dödsfallet</span>
           </button>
-          <button class="doc-type-btn" onclick="showDocForm('annons')">
+          <button class="doc-type-btn hidden" onclick="showDocForm('annons')">
             <span class="doc-icon" aria-hidden="true">📰</span>
             <span class="doc-type-title">Dödsannons</span>
             <span class="doc-type-sub">Formulera ett minnesvärigt meddelande</span>
           </button>
-          <button class="doc-type-btn" onclick="showDocForm('forsakring')">
+          <button class="doc-type-btn hidden" onclick="showDocForm('forsakring')">
             <span class="doc-icon" aria-hidden="true">🛡</span>
             <span class="doc-type-title">Till försäkringsbolaget</span>
             <span class="doc-type-sub">Meddela försäkringsbolaget om dödsfallet</span>
@@ -631,7 +631,7 @@
           </button>
         </div>
 
-        <!-- Paywall card — dold tills PAYWALL_ENABLED = true i app.js -->
+        <!-- Paywall card — visas för icke-premium användare och låser hela Dokument-fliken -->
         <div id="paywall-card" class="paywall-card hidden">
           <div class="paywall-lock" aria-hidden="true">🔒</div>
           <h2 class="paywall-title">Lås upp alla dokument</h2>
