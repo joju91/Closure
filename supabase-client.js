@@ -45,18 +45,61 @@ const SUPABASE_CONFIG = {
   function initSupabase() {
     if (!isConfigured()) return Promise.resolve(null);
     if (initPromise) return initPromise;
+    // Parse URL for auth errors immediately — independent of CDN loading.
+    // A failed magic-link redirect must surface even if the SDK never loads.
+    reportUrlAuthError();
     initPromise = loadCdn().then(() => {
       client = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey, {
-        auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: true,
+          // Implicit flow uses URL fragments (#access_token=…), which works
+          // whether the user clicks the magic-link in the same browser or
+          // another one. PKCE (the default) silently fails cross-browser
+          // because the code-verifier lives in the originating browser's
+          // localStorage only.
+          flowType: 'implicit',
+        },
       });
       client.auth.onAuthStateChange(handleAuthChange);
       return client.auth.getUser().then(({ data }) => {
         currentUser = data && data.user ? data.user : null;
         fireAuthChanged();
-        if (currentUser) hydrateFromRemoteIfNewer();
+        if (currentUser) {
+          // Surface a one-shot success ping so the UI can confirm the magic-
+          // link round-trip worked (otherwise users just see the modal close).
+          window.dispatchEvent(new CustomEvent('efterplan:auth-success', {
+            detail: { user: currentUser, source: 'init' },
+          }));
+          hydrateFromRemoteIfNewer().catch(err => {
+            console.warn('[efterplan] hydrate failed', err);
+          });
+        }
       }).then(() => client);
+    }).catch(err => {
+      window.dispatchEvent(new CustomEvent('efterplan:auth-error', {
+        detail: { source: 'init', message: (err && err.message) || String(err) },
+      }));
+      throw err;
     });
     return initPromise;
+  }
+
+  // Supabase puts auth errors in either the query string or URL fragment when
+  // a magic-link redirect fails (expired, invalid, redirect-mismatch, …).
+  function reportUrlAuthError() {
+    try {
+      const search = new URLSearchParams(window.location.search);
+      const hash = new URLSearchParams((window.location.hash || '').replace(/^#/, ''));
+      const error =
+        search.get('error_description') || hash.get('error_description') ||
+        search.get('error') || hash.get('error');
+      if (!error) return;
+      window.dispatchEvent(new CustomEvent('efterplan:auth-error', {
+        detail: { source: 'url', message: decodeURIComponent(error) },
+      }));
+    } catch (_) { /* ignore */ }
   }
 
   function fireAuthChanged() {
@@ -68,7 +111,14 @@ const SUPABASE_CONFIG = {
   async function handleAuthChange(event, session) {
     currentUser = session && session.user ? session.user : null;
     if (event === 'SIGNED_IN') {
-      await hydrateFromRemoteIfNewer();
+      window.dispatchEvent(new CustomEvent('efterplan:auth-success', {
+        detail: { user: currentUser, source: 'signed_in' },
+      }));
+      // Hydrate is best-effort: a failed hydrate must not silently break the
+      // signed-in UI, so it stays decoupled from fireAuthChanged.
+      hydrateFromRemoteIfNewer().catch(err => {
+        console.warn('[efterplan] hydrate failed', err);
+      });
     }
     // SIGNED_OUT: do NOT touch localStorage (keeps offline data intact).
     fireAuthChanged();

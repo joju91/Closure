@@ -118,6 +118,29 @@
 
   window.addEventListener('efterplan:auth-changed', e => render(e.detail && e.detail.user));
 
+  // Surface backend errors that arrive after the form was already cleared
+  // (e.g. expired magic link, redirect mismatch). Persistent until the user
+  // closes the modal or starts a new login attempt.
+  window.addEventListener('efterplan:auth-error', e => {
+    if (!status) return;
+    const msg = e.detail && e.detail.message;
+    status.textContent = msg
+      ? 'Inloggning misslyckades: ' + msg
+      : 'Inloggningen misslyckades. Försök igen.';
+    status.style.color = 'var(--accent-warning, #b00020)';
+    modal.classList.remove('hidden');
+  });
+
+  // Confirm successful magic-link round-trip with a brief inline ping so the
+  // user doesn't wonder if anything happened.
+  window.addEventListener('efterplan:auth-success', e => {
+    if (!status) return;
+    const u = e.detail && e.detail.user;
+    if (!u) return;
+    status.textContent = 'Inloggad som ' + (u.email || '') + ' ✓';
+    status.style.color = 'var(--accent-success, #0a7d2e)';
+  });
+
   // Initial render once supabase client has had a chance to restore session.
   if (window.efterplanAuth) {
     window.efterplanAuth.getCurrentUser().then(render).catch(() => render(null));

@@ -915,7 +915,7 @@
   </div>
 </div>
 
-<script src="supabase-client.js?v=2" defer></script>
+<script src="supabase-client.js?v=3" defer></script>
 <script src="app.js?v=18" defer></script>
 <script>
   if ('serviceWorker' in navigator) {
@@ -960,6 +960,7 @@
 <script>
 (function () {
   'use strict';
+  const modal       = document.getElementById('auth-modal');
   const viewOut     = document.getElementById('auth-view-out');
   const viewIn      = document.getElementById('auth-view-in');
   const form        = document.getElementById('auth-magic-form');
@@ -1038,6 +1039,28 @@
   });
 
   window.addEventListener('efterplan:auth-changed', e => render(e.detail && e.detail.user));
+
+  // Surface backend errors that arrive after the form was already cleared
+  // (e.g. expired magic link, redirect mismatch). Only auto-opens the modal
+  // for user-facing failures (URL-bound), not internal SDK init issues.
+  window.addEventListener('efterplan:auth-error', e => {
+    if (!status) return;
+    const detail = e.detail || {};
+    if (detail.source !== 'url') return;
+    status.textContent = detail.message
+      ? 'Inloggning misslyckades: ' + detail.message
+      : 'Inloggningen misslyckades. Försök igen.';
+    status.style.color = 'var(--accent-warning, #b00020)';
+    modal.classList.remove('hidden');
+  });
+
+  window.addEventListener('efterplan:auth-success', e => {
+    if (!status) return;
+    const u = e.detail && e.detail.user;
+    if (!u) return;
+    status.textContent = 'Inloggad som ' + (u.email || '') + ' ✓';
+    status.style.color = 'var(--accent-success, #0a7d2e)';
+  });
 
   if (window.efterplanAuth) {
     window.efterplanAuth.getCurrentUser().then(render).catch(() => render(null));
