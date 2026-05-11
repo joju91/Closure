@@ -34,7 +34,7 @@ Each step improves the product or the company in a meaningful way.
 💡 Everything else is blocked until this is done.
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T001 | Read the entire Manifest sheet and confirm scope | Fas 1 | 📋 Manifest | 🔴 | Principle | ☐ |
 | T002 | Buy domain: kaascha.se (and .com if available) | Fas 1 | 🏢 Company Plan | 🔴 | Infra | ☐ |
 | T003 | Register company / sole proprietorship + apply for F‑tax | Fas 1 | 🏢 Company Plan | 🔴 | Bolag | ☐ |
@@ -47,7 +47,7 @@ Each step improves the product or the company in a meaningful way.
 💡 The core *is* the product.
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T006 | Sketch the entire checklist flow (all steps, correct order) | Fas 2 | 📱 App Plan | 🔴 | Design | ✔ |
 | T007 | Build view: show 1 active task | Fas 2 | 📱 App Plan | 🔴 | Dev | ✔ |
 | T008 | Add "Done →" button | Fas 2 | 📱 App Plan | 🔴 | Dev | ✔ |
@@ -61,7 +61,7 @@ Each step improves the product or the company in a meaningful way.
 💡 Content *is* the product.
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T012 | Write all 20–30 steps | Fas 3 | 📱 App Plan | 🔴 | Content | ✔ |
 | T013 | Add priority per step | Fas 3 | 📱 App Plan | 🔴 | Content | ✔ |
 | T014 | Deterministic order — system chooses | Fas 3 | 📋 Manifest | 🔴 | Logic | ✔ |
@@ -74,7 +74,7 @@ Each step improves the product or the company in a meaningful way.
 💡 Mobile first. Desktop is a bonus.
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T017 | Mobile layout: large type, spacing, big buttons | Fas 4 | 📋 Manifest | 🔴 | Design | ✔ |
 | T018 | Remove distractions — no menus, sidebars, images | Fas 4 | 📋 Manifest | 🔴 | Design | ✔ |
 | T019 | Build expand view ("See all steps") | Fas 4 | 📱 App Plan | 🟠 | Dev | ✔ |
@@ -87,7 +87,7 @@ Each step improves the product or the company in a meaningful way.
 💡 Must be done before soft launch.
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T055 | Split plan into urgency sections | Fas 4.5 | UX Audit | 🔴 | Dev | ✔ |
 | T056 | Add visual progress bar in onboarding | Fas 4.5 | UX Audit | 🔴 | Dev | ✔ |
 | T057 | Add offline banner | Fas 4.5 | UX Audit | 🔴 | Dev | ✔ |
@@ -100,7 +100,7 @@ Each step improves the product or the company in a meaningful way.
 💡 Launch open and free. Real users give real data.
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T022 | Add disclaimer: "Not legal advice" | Fas 5 | 📱 App Plan | 🔴 | Legal | ✔ |
 | T023 | Write "About Kaascha" | Fas 5 | 🏢 Company Plan | 🟠 | Content | ✔ |
 | T024 | End‑to‑end test | Fas 5 | 📱 App Plan | 🔴 | QA | ✔ |
@@ -114,7 +114,7 @@ Each step improves the product or the company in a meaningful way.
 💡 Don't add paywall until usage is proven.
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T028 | Set up Stripe account | Fas 6 | 🏢 Company Plan | 🔴 | Bolag | x |
 | T029 | Decide paywall point | Fas 6 | 📱 App Plan | 🔴 | Decision | x |
 | T030 | Build free preview (steps 1–5 open) | Fas 6 | 📱 App Plan | 🔴 | Dev | ✔ |
@@ -128,7 +128,7 @@ Each step improves the product or the company in a meaningful way.
 💡 Infrastructure that scales.
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T034 | Set up Bokio or Fortnox | Fas 7 | 🏢 Company Plan | 🟠 | Bolag | ⧖ |
 | T035 | Install Plausible Analytics | Fas 7 | 🏢 Company Plan | 🟠 | Infra | ✔ |
 | T036 | Configure analytics events | Fas 7 | 🏢 Company Plan | 🟠 | Infra | ✔ |
@@ -140,7 +140,7 @@ Each step improves the product or the company in a meaningful way.
 💡 SEO takes 3–6 months.
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T038 | Canonical landing page | Fas 8 | 🏢 Company Plan | 🔴 | SEO | ✔ |
 | T039 | 5 long‑tail FAQ pages | Fas 8 | 🏢 Company Plan | 🟠 | SEO | ✔ |
 | T040 | LLM‑friendly answers | Fas 8 | 🏢 Company Plan | 🟠 | SEO | ✔ |
@@ -156,7 +156,7 @@ Each step improves the product or the company in a meaningful way.
 💡 Start with free channels.
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T043 | Flashback post | Fas 9 | 🏢 Company Plan | 🟠 | Distribution | ✔ |
 | T044 | Facebook groups | Fas 9 | 🏢 Company Plan | 🟠 | Distribution | x |
 | T045 | Contact 3 lawyers | Fas 9 | 🏢 Company Plan | 🟡 | Partnership | x |
@@ -168,7 +168,7 @@ Each step improves the product or the company in a meaningful way.
 💡 Only optimize what works.
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T047 | Analyze drop‑off | Fas 10 | 🏢 Company Plan | 🔴 | Analytics | ⧖ Väntar på ~100 organiska sessioner |
 | T048 | A/B test price | Fas 10 | 🏢 Company Plan | 🟠 | Growth | ☐ |
 | T049 | Improve weakest content | Fas 10 | 📱 App Plan | 🟠 | Content | ✔ |
@@ -183,7 +183,7 @@ Each step improves the product or the company in a meaningful way.
 # 🔧 FAS 4.5 — HOTFIXES & CONTENT
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T064 | Bug: skip‑link wrong target | Fas 4.5 | 📱 App Plan | 🔴 | Dev | ✔ |
 | T065 | Bug: ALL CAPS headings | Fas 4.5 | 📱 App Plan | 🔴 | Design | ✔ |
 | T066 | Bug: tagline truncation on narrow mobile | Fas 4.5 | 📱 App Plan | 🔴 | Design | ✔ |
@@ -194,7 +194,7 @@ Each step improves the product or the company in a meaningful way.
 # 🛡️ FAS 5 — GROWTH & MOAT
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T060 | Push notifications (7/30/90 days) | Fas 5 | 📱 App Plan | 🟠 | Dev | ✔ |
 | T061 | 3–4 static SEO landing pages | Fas 5 | 📱 App Plan | 🟠 | Growth | ✔ |
 | T062 | Extended telemetry | Fas 5 | 📱 App Plan | 🟡 | Analytics | ✔ |
@@ -204,7 +204,7 @@ Each step improves the product or the company in a meaningful way.
 # 🆕 FAS 10 — NEW FEATURES
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T067 | Bills overview (manual or OCR) | Fas 10 | 📱 App Plan | 🟡 | Dev | ✔ |
 | T068 | Notes field per task | Fas 10 | 📱 App Plan | 🟡 | UX | ✔ |
 | T069 | Accessibility: voice input (speech‑to‑text) | Fas 10 | 📱 App Plan | 🟢 | UX | ✔ |
@@ -214,7 +214,7 @@ Each step improves the product or the company in a meaningful way.
 # 🚀 FAS 11 — TRAFFIC SPRINT (30 DAYS)
 
 | ID | Task | Date | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|---------|
+|----|------|--------|---------|----------|--------|---------|--------|
 | T070 | Verify Search Console + sitemap | 2026‑04‑13 | Fas 11 | SEO Sprint | 🟡 | SEO | ✔ |
 | T071 | Publish landing page "dodsbo‑checklista‑7‑dagar" | 2026‑04‑14 | Fas 11 | SEO Sprint | 🟡 | SEO | ✔ |
 | T072 | Publish "bouppteckning‑tidslinje" + FAQ schema | 2026‑04‑15 | Fas 11 | SEO Sprint | 🟡 | SEO | ✔ |
@@ -239,7 +239,7 @@ Each step improves the product or the company in a meaningful way.
 # 🚀 FAS 12 — SPRINT 3: GROWTH & QUALITY
 
 | ID | Task | Phase | Source | Priority | Type | Status |
-|----|------|--------|---------|----------|--------|---------|
+|----|------|--------|---------|----------|--------|-------|
 | T092 | SEO: tomma-dodsbo.html | Fas 12 | Sprint 3 | 🟡 | SEO | ✔ |
 | T093 | Konvertering: CTA/funnel-optimering | Fas 12 | Sprint 3 | 🟡 | Growth | ✔ |
 | T094 | Outreach-uppföljning | Fas 12 | Sprint 3 | 🟡 | Partnership | x |
@@ -277,9 +277,9 @@ Each step improves the product or the company in a meaningful way.
 
 | ID | Task | Date | Phase | Source | Priority | Type | Status |
 |----|------|------|-------|--------|----------|------|--------|
-| T108 | Uppgradera Stripe 17.5→22.x i package.json + verifiera api/_lib.js + api/create-checkout.js + api/stripe-webhook.js + api/verify-checkout.js fungerar (apiVersion-strängen kan behöva uppdateras). | 2026-05-11 | Fas 12 | Veckorapport | 🟠 | Dev | ✔ |
-| T109 | Uppgradera @supabase/supabase-js 2.45→2.105 i package.json + smoke-test auth + DB-anrop. | 2026-05-11 | Fas 12 | Veckorapport | 🟠 | Dev | ✔ |
-| T110 | Markera T105 + T107 som ✔ — redan implementerade men felaktigt ☐ i roadmap. | 2026-05-11 | Fas 12 | Veckorapport | 🟡 | Admin | ✔ |
+| T108 | Stripe 17.5→22.1.1 — uppgraderad i package.json. apiVersion '2024-11-20.acacia' i api/_lib.js oförändrad. Smoke-test passerat (checkout.sessions.create + webhooks.constructEvent + syntax-check på alla api/*.js). Återstår: Stripe testmiljö-betalning end-to-end. Fil: package.json. | 2026-05-11 | Fas 12 | Veckorapport | 🟠 | Dev | ✔ |
+| T109 | @supabase/supabase-js 2.45→2.105.4 — uppgraderad i package.json. Smoke-test passerat (from/auth/upsert exponerade). Återstår: full smoke-test av premium-entitlement + delad plan i produktion. Fil: package.json. | 2026-05-11 | Fas 12 | Veckorapport | 🟡 | Dev | ✔ |
+| T110 | Roadmap-status synkad: T105 (ga4 noindex) + T107 (sitemap lastmod) markerade ✔ enligt faktiska commits. | 2026-05-11 | Fas 12 | Veckorapport | 🟡 | Dev | ✔ |
 | T111 | Sätt upp UptimeRobot (gratis) för https://efterplan.se — Owner-åtgärd. Klart när: monitor aktiv, e-postvarning till jonas.soderstrom43@gmail.com. | 2026-05-11 | Fas 12 | Veckorapport | 🟠 | Infra | ☐ |
 | T112 | Filtrera Jonas IP i GA4 admin (Data Streams → Configure tag settings → Define internal traffic) — Owner-åtgärd. Klart när: egna sessioner exkluderas från rapporter. | 2026-05-11 | Fas 12 | Veckorapport | 🟠 | Analytics | ☐ |
 | T113 | Konfigurera GA4 service-account-credentials i Cowork-sandlådan så veckorapport kan dra GA4-data direkt. Klart när: ga4-service-account.json finns på förväntad sökväg. | 2026-05-11 | Fas 12 | Veckorapport | 🟡 | Infra | ☐ |
