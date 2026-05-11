@@ -267,6 +267,19 @@ Each step improves the product or the company in a meaningful way.
 
 | ID | Task | Date | Phase | Source | Priority | Type | Status |
 |----|------|------|-------|--------|----------|------|--------|
-| T105 | ga4-dashboard/public/index.html saknar `<meta name="robots" content="noindex, nofollow">` — intern admin-dashboard är exponerad utan noindex-direktiv och riskerar att crawlas/indexeras av sökmotorer. Lägg till i `<head>` på rad 8. Fil: ga4-dashboard/public/index.html | 2026-05-04 | Fas 12 | Veckorapport | 🟠 | SEO | ☐ |
+| T105 | ga4-dashboard/public/index.html saknar `<meta name="robots" content="noindex, nofollow">` — intern admin-dashboard är exponerad utan noindex-direktiv och riskerar att crawlas/indexeras av sökmotorer. Lägg till i `<head>` på rad 8. Fil: ga4-dashboard/public/index.html | 2026-05-04 | Fas 12 | Veckorapport | 🟠 | SEO | ✔ |
 | T106 | Extern uptime-monitor saknas — sandbox-hälsocheck blockeras av Cloudflare (HTTP 403), dvs riktiga driftstopp syns inte proaktivt. Sätt upp UptimeRobot (gratis) för https://efterplan.se med e-postvarning till jonas.soderstrom43@gmail.com (kontrollintervall 5 min). | 2026-05-04 | Fas 12 | Veckorapport | 🟠 | Dev | ☐ |
-| T107 | sitemap.xml lastmod-datum är inaktuella — flertalet URLs har `2026-04-15` men nyare SEO-sidor (tomma-dodsbo, checklista-dodsbo m.fl.) har lagts till sedan dess. Uppdatera `<lastmod>` för berörda sidor i sitemap.xml. Fil: sitemap.xml | 2026-05-04 | Fas 12 | Veckorapport | 🟡 | SEO | ☐ |
+| T107 | sitemap.xml lastmod-datum är inaktuella — flertalet URLs har `2026-04-15` men nyare SEO-sidor (tomma-dodsbo, checklista-dodsbo m.fl.) har lagts till sedan dess. Uppdatera `<lastmod>` för berörda sidor i sitemap.xml. Fil: sitemap.xml | 2026-05-04 | Fas 12 | Veckorapport | 🟡 | SEO | ✔ |
+
+---
+
+# 🔍 VECKORAPPORT-TICKETS — 2026-05-11
+
+| ID | Task | Date | Phase | Source | Priority | Type | Status |
+|----|------|------|-------|--------|----------|------|--------|
+| T108 | Uppgradera Stripe 17.5→22.x i package.json + verifiera api/_lib.js + api/create-checkout.js + api/stripe-webhook.js + api/verify-checkout.js fungerar (apiVersion-strängen kan behöva uppdateras). | 2026-05-11 | Fas 12 | Veckorapport | 🟠 | Dev | ✔ |
+| T109 | Uppgradera @supabase/supabase-js 2.45→2.105 i package.json + smoke-test auth + DB-anrop. | 2026-05-11 | Fas 12 | Veckorapport | 🟠 | Dev | ✔ |
+| T110 | Markera T105 + T107 som ✔ — redan implementerade men felaktigt ☐ i roadmap. | 2026-05-11 | Fas 12 | Veckorapport | 🟡 | Admin | ✔ |
+| T111 | Sätt upp UptimeRobot (gratis) för https://efterplan.se — Owner-åtgärd. Klart när: monitor aktiv, e-postvarning till jonas.soderstrom43@gmail.com. | 2026-05-11 | Fas 12 | Veckorapport | 🟠 | Infra | ☐ |
+| T112 | Filtrera Jonas IP i GA4 admin (Data Streams → Configure tag settings → Define internal traffic) — Owner-åtgärd. Klart när: egna sessioner exkluderas från rapporter. | 2026-05-11 | Fas 12 | Veckorapport | 🟠 | Analytics | ☐ |
+| T113 | Konfigurera GA4 service-account-credentials i Cowork-sandlådan så veckorapport kan dra GA4-data direkt. Klart när: ga4-service-account.json finns på förväntad sökväg. | 2026-05-11 | Fas 12 | Veckorapport | 🟡 | Infra | ☐ |
