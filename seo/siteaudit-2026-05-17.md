@@ -36,13 +36,17 @@
 
 **Åtgärd:** beslut behövs — antingen lägg fonts på alla sidor (konsistens, lite sämre CWV) eller ta bort från de 5 (full prestanda, generisk look). Rekommendation: lägg system-font-stack som primary i `style.css` och behandla Fraunces som progressive enhancement.
 
-### 🔴 2. Pris-inkonsistens 49 kr vs 149 kr
+### 🟢 2. Pris-inkonsistens 49 kr vs 149 kr — ÅTGÄRDAD 2026-05-17
 
-Roadmap-not T033 säger "pricing uppdaterad till 49 kr". Faktiska produktionsfiler (index.html, paywall) visar 149 kr. Nya hjalp-med-dodsbo.html använder 149 kr (matchar produktion).
+UI-priser i `index.html`, `app.js` och `hjalp-med-dodsbo.html` ändrade från 149 kr → 49 kr för låg ingångströskel.
 
-**Risk:** SERP-snippets cachear 49 kr om någon sida i Googles index har det priset → besökare ser 49 kr på Google, klickar in på 149 kr-paywallen → bounce.
+**Kvarstår (Owner-action):** Stripe-priset styrs av `STRIPE_PRICE_ID` env-var i Vercel — pekar idag på en Price-objekt för 149 kr. Innan deploy måste:
 
-**Åtgärd:** grepa alla sidor för "49 kr" och se var det finns. Just nu: ingen matcher i HTML, OK. Men roadmap-noten bör uppdateras eller pris ändras till 49 kr — beslut behövs.
+1. Ny Price-objekt skapas i Stripe Dashboard för 49 kr (SEK, engångsbetalning)
+2. `STRIPE_PRICE_ID` i Vercel (production + preview) uppdateras till nya price-ID
+3. Redeploy
+
+Tills steg 1–3 är klara: UI:t visar 49 kr men kassan tar 149 kr. **Mergea inte branchen till main förrän Stripe är uppdaterat.**
 
 ---
 
