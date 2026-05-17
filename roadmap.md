@@ -290,3 +290,14 @@ Each step improves the product or the company in a meaningful way.
 | ID | Task | Date | Phase | Source | Priority | Type | Status |
 |----|------|------|-------|--------|----------|------|--------|
 | T115 | Stripe webhook signing secret roterad efter GitGuardian-läcka. Gammalt `whsec_*` från Kaascha-sandlådan exponerades i `.claude/handoff.md` (PR #21, merge 5e2ba3f, 2026-05-11). Roterad i Stripe Dashboard, nytt värde satt i Vercel env (production + preview), redeployat. `.claude/handoff.md`, `weekly-report.log`, `scheduled_tasks.lock`, `settings.local.json` tillagda i `.gitignore` och untrackade från index. Historik lämnad orörd (test-mode secret, ingen pengarisk efter rotation). | 2026-05-12 | Säkerhet | GitGuardian | 🔴 | Infra | ✔ |
+
+---
+
+## SEO & Growth
+
+- [ ] Content brief: "vad gör man när någon dör" — sökintention, H2/H3, featured snippet, schema markup
+- [ ] Konkurrentanalys: 5 sidor som rankar för "bouppteckning" — gap kring emotionellt ingångsmoment och digital administration
+- [ ] Programmatisk SEO: URL-struktur + sidmall för /bouppteckning/[stad] och /dödsfallsintyg/[stad], 50–100 sidor
+- [ ] Konverterande landningssida för "hjälp med dödsbo" — varm ton, FAQ-schema, CTA till 149 kr
+- [ ] Siteaudit: crawlbarhet, interna länkar, orphan pages, CWV, mobil-first
+- [ ] Topical authority map: 40–60 nyckelord i kluster + 6-månaders publiceringsplan
