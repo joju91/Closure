@@ -2,6 +2,45 @@
 
 Allt jag kunde göra autonomt är klart (se commit). Det här kräver dig — inloggad i GA4, GSC, eller på annat sätt manuellt.
 
+---
+
+## 🔴 PRIO 2026-05-17 — gör innan branchen `claude/add-seo-growth-roadmap-zQRJW` mergas
+
+### A. Stripe-pris 49 kr (blocker för deploy)
+
+UI:t på sajten visar nu 49 kr (T125), men kassan tar fortfarande 149 kr eftersom `STRIPE_PRICE_ID` pekar på ett gammalt 149-kr Price-objekt. Gör så här innan merge:
+
+1. **Stripe Dashboard** → Products → Efterplan → **+ Add another price**
+   - Belopp: `49,00 SEK`
+   - Typ: `One time`
+   - Spara → kopiera nya `price_xxx`-ID:t
+2. **Vercel** → projektet → Settings → Environment Variables
+   - Uppdatera `STRIPE_PRICE_ID` med nya ID:t i **Production** OCH **Preview**
+3. **Redeploy** (sker automatiskt när env-varen sparas, eller trigga manuellt)
+4. Test-köp på preview-URL för att bekräfta att kassan visar 49 kr
+
+**Risk om missas:** besökare ser 49 kr i UI, betalar 149 kr i kassan → chargebacks + dåligt rykte.
+
+### B. GSC-export så jag kan bygga publiceringsplan på riktig data
+
+Gå till **Search Console → efterplan.se → Performance**, sätt **senaste 3 månaderna**, exportera 3 CSV-filer:
+
+1. **Queries-fliken** → Export → CSV
+2. **Pages-fliken** → Export → CSV
+3. Filtrera på Page = `/bouppteckning-guide.html` → exportera queries. Repetera för `/vad-gora-nar-nagon-dor.html` och `/dodsfallsintyg.html`.
+
+Skicka filerna eller klistra in raw-CSV i nästa Claude-session. Då bygger jag en datadriven publiceringsplan istället för gissningar (T121-uppföljning).
+
+### C. Verifiera de 40 nya stadsidorna i GSC
+
+Efter merge + deploy, kontrollera i GSC → URL Inspection att Google hittar:
+- `/bouppteckning-stockholm.html`
+- `/dodsfallsintyg-stockholm.html`
+
+Om "Not on Google" — klicka Request Indexing. Räkna med 1–2 veckor innan stadsidorna börjar fångas i SERP.
+
+---
+
 ## 1. Filtrera bort din egen IP i GA4 (5 min)
 
 1. https://analytics.google.com → välj efterplan-property (531365335)
