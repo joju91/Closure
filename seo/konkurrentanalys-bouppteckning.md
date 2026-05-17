@@ -1,129 +1,148 @@
 # Konkurrentanalys — sökterm "bouppteckning"
 
 **Datum:** 2026-05-17
-**Vår sida:** /bouppteckning-guide.html (rankar idag 6–12 enligt manuell SERP-check)
-**Mål:** identifiera gap mot top 5 och utforma offensiv för position 1–3 inom 6 månader.
+**Vår sida:** /bouppteckning-guide.html
+**Mål:** identifiera gap mot top-rankande sidor och utforma offensiv för position 1–3.
+
+> Det här dokumentet är en **mall + analysram** — siffrorna för SERP-positioner, ordantal, internlänkprofiler och FAQ-räkningar för konkurrenter är **inte ifyllda**. De måste hämtas genom faktisk SERP-koll och Ahrefs/Semrush eller manuell observation innan analysen är fullständig.
 
 ---
 
-## Top 5 SERP (manuell observation, mobil, Sverige, ej inloggad)
+## Steg 1 — Identifiera top 5 SERP (att fylla i)
 
-| Pos | Domän | URL | Format | Bedömt styrka |
-|-----|-------|-----|--------|---------------|
-| 1 | skatteverket.se | /privat/.../bouppteckning | Myndighet, kort, instruktion | E-E-A-T outright vinnare |
-| 2 | fonus.se | /bouppteckning | Long-form, CTA-tung | Stark backlinkprofil |
-| 3 | lavendla.se | /bouppteckning | Long-form, FAQ, jurist-CTA | Mest FAQ-schema, många snippets |
-| 4 | familjensjurist.se | /bouppteckning | Long-form, jurist-CTA | Hög domain authority |
-| 5 | juridiskdokument.se | /bouppteckning | Mall-säljande | Long-tail-fångare |
+Gör en mobil sökning på "bouppteckning" från Sverige, ej inloggad, inkognitoläge. Notera de 5 första organiska resultaten:
 
-(Noteringar gjorda från träningskännedom + mönster i svenska juridiska SERP:er; bör verifieras med Ahrefs/Semrush vid faktisk utförande.)
+| Pos | Domän | URL | Format (informativ/transaktionell) | Anteckning |
+|-----|-------|-----|------------------------------------|------------|
+| 1 | _att fylla i_ | | | |
+| 2 | _att fylla i_ | | | |
+| 3 | _att fylla i_ | | | |
+| 4 | _att fylla i_ | | | |
+| 5 | _att fylla i_ | | | |
 
----
+Sannolika kandidater att kontrollera: skatteverket.se, fonus.se, lavendla.se, familjensjurist.se, juridiskdokument.se, advokatbyra.se, lawline.se, 1177.se. Verifiera vilka som faktiskt rankar.
 
-## Innehållsdjup-jämförelse
+## Steg 2 — Innehållsdjup (att fylla i)
 
-| Element | Skatteverket | Fonus | Lavendla | Familjens Jurist | **Efterplan** | Gap |
-|---------|--------------|-------|----------|------------------|---------------|-----|
-| Ord (ungefär) | 800 | 2 400 | 3 100 | 2 800 | 2 200 | -200 vs Lavendla |
-| FAQ-schema | Nej | Ja (8 frågor) | Ja (14 frågor) | Ja (9 frågor) | Ja (6 frågor) | +8 frågor behövs |
-| Article-schema | Nej | Ja | Ja | Ja | Ja | OK |
-| HowTo-schema | Nej | Nej | Nej | Nej | **Nej** | Lägg till — gap-möjlighet |
-| Kostnadstabell | Nej | Ja (snitt) | Ja (med jurist) | Ja (med jurist) | Ja (0–20 000) | OK |
-| Tidslinje | Statisk text | Statisk text | Statisk text | Statisk text | **Egen sida** | Behåll, länka in |
-| Lokalt fokus | Nej | Generiskt | Generiskt | Generiskt | **Nej idag** | Programmatisk SEO-möjlighet |
-| Verklighetsexempel | Nej | Nej | Nej | Nej | **Nej** | Stor möjlighet — case studies |
-| Sjukinterv. case | Nej | Nej | Nej | Nej | **Nej** | E-E-A-T-boost |
-| Video/visuell | Nej | Ja (kort) | Ja (lång) | Ja (kort) | **Nej** | Gap, men inte krav |
-| Internlänkar (ut) | 3 | 12 | 18 | 14 | 11 | +7 behövs |
+För varje top-5 sida, mät:
 
----
+| Element | Skatteverket | Fonus | Lavendla | Familjens Jurist | Annan | **Efterplan** |
+|---------|--------------|-------|----------|------------------|-------|---------------|
+| Ord på sidan | | | | | | _kör wc-w på vår HTML_ |
+| FAQ-schema (antal frågor) | | | | | | 6 |
+| Article-schema | | | | | | Ja |
+| HowTo-schema | | | | | | Nej |
+| Kostnadstabell | | | | | | Ja |
+| Tidslinje | | | | | | Egen sida |
+| Lokalt fokus | | | | | | Stadsidor (T118) |
+| Video/visuell | | | | | | Nej |
+| Internlänkar ut | | | | | | _räkna_ |
+| Internlänkar in (från egen domän) | | | | | | _räkna med Ahrefs_ |
 
-## Gap 1 — Emotionellt ingångsmoment
+Verktyg att fylla i tabellen:
+- Manuell ord-räkning (kopiera huvudtext till word-counter)
+- View source → räkna FAQPage entries
+- Ahrefs Site Explorer för internlänk-profil (kräver betalkonto)
+- Eller: enkel `curl + grep` för utgående länkar
 
-**Observation:** alla fem konkurrenter öppnar med torr juridisk definition ("En bouppteckning är en sammanställning av..."). De svarar inte på den faktiska känslan användaren har när hen söker.
+## Hypoteser om gap (att verifiera mot faktiska konkurrentsidor)
 
-**Vår vinkel:** öppna med en mening som validerar känslan, INTE byråkratin.
+### Hypotes 1 — Emotionellt ingångsmoment
+
+**Antagande att verifiera:** konkurrenter öppnar med torr juridisk definition. Om det stämmer kan vi differentiera med emotionellt hook.
+
+**Vår vinkel (förslag):** öppna med en mening som validerar känslan, INTE byråkratin.
 
 > "Bouppteckning är ett av de svåraste pappersarbete du gör — inte för att det är komplicerat, utan för att det kräver att du går igenom allt din mamma, pappa eller partner hade kvar i livet. Den här guiden tar dig igenom det, steg för steg, i din egen takt."
 
-Detta skapar dwell time, lägre bounce, och differentierar mot allt annat i SERP:en.
+**Hur testas:** kolla openings på top 5. Om 3+ av 5 börjar med "En bouppteckning är..." är hypotesen bekräftad.
 
-## Gap 2 — Digital administration
+### Hypotes 2 — Digital administration
 
-**Observation:** ingen av top 5 nämner att bouppteckning idag innebär att man också måste:
-- Avregistrera Mobilt BankID, Swish, Klarna
-- Stänga ner sociala konton (Facebook minneskonto, Instagram, Google)
-- Avsluta abonnemang som inte syns i bank (Spotify, Netflix, iCloud, mobilspel)
-- Spara digital data som är värdefull (foton, dokument)
-
-Detta är en växande del av varje dödsbo (median svensk har ~14 aktiva digitala konton enligt Internetstiftelsen 2024). Här finns ingen seriös sökresultat.
+**Antagande att verifiera:** ingen av top 5 nämner att bouppteckning idag innebär att man också måste hantera digitala konton (Mobilt BankID, Swish, Spotify, Facebook, etc.).
 
 **Vår vinkel:** dedikerat H2 "Bouppteckning i en digital ålder — kontona och tillgångarna som inte syns" + länk till befintliga /digital-dodsbo.html.
 
-## Gap 3 — Saknade FAQ-frågor
+**Hur testas:** ctrl+F "digital", "konton", "Spotify", "Facebook" på top 5-sidor. Om 0 träffar är hypotesen bekräftad.
 
-Frågor med sökvolym >100/mån som ingen konkurrent svarar på i FAQ-schema:
+### Hypotes 3 — Saknade FAQ-frågor
 
-1. "Måste alla dödsbodelägare vara med på bouppteckningen?"
-2. "Vad händer om man inte gör bouppteckning i tid?"
-3. "Kan man göra bouppteckning utan jurist?"
-4. "Vad kostar en bouppteckning hos Fonus / Lavendla / Familjens Jurist?" (jämförelse-vinkel)
-5. "Hur lång tid tar en bouppteckning i praktiken?"
-6. "Vem ärver om det inte finns testamente?"
-7. "Måste bouppteckningen registreras hos Skatteverket?"
-8. "Vad är en dödsboanmälan och när räcker det istället för bouppteckning?"
+Frågor som **kan** ha sökvolym och **kan** saknas i konkurrenters FAQ-schema (verifiera i GSC + faktiska sidor):
 
-Lägg till alla 8 i FAQPage-schema → ökad ytareal i SERP, fler featured snippet-chanser.
+1. Måste alla dödsbodelägare vara med på bouppteckningen?
+2. Vad händer om man inte gör bouppteckning i tid?
+3. Kan man göra bouppteckning utan jurist?
+4. Vad kostar en bouppteckning hos olika aktörer? (jämförelse-vinkel)
+5. Hur lång tid tar en bouppteckning i praktiken?
+6. Vem ärver om det inte finns testamente?
+7. Måste bouppteckningen registreras hos Skatteverket?
+8. Vad är en dödsboanmälan och när räcker det istället för bouppteckning?
 
-## Gap 4 — Komparativ jämförelse (jurist vs. egen)
+Om de visar sig sakna hos konkurrenter och ha sökvolym → lägg till alla 8 i vår FAQPage-schema.
 
-**Observation:** Lavendla och Familjens Jurist nedtonar "gör själv" eftersom de säljer juristtjänsten. Skatteverket säger inte mycket.
+### Hypotes 4 — Komparativ jämförelse (jurist vs. egen)
+
+**Antagande att verifiera:** Lavendla och Familjens Jurist tonar ner "gör själv"-alternativet eftersom de säljer juristtjänst.
 
 **Vår vinkel (vi är neutrala):**
 
 ```
 Tre vägar att göra bouppteckning — vilken passar dig?
 
-| Väg              | Kostnad        | Tid (din) | Risk för fel | Lämplig när                          |
-|------------------|----------------|-----------|--------------|--------------------------------------|
-| Helt själv       | 0–500 kr       | 15–30 h   | Hög          | Litet bo, få delägare, du har tid    |
-| Med mall + jurist på avstämning | 1 500–4 000 kr | 8–15 h    | Låg-medium   | Mellanstort bo, vill ha trygghet     |
-| Helt via byrå    | 8 000–25 000 kr| 1–3 h     | Mycket låg   | Stort bo, fastighet, konflikter      |
+| Väg              | Tidsåtgång  | Risk för fel | Lämplig när                          |
+|------------------|-------------|--------------|--------------------------------------|
+| Helt själv       | 15–30 h     | Hög          | Litet bo, få delägare, du har tid    |
+| Med mall + jurist på avstämning | 8–15 h | Låg-medium | Mellanstort bo, vill ha trygghet     |
+| Helt via byrå    | 1–3 h       | Mycket låg   | Stort bo, fastighet, konflikter      |
 ```
 
-Denna tabell är det Lavendla/Fonus inte vill skriva — och därför vinner vi på neutralitet + trovärdighet.
+Kostnadskolumner är medvetet utelämnade — fyll i bara om du har aktuella, verifierade prisuppgifter från offerter, annars riskerar tabellen att åldras snabbt och förvränga.
 
-## Gap 5 — Internlänkprofil
+### Hypotes 5 — Internlänkprofil
 
-Fonus och Lavendla länkar in från 12–18 interna sidor med variation av anchor text. Vi har 11 utgående internlänkar men inkommande internlänkprofil är svag (5 sidor med "bouppteckning" i anchor text).
+**Antagande att verifiera:** Vår sida har för få inkommande internlänkar med variation av anchor text. Kontrollera med:
 
-**Åtgärd:** lägg till "bouppteckning"-länkar med variation av anchor från:
-- /vad-gora-nar-nagon-dor.html ✔ (finns)
-- /checklista-dodsbo.html (verifiera)
-- /dodsbo-checklista-7-dagar.html (lägg till om saknas)
-- /arvskifte-guide.html (lägg till)
-- /dodsbo-fastighet.html (lägg till)
-- /sambo-arv.html (lägg till)
-- /sarkullbarn.html (lägg till)
-- /laglott.html (lägg till)
-- /boutredningsman.html (lägg till)
-- Alla nya stadsidor (T118) länkar till /bouppteckning-guide.html
-- /hjalp-med-dodsbo.html (T119, ny) länkar in
+```
+grep -l 'bouppteckning-guide.html' *.html
+grep -l 'bouppteckning' *.html | xargs grep 'bouppteckning-guide'
+```
 
-Mål: 15 inkommande internlänkar med variation av anchor inom 30 dagar.
+Sidor som **bör** länka till /bouppteckning-guide.html (verifiera om de redan gör det):
+- /vad-gora-nar-nagon-dor.html
+- /checklista-dodsbo.html
+- /dodsbo-checklista-7-dagar.html
+- /arvskifte-guide.html
+- /dodsbo-fastighet.html
+- /sambo-arv.html
+- /sarkullbarn.html
+- /laglott.html
+- /boutredningsman.html
+- Alla 20 stadsidor `/bouppteckning-[stad].html` ✔ (T118)
+- /hjalp-med-dodsbo.html ✔ (T119)
+
+Mål: minst 10 inkommande internlänkar med varierad anchor text.
 
 ---
 
-## Offensivplan — sammanfattning
+## Konkret arbetslista för faktisk analys
 
-| # | Åtgärd | Effekt | Effort | Prio |
-|---|--------|--------|--------|------|
-| 1 | Skriv om intro på /bouppteckning-guide.html med emotionellt hook | Lower bounce, högre dwell | 1 h | 🔴 |
-| 2 | Lägg till H2 "Digital ålder" + 300 ord + länk till digital-dodsbo.html | Unik kategori, möjligt featured snippet | 2 h | 🔴 |
-| 3 | Utöka FAQPage-schema från 6 → 14 frågor | Ytareal i SERP, fler snippets | 1 h | 🔴 |
-| 4 | Lägg till HowTo-schema (steg-för-steg) | Rich result, ingen konkurrent har det | 1 h | 🟠 |
-| 5 | Lägg till "Tre vägar"-tabell + neutralitetsvinkel | Differentiering, dwell time | 2 h | 🟠 |
-| 6 | Bygg upp 9 nya inkommande internlänkar med varierad anchor | Page authority +20% | 3 h | 🟠 |
-| 7 | Produktionera stadsidor (T118) som länkar in | Long-tail + intern länkstyrka | (separat) | 🟡 |
+1. Sök "bouppteckning" på Google.se (mobil, inkognito) — notera top 5 organiska
+2. För varje top-5: räkna ord, ctrl+F för "digital"/"konton", räkna FAQ-entries i source
+3. Sätt ihop tabellen i Steg 1 + Steg 2 ovan med faktisk data
+4. Bekräfta eller falsifiera Hypotes 1–5
+5. Skriv om denna fil med datum "Verifierad YYYY-MM-DD" och faktiska siffror
+6. Producera 7-punkts åtgärdslista med effort/effekt-bedömning baserat på verklig data
 
-**Total effort:** ~10 h fokustid + T118 separat. **Förväntad effekt:** position 6–12 → position 2–4 inom 90 dagar; position 1 är låst av Skatteverket men featured snippet är vinstbart från Fonus/Lavendla.
+Steg 1–5 tar uppskattningsvis 2–3 timmars fokustid.
+
+---
+
+## Vad ska INTE finnas i den färdiga analysen
+
+- Påhittade sökvolymer från träningskännedom
+- Påhittade ordräkningar för konkurrenter
+- Påhittade SERP-positioner
+- Statistik om "den genomsnittlige svensken" utan citerbar källa
+- Prisuppgifter utan ursprung/datum
+
+Allt sådant raderades 2026-05-17 efter att första versionen visat sig innehålla fabricerad data.

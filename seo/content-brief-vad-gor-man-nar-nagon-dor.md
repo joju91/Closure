@@ -3,13 +3,14 @@
 **URL:** /vad-gora-nar-nagon-dor.html (befintlig sida, optimeras)
 **Primärt nyckelord:** vad gör man när någon dör
 **Sekundära:** vad ska man göra när någon dör, första steget när någon dör, någon har dött vad gör jag, anhörig har dött vad gör jag
-**Sökvolym (uppskattad):** 1 900–3 600/mån (säsongsvariation runt jul/påsk)
-**Konkurrens:** medium — domineras av begravningsbyråer (Fonus, Lavendla, Familjens Jurist) + 1177
-**Mål:** featured snippet ("0-position") för listfrågan + ranking 1–3
+
+> Sökvolym och konkurrens kräver Ahrefs/Semrush eller GSC-data för att kvantifieras. Den här briefen tar inte ställning till volymer — verifiera mot egen data innan prioritering.
+
+**Mål:** featured snippet ("0-position") för listfrågan + ranking 1–3.
 
 ---
 
-## Sökintention
+## Sökintention (hypotes)
 
 Användaren är i akut chock eller akut osäkerhet. Söker:
 1. **Lugnande validering** — "är det här normalt?"
@@ -17,26 +18,28 @@ Användaren är i akut chock eller akut osäkerhet. Söker:
 3. **Tidskänsla** — vad är akut och vad kan vänta?
 4. **Skuldfrihet** — får jag göra detta? får jag göra fel?
 
-Detta är inte en transaktionell sökning men leder till en. Användaren konverterar när de förstår att de behöver hålla reda på 40+ kontakter, dokument, deadlines.
+Detta är inte en transaktionell sökning men leder till en. Användaren konverterar när de förstår att de behöver hålla reda på 40+ kontakter, dokument, deadlines. Hypotesen bör testas med GSC-data (CTR + impressions för relaterade frågor).
 
-## Sökfras-varianter att täcka
+## Sökfraser att täcka (intentionsmappning)
 
-| Sökfras | Volym | Avsikt |
-|---------|-------|--------|
-| vad gör man när någon dör | 1900 | Informativ, akut |
-| vad ska man göra när någon dör | 880 | Samma, formellare |
-| första steget när någon dör | 320 | Specifik, action |
-| någon har dött vad gör jag | 260 | Akut, personlig |
-| min mamma har dött vad gör jag | 170 | Akut, känsla |
-| min pappa har dött vad gör jag | 140 | Akut, känsla |
-| vad händer när någon dör hemma | 590 | Subset, ovan situation |
-| vad gör man när någon dör på sjukhus | 210 | Subset, lugnare |
+| Sökfras | Avsikt |
+|---------|--------|
+| vad gör man när någon dör | Informativ, akut |
+| vad ska man göra när någon dör | Samma, formellare |
+| första steget när någon dör | Specifik, action |
+| någon har dött vad gör jag | Akut, personlig |
+| min mamma har dött vad gör jag | Akut, känsla |
+| min pappa har dött vad gör jag | Akut, känsla |
+| vad händer när någon dör hemma | Subset, ovan situation |
+| vad gör man när någon dör på sjukhus | Subset, lugnare |
+
+Prioritetsordning sätts utifrån GSC impressions + clicks när data finns.
 
 ## Featured snippet — target
 
-Google visar idag en paragraph snippet från Fonus. Vi siktar på **list snippet** (10 steg) eftersom det matchar intentionen bättre och vi har den listan på sidan idag (rad 126–137).
+Vi siktar på **list snippet** (10 steg) eftersom det matchar intentionen. Verifiera först vilken snippet-typ Google visar idag genom faktisk SERP-koll.
 
-**Snippet-format Google ska lyfta:**
+**Snippet-format att eftersträva:**
 ```
 De viktigaste stegen när någon dör:
 1. Kontakta läkare (112 eller 1177)
@@ -78,7 +81,7 @@ H1: Vad gör man när någon dör? (behåll)
 
 ## FAQ-schema att lägga till
 
-Lägg till fyra nya entries i befintligt FAQPage-script (rad 39–66):
+Lägg till fyra nya entries i befintligt FAQPage-script:
 
 ```json
 {
@@ -99,7 +102,7 @@ Lägg till fyra nya entries i befintligt FAQPage-script (rad 39–66):
 {
   "@type": "Question",
   "name": "Vad händer om någon dör utomlands?",
-  "acceptedAnswer": { "@type": "Answer", "text": "Kontakta först svensk ambassad eller konsulat i landet — de hjälper med dokument och hemförsel. En begravningsbyrå i Sverige kan koordinera transporten. Räkna med 1–3 veckors väntan och 30 000–80 000 kr i transportkostnad, beroende på land och försäkringsskydd." }
+  "acceptedAnswer": { "@type": "Answer", "text": "Kontakta först svensk ambassad eller konsulat i landet — de hjälper med dokument och hemförsel. En begravningsbyrå i Sverige kan koordinera transporten. Kostnaden för hemförsel kan vara betydande och varierar kraftigt — kontrollera reseförsäkring och tjänstereseförsäkring först." }
 }
 ```
 
@@ -120,22 +123,23 @@ Lägg till fyra nya entries i befintligt FAQPage-script (rad 39–66):
 - `pensionsmyndigheten.se` (efterlevandepension)
 - `forsakringskassan.se` (efterlevandestöd)
 
-Använd `rel="noopener"` och förklara varför (E-E-A-T-signal till Google).
+Använd `rel="noopener"` på externa länkar.
 
 ## Tekniska förbättringar
 
-1. **dateModified** i Article-schema → uppdatera till 2026-05-17 (kommer triggas av denna optimering)
-2. **Lägg till `priority="speakable"` SpeakableSpecification** — väntad sökning är röst ("Hej Google, vad gör jag när någon dör?")
-3. **Lägg till HowTo-schema** ovanför FAQPage-schema med 10-stegslistan (kan vinna list snippet utöver FAQ rich result)
+1. **dateModified** i Article-schema → uppdatera vid varje content-ändring
+2. **HowTo-schema** ovanför FAQPage-schema med 10-stegslistan (möjlig rich result)
+3. **SpeakableSpecification** — för röstsökning (om Google fortfarande stödjer det när det implementeras)
 4. **Image alt-text** — om bilder tillkommer, måste beskriva känslan, inte bara objektet
 
 ## Mätbart mål (90 dagar)
 
-- Position 1–3 för "vad gör man när någon dör" (idag: 5–8)
-- Featured snippet vunnen (idag: Fonus)
-- Click-through från SERP: +120% (från ~3% till ~6,5%)
-- Engagement: time-on-page > 3 min, scroll-djup > 70%
-- Konvertering (klick på "Skapa din plan"): > 4% av sidvisningar
+Mål bör formuleras mot GSC-baseline. Definiera baseline FÖRST genom att kolla:
+- Genomsnittlig position för primärt nyckelord (idag)
+- CTR från SERP
+- Impressions/månad
+
+Sedan sätt mål: position +3, CTR +50%, impressions +X%. Utan baseline är målen meningslösa.
 
 ## Tonläge
 
@@ -145,8 +149,12 @@ Verb i imperativ när det handlar om action. Du-form genomgående. Korta meninga
 
 ## Konkurrentbevakning
 
-- **fonus.se/vad-gor-man-vid-dodsfall** — kort, transaktionellt. Vi vinner på djup + emotionell ton.
-- **lavendla.se/dodsfall/vad-gor-man** — bra struktur, men "ring oss"-tung. Vi vinner på neutralitet.
-- **1177.se** — auktoritativ men byråkratisk. Vi vinner på praktisk klarhet.
+Aktörer som troligen rankar för termen (bör verifieras manuellt via Google):
 
-Övervaka månadsvis: titel, H2, snippet-format. Notera ändringar i `seo/serp-log.md`.
+- **fonus.se** — begravningsbyrå-kedja
+- **lavendla.se** — begravningsbyrå + jurist
+- **familjensjurist.se** — juristbyrå
+- **1177.se** — myndighetssajt (vårdguide)
+- **skatteverket.se** — myndighet
+
+Övervaka månadsvis: titel, H2, snippet-format. Notera ändringar i `seo/serp-log.md` när den filen skapas.
