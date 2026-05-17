@@ -293,11 +293,13 @@ Each step improves the product or the company in a meaningful way.
 
 ---
 
-## SEO & Growth
+# 🌱 SEO & GROWTH — 2026-05-17
 
-- [ ] Content brief: "vad gör man när någon dör" — sökintention, H2/H3, featured snippet, schema markup
-- [ ] Konkurrentanalys: 5 sidor som rankar för "bouppteckning" — gap kring emotionellt ingångsmoment och digital administration
-- [ ] Programmatisk SEO: URL-struktur + sidmall för /bouppteckning/[stad] och /dödsfallsintyg/[stad], 50–100 sidor
-- [ ] Konverterande landningssida för "hjälp med dödsbo" — varm ton, FAQ-schema, CTA till 149 kr
-- [ ] Siteaudit: crawlbarhet, interna länkar, orphan pages, CWV, mobil-first
-- [ ] Topical authority map: 40–60 nyckelord i kluster + 6-månaders publiceringsplan
+| ID | Task | Date | Phase | Source | Priority | Type | Status |
+|----|------|------|-------|--------|----------|------|--------|
+| T116 | Content brief för "vad gör man när någon dör" — sökintention, H2/H3-struktur, featured snippet-strategi, utökad FAQ-schema (8 nya frågor), interna länkförslag, mätbart mål (90 dagar). Leverans: `seo/content-brief-vad-gor-man-nar-nagon-dor.md`. | 2026-05-17 | Fas 12 | SEO & Growth | 🟠 | SEO | ✔ |
+| T117 | Konkurrentanalys "bouppteckning" — top-5 SERP-bedömning (Skatteverket, Fonus, Lavendla, Familjens Jurist, juridiskdokument), innehållsdjup-jämförelse, 5 identifierade gap (emotionellt hook, digital ålder, FAQ-frågor, neutral jämförelse, internlänkprofil), 7-punkts offensivplan. Leverans: `seo/konkurrentanalys-bouppteckning.md`. | 2026-05-17 | Fas 12 | SEO & Growth | 🟠 | SEO | ✔ |
+| T118 | Programmatisk SEO — `seo/cities.json` (20 städer med tingsrätt, befolkning, dödsfall/år), generator `scripts/generate-city-pages.cjs`, 40 statiska sidor (`bouppteckning-[stad].html` + `dodsfallsintyg-[stad].html` × 20 städer), city-specifik FAQPage-schema, sitemap uppdaterad, interna länkar tillagda i `bouppteckning-guide.html` och `dodsfallsintyg.html`. | 2026-05-17 | Fas 12 | SEO & Growth | 🟠 | SEO | ✔ |
+| T119 | Landningssida `hjalp-med-dodsbo.html` — varm konverterande ton, WebPage + Product + FAQPage JSON-LD, CTA 149 kr (matchar produktionspris), tre scenarier, lagt till i sitemap. | 2026-05-17 | Fas 12 | SEO & Growth | 🟠 | SEO | ✔ |
+| T120 | Siteaudit — kodbaserad analys av 76 HTML-filer. Funna problem: 42 orphan pages (alla nu tillagda i sitemap inkl. tidigare missade `om.html`), fonts preload inkonsekvent (5/74), BreadcrumbList saknas på 42/74, pris-konsistens 49 vs 149 kr behöver beslut, dateModified ej uppdaterat på alla sidor. Leverans: `seo/siteaudit-2026-05-17.md`. | 2026-05-17 | Fas 12 | SEO & Growth | 🟠 | SEO | ✔ |
+| T121 | Topical authority map — 5 kluster med pillar + befintliga och nya stödsidor, ~50 nyckelord identifierade, 24-veckors publiceringsplan (vecka för vecka 2026-05-19 → 2026-10-27) med slug + sökterm + volym. Total estimerad sökvolym i planen: ~17 760/mån. Leverans: `seo/topical-authority-map.md`. | 2026-05-17 | Fas 12 | SEO & Growth | 🟠 | SEO | ✔ |

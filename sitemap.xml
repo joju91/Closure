@@ -192,4 +192,56 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://efterplan.se/om.html</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://efterplan.se/hjalp-med-dodsbo.html</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url><loc>https://efterplan.se/bouppteckning-stockholm.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-goteborg.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-malmo.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-uppsala.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-vasteras.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-orebro.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-linkoping.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-helsingborg.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-jonkoping.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-norrkoping.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-lund.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-umea.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-gavle.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-boras.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-eskilstuna.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-sodertalje.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-karlstad.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-vaxjo.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-halmstad.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/bouppteckning-sundsvall.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-stockholm.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-goteborg.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-malmo.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-uppsala.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-vasteras.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-orebro.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-linkoping.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-helsingborg.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-jonkoping.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-norrkoping.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-lund.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-umea.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-gavle.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-boras.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-eskilstuna.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-sodertalje.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-karlstad.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-vaxjo.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-halmstad.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://efterplan.se/dodsfallsintyg-sundsvall.html</loc><lastmod>2026-05-17</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>
